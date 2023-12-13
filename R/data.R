@@ -110,8 +110,8 @@ get_EVStats <- function(EVStats) {
   library(dplyr)
   library(scales)
 
-  EVStats <- get_Stats %>%
-    #filter(GP > 9) %>%
+  EVStats <- LeagueStats %>%
+    filter(GP > 9) %>%
     select(
       Name, BD, Pos, Team,
       GP, G, A, PTS, PPG,
