@@ -1,7 +1,7 @@
 Package: OHLpkg
 Type: Package
 Title: Ontario Hockey League Data
-Version: 0.3.0
+Version: 0.3.1
 Author: Noah Cornish
 Maintainer: Noah Cornish <noahcornish7@gmail.com>
 Description: More about what it does (maybe more than one line)

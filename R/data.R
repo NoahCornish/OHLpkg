@@ -131,4 +131,6 @@ get_EVStats <- function(EVStats) {
       `EVPTS/G`, `EVPTS%`
     )
 
+  return(EVStats)
+
 }
