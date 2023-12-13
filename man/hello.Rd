@@ -1,12 +1,12 @@
-\name{data}
-\alias{data}
-\title{Ontario Hockey League !}
+\name{hello}
+\alias{hello}
+\title{Hello, World!}
 \usage{
-getStats()
+hello()
 }
 \description{
 Creates a dataframe with the 2023-2024 Player Statistics.
 }
 \examples{
-getStats()
+hello()
 }
