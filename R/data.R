@@ -9,18 +9,19 @@
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
 
-library(rsconnect)
-library(ggplot2)
-library(tidyverse)
-library(janitor)
-library(lubridate)
-library(RJSONIO)
-library(jsonlite)
-library(dplyr)
-library(scales)
 
-getStats <- function(LeagueStats_2024) {
 
+getStats <- function() {
+
+  library(rsconnect)
+  library(ggplot2)
+  library(tidyverse)
+  library(janitor)
+  library(lubridate)
+  library(RJSONIO)
+  library(jsonlite)
+  library(dplyr)
+  library(scales)
 
   url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=76&first=0&limit=50000&sort=active&stat=all&order_direction="
 
@@ -49,7 +50,7 @@ getStats <- function(LeagueStats_2024) {
 
 
   # create data frame with columns required for tableau viz
-  LeagueStats_2024 <- df %>%
+  LeagueStats <- df %>%
     select(Name = "name",
            Rookie = "rookie",
            JN = "jersey_number",
@@ -75,33 +76,31 @@ getStats <- function(LeagueStats_2024) {
 
 
 
-  LeagueStats_2024 <- LeagueStats_2024 %>%
+  LeagueStats <- LeagueStats %>%
     mutate(PPP = PPG + PPA) %>%
     mutate(`PPP_Percentage` = (PPP/PTS)*100) %>%
     filter(Pos != "G")
 
 
-  PowerPlayPointsPerc <- LeagueStats_2024 %>%
+  PowerPlayPointsPerc <- LeagueStats %>%
     na.omit(PowerPlayPointsPerc$PPP_Percentage)
 
   #assign rookie values as YES or No instead of binary (1, 0)
-  LeagueStats_2024$Rookie <- gsub('1', 'YES', LeagueStats_2024$Rookie)
-  LeagueStats_2024$Rookie <- gsub('0', 'NO', LeagueStats_2024$Rookie)
+  LeagueStats$Rookie <- gsub('1', 'YES', LeagueStats$Rookie)
+  LeagueStats$Rookie <- gsub('0', 'NO', LeagueStats$Rookie)
 
-  LeagueStats_2024$PPP_Percentage <- round(LeagueStats_2024$PPP_Percentage ,digit=1)
+  LeagueStats$PPP_Percentage <- round(LeagueStats$PPP_Percentage ,digit=1)
 
 
   #Ranking Players based on G, A, and +/-
 
-  LeagueStats_2024 <- LeagueStats_2024 %>%
+  LeagueStats <- LeagueStats %>%
     mutate(RNK = (2*G)+(1.5*A)+(1*`+/-`)-(1*PIM))
 
-  LeagueStats_2024$BD <- gsub(",", "", LeagueStats_2024$BD)
-  LeagueStats_2024$BD <- as.POSIXct(LeagueStats_2024$BD, format='%B %d %Y')
+  LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
+  LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
 
-  LeagueStats_2024$BD <- as.Date(LeagueStats_2024$BD, format = "%d-%b-%Y")
-
-
+  LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
 
 }
