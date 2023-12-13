@@ -2,11 +2,13 @@
 \alias{Hello}
 \title{OHLpkg!}
 \usage{
-getStats()
+get_Stats()
+get_EVStats()
 }
 \description{
 Creates a dataframe with the 2023-2024 Player Statistics.
 }
 \examples{
-getStats()
+get_Stats()
+get_EVStats()
 }
