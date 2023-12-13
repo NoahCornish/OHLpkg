@@ -1,12 +1,12 @@
-\name{hello}
-\alias{hello}
-\title{Hello, World!}
+\name{Hello}
+\alias{Hello}
+\title{OHLpkg!}
 \usage{
-hello()
+getStats()
 }
 \description{
 Creates a dataframe with the 2023-2024 Player Statistics.
 }
 \examples{
-hello()
+getStats()
 }

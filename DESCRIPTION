@@ -3,7 +3,7 @@ Type: Package
 Title: Ontario Hockey League Data
 Version: 0.2.0
 Author: Noah Cornish
-Maintainer: Noah Cornish
+Maintainer: Noah Cornish <noahcornish7@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
