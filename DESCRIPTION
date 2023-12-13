@@ -1,9 +1,9 @@
 Package: OHLpkg
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Ontario Hockey League Data
 Version: 0.2.0
 Author: Noah Cornish
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: Noah Cornish
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
