@@ -11,7 +11,7 @@
 
 
 
-getStats <- function() {
+getStats <- function(LeagueStats) {
 
   library(rsconnect)
   library(ggplot2)
@@ -102,5 +102,6 @@ getStats <- function() {
 
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
+  return(LeagueStats)
 
 }
