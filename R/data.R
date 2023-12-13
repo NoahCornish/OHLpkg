@@ -2,7 +2,7 @@
 #   http://r-pkgs.had.co.nz/
 
 
-getStats <- function(LeagueStats) {
+get_Stats <- function(LeagueStats) {
 
   library(rsconnect)
   library(ggplot2)
@@ -94,5 +94,41 @@ getStats <- function(LeagueStats) {
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
   return(LeagueStats)
+
+}
+
+
+get_EVStats <- function(EVStats) {
+
+  library(rsconnect)
+  library(ggplot2)
+  library(tidyverse)
+  library(janitor)
+  library(lubridate)
+  library(RJSONIO)
+  library(jsonlite)
+  library(dplyr)
+  library(scales)
+
+  EVStats <- get_Stats %>%
+    filter(GP > 9) %>%
+    select(
+      Name, BD, Pos, Team,
+      GP, G, A, PTS, PPG,
+      PPA, PPP, SHG, SHA, SHPTS
+    ) %>%
+    mutate(
+      EVG = G - PPG - SHG,
+      EVA = A - PPA - SHA,
+      EVPTS = EVG + EVA,
+      `EVPTS/G` = round((EVPTS / GP), 2),
+      `EVPTS%` = round((EVPTS / PTS) * 100)
+    ) %>%
+    arrange(desc(EVPTS)) %>%  # Sort by EVPTS in descending order
+    select(
+      Name, BD, Pos, Team,
+      GP, EVG, EVA, EVPTS,
+      `EVPTS/G`, `EVPTS%`
+    )
 
 }
