@@ -2,6 +2,10 @@
 #   http://r-pkgs.had.co.nz/
 
 
+#library(OHLpkg)
+#x <- get_Stats()
+#y <- get_EVStats()
+
 get_Stats <- function(LeagueStats) {
 
   library(rsconnect)
@@ -67,7 +71,8 @@ get_Stats <- function(LeagueStats) {
            ENG = "empty_net_goals",
            PIM = "penalty_minutes",
            Active = "active") %>%
-    filter(Active == 1)
+    filter(Active == 1) %>%
+    filter(GP > 9)
 
 
 
