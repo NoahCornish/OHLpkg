@@ -1,4 +1,4 @@
 # OHLpkg
-# v0.4.0
+# v0.5.0
 
-This release has added NHL 2024 Draft Eligible Player Statistics for the OHL.
+This release has added Rookie Statistics for the OHL.

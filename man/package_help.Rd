@@ -5,20 +5,29 @@
 get_Stats()
 get_EVStats()
 get_DYStats()
+get_RKStats()
 }
 \description{
-get_Stats() creates a dataframe with the 2023-2024 Player Statistics.
-get_Stats() has filtered out players who haven't played at least 10 games.
+get_Stats()
+- creates a dataframe with the 2023-2024 Player stats.
+- filters out players who haven't played at least 10 games.
 
-get_EVStats() creates a dataframe with the 2023-2024 EV Strength Player Stats.
-get_EVStats() has filtered out players who haven't played at least 10 games.
+get_EVStats()
+- creates a dataframe with the 2023-2024 EV Strength Player stats.
+- filters out players who haven't played at least 10 games.
 
-get_DYStats() creates a dataframe with the 2023-2024 Draft Eligible Skaters Stats.
-get_DYStats() has filtered out players who haven't played at least 10 games.
+get_DYStats()
+- creates a dataframe with the 2023-2024 Draft Eligible Skaters stats.
+- filters out players who haven't played at least 10 games.
+
+get_RKStats()
+- creates a dataframe with the 2023-2024 Rookie Skaters stats
+- filters out players who haven't played at least 10 games.
 
 }
 \examples{
-x <- get_Stats()
-y <- get_EVStats()
-z <- get_DYStats()
+q <- get_Stats()
+w <- get_EVStats()
+e <- get_DYStats()
+r <- get_RKStats()
 }
