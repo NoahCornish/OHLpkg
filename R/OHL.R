@@ -1,14 +1,6 @@
-#   created by Noah Cornish
-#   http://r-pkgs.had.co.nz/
 
+#v1.0.0
 
-#devtools::install_github('NoahCornish/OHLpkg')
-#library(OHLpkg)
-#a <- get_Stats()
-#b <- get_EVStats()
-#c <- get_DYStats()
-#d <- get_RKStats()
-#e <- get_Teams()
 
 get_Stats <- function(LeagueStats) {
 
@@ -76,7 +68,7 @@ get_Stats <- function(LeagueStats) {
            PIM = "penalty_minutes",
            Active = "active") %>%
     filter(Active == 1) %>%
-    filter(GP > 9) %>%
+    #filter(GP > 9) %>%
     mutate(PPP = PPG + PPA) %>%
     filter(Pos != "G")
 
@@ -467,3 +459,5 @@ get_Teams <- function(Teams){
   return(Teams)
 
 }
+
+#Created by Noah Cornish
