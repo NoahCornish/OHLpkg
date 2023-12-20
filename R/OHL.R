@@ -475,26 +475,28 @@ get_Teams <- function(Teams){
 #'
 #' @export
 
-get_u17Skaters <- function(api_key, draft_year, birth_year) {
+get_u17Skaters <- function(u17Skaters) {
+
   library(tidyverse)
   library(janitor)
   library(httr)
   library(jsonlite)
 
-  # CODE TO GET DRAFTED PLAYERS
-  draft_url <- paste0("https://api.eliteprospects.com/v1/draft-types/ohl-priority-selection/selections?offset=0&limit=400&sort=-year&apiKey=", api_key)
-  draft_api_call <- GET(draft_url)
-  draft_api_char <- base::rawToChar(draft_api_call$content)
-  draft_api_json <- jsonlite::fromJSON(draft_api_char, flatten = TRUE)
+  ## CODE TO GET DRAFTED PLAYERS
+  url <- "https://api.eliteprospects.com/v1/draft-types/ohl-priority-selection/selections?offset=0&limit=400&sort=-year&apiKey=0cMWKbnl12KJusOFQZjZK7BVLYLP343e"
 
-  drafted_players <- as_tibble(draft_api_json[["data"]]) %>% 
+  api_call <- GET(url)
+  api_char <- base::rawToChar(api_call$content)
+  api_json <- jsonlite::fromJSON(api_char, flatten = TRUE)
+
+  drafted_players <- as_tibble(api_json[["data"]]) %>%
     clean_names() %>%
-    filter(year == draft_year) %>% 
-    select(round, overall, 
+    filter(year == 2023) %>%
+    select(round, overall,
            drafted_team = "team_name",
            eliteID = "player_id")
 
-  # CODE TO GET U17 PLAYER STATS EXCLUDING THE OHL
+  ## CODE TO GET ALL U17 PLAYER STATS EXCLUDING THE OHL
   leagues <- tibble(
     league = c("OJHL", "CCHL", "NOJHL", "GOJHL", "EOJHL",
                "NCJHL", "PJCHL", "OMHA U18",
@@ -502,11 +504,11 @@ get_u17Skaters <- function(api_key, draft_year, birth_year) {
   )
 
   ages <- tibble(
-    birthYear = c(birth_year)
+    birthYear = c("2007")
   )
 
   pb_count <- nrow(ages)
-  tmsleep <- sample(2:4, 1)
+  tmsleep <- sample(2:4,1)
   pb <- txtProgressBar(min = 0, max = pb_count, style = 3)
 
   u17_skaters_stats <- NULL
@@ -518,10 +520,9 @@ get_u17Skaters <- function(api_key, draft_year, birth_year) {
       league_name <- as.character(leagues[j, 1])
 
       str1 <- "https://api.eliteprospects.com/v1/leagues/"
-      str2 <- "/player-stats?offset=0&limit=400&apiKey="
-      str3 <- "&player.yearOfBirth="
-      str4 <- "&sort=-regularStats.PTS"
-      url <- paste0(str1, URLencode(league_name), str2, api_key, str3, birthYear, str4)
+      str2 <- "/player-stats?offset=0&limit=400&apiKey=0cMWKbnl12KJusOFQZjZK7BVLYLP343e&player.yearOfBirth="
+      str3 <- "&sort=-regularStats.PTS"
+      url <- paste0(str1, URLencode(league_name), str2, birthYear, str3)
 
       print(url) # Print the URL for debugging
 
@@ -529,10 +530,10 @@ get_u17Skaters <- function(api_key, draft_year, birth_year) {
       api_char <- base::rawToChar(api_call$content)
       api_json <- jsonlite::fromJSON(api_char, flatten = TRUE)
 
-      df <- as_tibble(api_json[["data"]]) %>% 
+      df <- as_tibble(api_json[["data"]]) %>%
         clean_names() %>%
-        filter(season_start_year == "2023", 
-               player_position != "G") %>% 
+        filter(season_start_year == "2023",
+               player_position != "G") %>%
         select(team_name,
                eliteID = "player_id",
                name = "player_name",
@@ -543,7 +544,7 @@ get_u17Skaters <- function(api_key, draft_year, birth_year) {
                a = "regular_stats_a",
                pts = "regular_stats_pts",
                pim = "regular_stats_pim",
-               ppg = "regular_stats_ppg") %>% 
+               ppg = "regular_stats_ppg") %>%
         mutate_if(is.integer, as.numeric) %>%
         mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
         mutate(league_name = league_name) %>%
@@ -556,17 +557,17 @@ get_u17Skaters <- function(api_key, draft_year, birth_year) {
     }
   }
 
-  u17_skaters <- u17_skaters_stats %>% 
-    left_join(drafted_players, by = "eliteID") %>% 
+  u17Skaters <- u17_skaters_stats %>%
+    left_join(drafted_players, by = "eliteID") %>%
     select(eliteID:dob, drafted_team, round, overall, team_name:ppg) %>%
-    mutate(across(where(is.numeric), ~replace_na(.x, 0))) %>% 
-    mutate(across(where(is.character), ~replace_na(.x, "not available"))) %>% 
+    mutate(across(where(is.numeric), ~replace_na(.x, 0))) %>% # Replace NAs with 0 in numeric columns
+    mutate(across(where(is.character), ~replace_na(.x, "not available"))) %>% # Replace NAs with "not available" in character columns
     mutate(drafted_team = case_when(
       drafted_team == "not available" ~ "not drafted",
       TRUE ~ as.character(drafted_team)
     ))
 
-  return(u17_skaters)
+  return(u17Skaters)
 }
 
 

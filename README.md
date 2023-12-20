@@ -1,10 +1,10 @@
 # OHLpkg
 
-#### v1.0.0
+#### v1.1.0
 
 ------------------------------------------------------------------------
 
-This is the first stable release. **Version 1.0.0** enables users who use the **OHLpkg R Package** access to OHL Data. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* is available for use. Download this package by entering these lines of code.
+This is the first minor update to the first major version. **Version 1.1.0** enables users who use the **OHLpkg R Package** access to OHL Data and U17 Skaters. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, *Teams, and U17Skaters* is available for use. Download this package by entering these lines of code.
 
 `devtools::install_github('NoahCornish/OHLpkg')`
 
