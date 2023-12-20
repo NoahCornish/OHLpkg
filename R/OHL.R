@@ -460,4 +460,116 @@ get_Teams <- function(Teams){
 
 }
 
+
+
+#' Function to Retrieve U17 Skater Stats
+#'
+#' This function retrieves U17 skater statistics from EliteProspects API and
+#' joins them with drafted player information.
+#'
+#' @param api_key Your EliteProspects API key.
+#' @param draft_year The draft year for which you want to retrieve drafted players.
+#' @param birth_year The birth year for which you want to retrieve U17 skater stats.
+#'
+#' @return A tibble containing U17 skater statistics with draft information.
+#'
+#' @export
+
+get_u17Skaters <- function(api_key, draft_year, birth_year) {
+  library(tidyverse)
+  library(janitor)
+  library(httr)
+  library(jsonlite)
+
+  # CODE TO GET DRAFTED PLAYERS
+  draft_url <- paste0("https://api.eliteprospects.com/v1/draft-types/ohl-priority-selection/selections?offset=0&limit=400&sort=-year&apiKey=", api_key)
+  draft_api_call <- GET(draft_url)
+  draft_api_char <- base::rawToChar(draft_api_call$content)
+  draft_api_json <- jsonlite::fromJSON(draft_api_char, flatten = TRUE)
+
+  drafted_players <- as_tibble(draft_api_json[["data"]]) %>% 
+    clean_names() %>%
+    filter(year == draft_year) %>% 
+    select(round, overall, 
+           drafted_team = "team_name",
+           eliteID = "player_id")
+
+  # CODE TO GET U17 PLAYER STATS EXCLUDING THE OHL
+  leagues <- tibble(
+    league = c("OJHL", "CCHL", "NOJHL", "GOJHL", "EOJHL",
+               "NCJHL", "PJCHL", "OMHA U18",
+               "ALLIANCE U18", "GNML", "GTHL U18", "HEO U18")
+  )
+
+  ages <- tibble(
+    birthYear = c(birth_year)
+  )
+
+  pb_count <- nrow(ages)
+  tmsleep <- sample(2:4, 1)
+  pb <- txtProgressBar(min = 0, max = pb_count, style = 3)
+
+  u17_skaters_stats <- NULL
+
+  for (i in 1:nrow(ages)) {
+    birthYear <- as.character(ages[i, 1])
+
+    for (j in 1:nrow(leagues)) {
+      league_name <- as.character(leagues[j, 1])
+
+      str1 <- "https://api.eliteprospects.com/v1/leagues/"
+      str2 <- "/player-stats?offset=0&limit=400&apiKey="
+      str3 <- "&player.yearOfBirth="
+      str4 <- "&sort=-regularStats.PTS"
+      url <- paste0(str1, URLencode(league_name), str2, api_key, str3, birthYear, str4)
+
+      print(url) # Print the URL for debugging
+
+      api_call <- GET(url)
+      api_char <- base::rawToChar(api_call$content)
+      api_json <- jsonlite::fromJSON(api_char, flatten = TRUE)
+
+      df <- as_tibble(api_json[["data"]]) %>% 
+        clean_names() %>%
+        filter(season_start_year == "2023", 
+               player_position != "G") %>% 
+        select(team_name,
+               eliteID = "player_id",
+               name = "player_name",
+               pos = "player_position",
+               dob = "player_date_of_birth",
+               gp = "regular_stats_gp",
+               g = "regular_stats_g",
+               a = "regular_stats_a",
+               pts = "regular_stats_pts",
+               pim = "regular_stats_pim",
+               ppg = "regular_stats_ppg") %>% 
+        mutate_if(is.integer, as.numeric) %>%
+        mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>%
+        mutate(league_name = league_name) %>%
+        select(eliteID:dob, team_name, league_name,
+               gp:ppg)
+
+      u17_skaters_stats <- bind_rows(u17_skaters_stats, df)
+
+      setTxtProgressBar(pb, i)
+    }
+  }
+
+  u17_skaters <- u17_skaters_stats %>% 
+    left_join(drafted_players, by = "eliteID") %>% 
+    select(eliteID:dob, drafted_team, round, overall, team_name:ppg) %>%
+    mutate(across(where(is.numeric), ~replace_na(.x, 0))) %>% 
+    mutate(across(where(is.character), ~replace_na(.x, "not available"))) %>% 
+    mutate(drafted_team = case_when(
+      drafted_team == "not available" ~ "not drafted",
+      TRUE ~ as.character(drafted_team)
+    ))
+
+  return(u17_skaters)
+}
+
+
+
+
 #Created by Noah Cornish
