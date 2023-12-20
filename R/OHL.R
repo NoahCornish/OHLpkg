@@ -1,5 +1,5 @@
 
-#v1.0.0
+#v1.2.0
 
 
 get_Stats <- function(LeagueStats) {
@@ -571,6 +571,117 @@ get_u17Skaters <- function(u17Skaters) {
 }
 
 
+get_Prospects <- function(prospects_stats){
 
+  library(tidyverse)
+  library(janitor)
+  library(httr)
+  library(jsonlite)
+  library(lubridate)
+
+  #link structure
+  #https://www.eliteprospects.com/player.php?player=897666
+
+  # get quick info on a player based on eliteID
+  prospects <- tibble(
+    eliteID = c(897666, 888279, 889660, 883053, 881014,
+                969357, 905940, 576966, 876197, 897624,
+                800177, 880414, 880831, 618963, 880865,
+                880636, 722925)
+  )
+
+  # get the number of games
+  pb_count <- nrow(prospects)
+  #set random system sleep variable
+  tmsleep <- sample(2:5,1)
+  # set progress bar
+  pb <- txtProgressBar(min = 0, max = pb_count, style = 3)
+
+  prospects_stats <- NULL
+
+
+  # loop through leagues
+  for (i in 1:nrow(prospects)) {
+    eliteID <- (prospects[i, 1])
+
+    # get stats
+    str1 <- "https://api.eliteprospects.com/v1/players/"
+    str2 <- "/stats?offset=0&limit=100&sort=season&apiKey=0cMWKbnl12KJusOFQZjZK7BVLYLP343e"
+    url <- paste0(str1,eliteID,str2)
+
+    api_call <- GET(url)
+    # convert hexidecimal content into character
+    api_char <- base::rawToChar(api_call$content)
+    # pull json data
+    api_json <- jsonlite::fromJSON(api_char, flatten = TRUE)
+
+    stats <- as_tibble(api_json[["data"]]) %>%
+      select(teamName, leagueName,
+             season = "season.endYear",
+             regularStats.GP:regularStats.PPG) %>%
+      rename(GP = "regularStats.GP",
+             G = "regularStats.G",
+             A = "regularStats.A",
+             PTS = "regularStats.PTS",
+             PPG = "regularStats.PPG",
+             PIMS = "regularStats.PIM") %>%
+      select(-c("regularStats.PM")) %>%
+      mutate(eliteID = eliteID$eliteID) %>%
+      mutate(eliteLink = as.character(
+        paste0("https://www.eliteprospects.com/player.php?player=",eliteID)
+      )) %>%
+      arrange(-season)
+
+    # get bio
+    str1 <- "https://api.eliteprospects.com/v1/players/"
+    str3 <- "?apiKey=0cMWKbnl12KJusOFQZjZK7BVLYLP343e"
+    url <- paste0(str1,eliteID,str3)
+
+    api_call <- GET(url)
+    # convert hexidecimal content into character
+    api_char <- base::rawToChar(api_call$content)
+    # pull json data
+    api_json <- jsonlite::fromJSON(api_char, flatten = TRUE)
+
+    # use below if you need to adjust based on something
+    bio <- tibble(
+      eliteID = api_json[["data"]][["id"]],
+      name = api_json[["data"]][["name"]],
+      pos = api_json[["data"]][["position"]],
+      shoots = api_json[["data"]][["shoots"]],
+      dob = as.Date(api_json[["data"]][["dateOfBirth"]]),
+      height = api_json[["data"]][["height"]][["imperial"]],
+      weight = api_json[["data"]][["weight"]][["imperial"]]
+    )
+
+
+    df_prospects <- bio %>%
+      left_join(stats, by = "eliteID")
+
+    prospects_stats <- bind_rows(prospects_stats, df_prospects)
+
+    setTxtProgressBar(pb, i)
+
+
+  }
+
+
+  prospects_bio <- prospects_stats %>%
+    select(name, dob, height, weight, pos, shoots) %>%
+    distinct()
+
+  prospects_stats <- prospects_stats %>%
+    select(eliteID, eliteLink, name, teamName, leagueName,
+           season, GP, G, A, PTS, PPG, PIMS) %>%
+    rename(
+      Team = "teamName",
+      League = "leagueName",
+      Season = "season"
+    )
+
+  return(prospects_stats)
+
+
+}
 
 #Created by Noah Cornish
