@@ -27,13 +27,6 @@ get_RKStats()
 get_Teams()
 - creates a dataframe with the 2023-2024 Teams in the OHL.
 
-get_u17Skaters()
-- creates a dataframe with U17 Ontario Skaters Stats for the 2023-2024 season.
-- Only shows plays who aren't playing in the OHL.
-
-get_Prospects()
-- creates a dataframe of selected Peterborough Petes prospects.
-
 }
 \examples{
 q <- get_Stats()
@@ -41,6 +34,4 @@ w <- get_EVStats()
 e <- get_DYStats()
 r <- get_RKStats()
 t <- get_Teams()
-y <- get_u17Skaters()
-z <- get_Prospects()
 }
