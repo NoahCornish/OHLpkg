@@ -1,6 +1,6 @@
-\name{Hello}
-\alias{Hello}
-\title{OHLpkg!}
+\name{Package Help}
+\alias{Package Help}
+\title{OHLpkg}
 \usage{
 get_Stats()
 get_EVStats()

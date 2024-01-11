@@ -1,6 +1,5 @@
-
-#v1.3.0
-
+# Created by Noah Cornish
+#v1.3.1
 
 get_Stats <- function(LeagueStats) {
 
@@ -85,7 +84,6 @@ get_Stats <- function(LeagueStats) {
   return(LeagueStats)
 
 }
-
 
 get_EVStats <- function(EVStats) {
 
@@ -192,7 +190,6 @@ get_EVStats <- function(EVStats) {
 
 }
 
-
 get_DYStats <- function(DYStats){
 
   library(rsconnect)
@@ -281,7 +278,6 @@ get_DYStats <- function(DYStats){
            PPA, PPP, GWG, ENG, PIM)
 
 }
-
 
 get_RKStats <- function(RKStats){
 
@@ -373,7 +369,6 @@ get_RKStats <- function(RKStats){
 
 }
 
-
 get_Teams <- function(Teams){
 
   library(rsconnect)
@@ -459,5 +454,3 @@ get_Teams <- function(Teams){
   return(Teams)
 
 }
-
-#Created by Noah Cornish

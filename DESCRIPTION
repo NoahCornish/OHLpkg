@@ -1,10 +1,14 @@
 Package: OHLpkg
 Type: Package
 Title: Ontario Hockey League Data
-Version: 1.3.0
+Version: 1.3.1
 Author: Noah Cornish
 Maintainer: Noah Cornish <noahcornish7@gmail.com>
-Description: ""
+Description: "The R code comprises functions for fetching and processing hockey statistics from a JSON dataset. 
+Functions like get_Stats, get_EVStats, get_DYStats, get_RKStats, and get_Teams focus on different aspects of player data, 
+including overall statistics, even-strength performance, draft year eligibility, rookie performance, and team information. 
+These functions are designed for data cleaning, transformation, and selection, 
+suitable for detailed analysis and visualization, such as in scouting and performance evaluation."
 License: MIT
 Encoding: UTF-8
 LazyData: true
