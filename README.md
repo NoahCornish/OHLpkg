@@ -6,11 +6,15 @@
 
 ------------------------------------------------------------------------
 
+<<<<<<< HEAD
 This is the first bug patch to the second minor update of the first major version. **Version 1.3.1** has made adjustment to the **package_help** file and to the **Description** file. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* are available for use.
 
 ------------------------------------------------------------------------
 
 ***Download this package by entering these lines of code.***
+=======
+This is the third minor update to the first major version. **Version 1.3.0** enables users who use the **OHLpkg R Package** access to OHL Data. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* is available for use. Download this package by entering these lines of code.
+>>>>>>> 25d970726244ecd938068c639f35a75f3490f0fb
 
 `devtools::install_github('NoahCornish/OHLpkg')`
 
