@@ -25,7 +25,7 @@ get_RKStats()
 - filters out players who haven't played at least 10 games.
 
 get_Teams()
-- creates a dataframe with the 2023-2024 Teams in the OHL.
+- creates a dataframe with the 2023-2024 Teams.
 
 }
 \examples{
