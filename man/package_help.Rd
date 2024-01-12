@@ -4,6 +4,7 @@
 \usage{
 get_Stats()
 get_EVStats()
+get_SHStats()
 get_DYStats()
 get_RKStats()
 }
@@ -14,6 +15,10 @@ get_Stats()
 
 get_EVStats()
 - creates a dataframe with the 2023-2024 EV Strength Player stats.
+- filters out players who haven't played at least 10 games.
+
+get_SHStats()
+- creates a dataframe with the 2023-2024 Short-Handed Player stats.
 - filters out players who haven't played at least 10 games.
 
 get_DYStats()

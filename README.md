@@ -1,12 +1,14 @@
 ## **OHLpkg**
 
-#### **v1.3.1**
+#### **v1.4.0**
 
-![](https://1000logos.net/wp-content/uploads/2018/10/Ontario-Hockey-League-logo.png){width="271"}
+![](https://1000logos.net/wp-content/uploads/2018/10/Ontario-Hockey-League-logo.png){width="220"}
 
 ------------------------------------------------------------------------
 
-This is the first bug patch to the second minor update of the first major version. **Version 1.3.1** has made adjustment to the **package_help** file and to the **Description** file. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* are available for use.
+The ***OHLpkg*** is presently at **Version 1.4.0**, which is the fourth minor release in its first major version.
+
+**Version 1.4.0** has the following functions: **`get_Stats, get_EVStats, get_SHStats, get_DYStats, get_RKStats, get_Teams`**
 
 ------------------------------------------------------------------------
 
@@ -34,4 +36,23 @@ This will install the package directly from this repository. Use the Help inform
 
 5.  **`get_Teams`**: This function seems to extract distinct team names from the dataset, possibly for creating team-specific visualizations or analyses.
 
-#### **More functions will be added in the future**
+------------------------------------------------------------------------
+
+#### **Latest Version Update**
+
+***Version 1.4.0*** has introduced Short-Handed Stats for all skaters who have played more than nine (9) games.
+
+------------------------------------------------------------------------
+
+#### **Current Package Functions**
+
+| Function        | Information                                                                |
+|-----------------|-------------------------------------------------------|
+| **get_Stats**   | Returns all skaters statistics                                             |
+| **get_EVStats** | Returns skaters (GP\>9) even-strength statistics                           |
+| **get_SHStats** | Returns skaters (GP\>9) short-handed statistics                            |
+| **get_DYStats** | Returns skaters (GP\>9) statistics who are NHL draft year (DY-0) eligible  |
+| **get_RKStats** | Returns skaters (GP\>9) statistics who are playing in their first OHL year |
+| **get_Teams**   | Returns a data table consisting of all 20 OHL teams                        |
+
+------------------------------------------------------------------------
