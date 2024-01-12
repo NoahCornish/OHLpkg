@@ -1,6 +1,4 @@
-## **OHLpkg**
-
-## **v1.4.0**
+# **Functions to Access Ontario Hockey League Data**
 
 ------------------------------------------------------------------------
 
@@ -45,7 +43,7 @@ This will install the package directly from this repository. Use the Help inform
 #### **Current Package Functions**
 
 | Function        | Information                                                                |
-|-----------------|-------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | **get_Stats**   | Returns all skaters statistics                                             |
 | **get_EVStats** | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats** | Returns skaters (GP\>9) short-handed statistics                            |
