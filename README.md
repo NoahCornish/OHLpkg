@@ -1,8 +1,6 @@
 ## **OHLpkg**
 
-#### **v1.4.0**
-
-![](https://1000logos.net/wp-content/uploads/2018/10/Ontario-Hockey-League-logo.png){width="220"}
+## **v1.4.0**
 
 ------------------------------------------------------------------------
 
