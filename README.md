@@ -2,41 +2,25 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.5.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v1.5.0-teal){width="119" height="24"}
 
-[![](https://img.shields.io/github/commit-activity/w/NoahCornish/OHLpkg/main)](https://github.com/NoahCornish/OHLpkg/commits/main/)
+[![](https://img.shields.io/github/commit-activity/w/NoahCornish/OHLpkg/main){width="188" height="25"}](https://github.com/NoahCornish/OHLpkg/commits/main/)
 
-[![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/issues)
+[![](https://img.shields.io/github/issues/NoahCornish/OHLpkg){width="115" height="26"}](https://github.com/NoahCornish/OHLpkg/issues)
 
-[![](https://img.shields.io/github/license/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/blob/main/LICENSE)
+![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total){width="122" height="28"}
 
-------------------------------------------------------------------------
+![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg){width="142" height="25"}
 
-#### ***Download this package by entering these lines of code***
-
-`devtools::install_github('NoahCornish/OHLpkg')`
-
-`library(OHLpkg)`
-
-This will install the package directly from this repository. Use the ***Package Help*** information for packages at this time. The DESCRIPTION file will provide instructions on how to use this package.
+[![](https://img.shields.io/github/license/NoahCornish/OHLpkg){width="102"}](https://github.com/NoahCornish/OHLpkg/blob/main/LICENSE)
 
 ------------------------------------------------------------------------
 
-#### **Here's a breakdown of each function**
+#### **Download this Package**
 
-1.  **`get_Stats()`**: This function fetches a JSON dataset from a specified URL, processes it, and returns a data frame with specific statistics. It removes some irrelevant columns, converts certain columns to numeric types, and performs date processing. The final dataframe includes player names, rookie status, jersey number, birthdate, height, weight, position, team name, and various gameplay statistics like games played, goals, assists, points, etc.
+**`devtools::install_github('NoahCornish/OHLpkg')`**
 
-2.  **`get_SHStats()`** : This function produces "Short Handed" stats. It filters and calculates specific stats like Short Handed Goals (SHG), Assists (SHA), Points (SHPTS), and calculates additional metrics like SHPTS per game and percentage of total points that are Short Handed.
-
-3.  **`get_EVStats()`**: Similar to **`get_Stats()`**, but it focuses on "Even Strength" stats. It filters and calculates specific stats like Even Strength Goals (EVG), Assists (EVA), Points (EVPTS), and calculates additional metrics like EVPTS per game and percentage of total points that are even strength.
-
-4.  **`get_DYStats()`**: This function processes data for players who are eligible for the NHL draft this year (DY). It filters players based on their birthdate to include only those eligible for a particular draft year and selects various statistics relevant to scouting and draft considerations.
-
-5.  **`get_RKStats()`**: Focuses on statistics for rookie players. It filters the dataset for rookies and selects relevant statistics for these players, such as goals, assists, points, and game-winning goals.
-
-6.  **`get_Teams()`**: This function extracts distinct team names for the Ontario Hockey League (OHL).
-
-7.  **`get_Schedule()`** : This function creates a data frame that consists of the Date, Game-ID, Time, Home Team, Home Team Goals, Away Team, Away Team Goals. *This function will only return the current Ontario Hockey League (OHL) regular season schedule*.
+**`library(OHLpkg)`**
 
 ------------------------------------------------------------------------
 
@@ -49,7 +33,7 @@ This will install the package directly from this repository. Use the ***Package 
 #### **Current Package Functions**
 
 | Function           | Information                                                                |
-|------------------|------------------------------------------------------|
+|--------------------|----------------------------------------------------------------------------|
 | **get_Stats()**    | Returns all skaters statistics                                             |
 | **get_EVStats()**  | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats()**  | Returns skaters (GP\>9) short-handed statistics                            |
@@ -60,5 +44,9 @@ This will install the package directly from this repository. Use the ***Package 
 
 ------------------------------------------------------------------------
 
+More information about the package can be viewed at (<https://github.com/NoahCornish/OHLpkg/wiki>)
+
 Created by:\
 Noah Cornish
+
+[![](https://img.shields.io/twitter/follow/NoahCornish)](https://twitter.com/NoahCornish)
