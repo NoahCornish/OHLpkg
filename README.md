@@ -2,9 +2,9 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/Version%201.4.0-8A2BE2){width="120"}
+![](https://img.shields.io/badge/Version%201.4.0-8A2BE2)
 
-![](https://img.shields.io/badge/OHLpkg-E22B2B){width="93" height="29"}
+![](https://img.shields.io/badge/OHLpkg-E22B2B)
 
 ![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
 
