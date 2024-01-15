@@ -1,16 +1,18 @@
-# OHLStatsKit: R Package for Ontario Hockey League Data
+# OHLpkg: R Package for Ontario Hockey League Data
 
 ------------------------------------------------------------------------
 
-The ***OHLpkg*** is presently at **Version 1.4.0**, which is the fourth minor release in its first major version.
+![](https://img.shields.io/badge/Version%201.4.0-8A2BE2){width="120"}
 
-**Version 1.4.0** has the following functions: **`get_Stats, get_EVStats, get_SHStats, get_DYStats, get_RKStats, get_Teams`**
+![](https://img.shields.io/badge/OHLpkg-E22B2B){width="93" height="29"}
+
+![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
 
 ------------------------------------------------------------------------
 
 #### ***Download this package by entering these lines of code.***
 
-This is the third minor update to the first major version. **Version 1.3.0** enables users who use the **OHLpkg R Package** access to OHL Data. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* is available for use. Download this package by entering these lines of code.
+This is the third minor update to the first major version. **Version 1.4.0** enables users who use the **OHLpkg R Package** access to OHL Data. At this time, *LeagueStats*, *EVStats*, *DYStats*, *RKStats*, and *Teams* is available for use. Download this package by entering these lines of code.
 
 `devtools::install_github('NoahCornish/OHLpkg')`
 
@@ -45,7 +47,7 @@ This will install the package directly from this repository. Use the Help inform
 #### **Current Package Functions**
 
 | Function        | Information                                                                |
-|----------------|-------------------------------------------------------|
+|---------------------------|---------------------------------------------|
 | **get_Stats**   | Returns all skaters statistics                                             |
 | **get_EVStats** | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats** | Returns skaters (GP\>9) short-handed statistics                            |

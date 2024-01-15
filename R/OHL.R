@@ -194,7 +194,6 @@ get_EVStats <- function(EVStats) {
 
 }
 
-
 #New Function
 # GP > 9
 get_SHStats <- function(SHStats){
@@ -472,7 +471,7 @@ get_RKStats <- function(RKStats){
 
 }
 
-
+# No minimum data requirement
 get_Teams <- function(Teams){
 
   library(rsconnect)
