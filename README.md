@@ -2,11 +2,13 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/Version%201.4.0-8A2BE2)
+[![](https://img.shields.io/badge/Version%201.4.0-8A2BE2)](https://github.com/NoahCornish/OHLpkg/releases)
 
-![](https://img.shields.io/badge/OHLpkg-E22B2B)
+[![](https://img.shields.io/badge/OHLpkg-E22B2B)](https://github.com/NoahCornish/OHLpkg)
 
-![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
+[![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/issues)
+
+[![](https://img.shields.io/github/license/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/blob/main/LICENSE)
 
 ------------------------------------------------------------------------
 
@@ -47,7 +49,7 @@ This will install the package directly from this repository. Use the Help inform
 #### **Current Package Functions**
 
 | Function        | Information                                                                |
-|------------------|------------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | **get_Stats**   | Returns all skaters statistics                                             |
 | **get_EVStats** | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats** | Returns skaters (GP\>9) short-handed statistics                            |
