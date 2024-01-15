@@ -7,6 +7,7 @@ get_EVStats()
 get_SHStats()
 get_DYStats()
 get_RKStats()
+get_Schedule()
 }
 \description{
 get_Stats()
@@ -32,6 +33,9 @@ get_RKStats()
 get_Teams()
 - creates a dataframe with the 2023-2024 Teams.
 
+get_Schedule()
+- creates a dataframe with the 2023-2024 OHL regular season schedule.
+
 }
 \examples{
 q <- get_Stats()
@@ -39,4 +43,5 @@ w <- get_EVStats()
 e <- get_DYStats()
 r <- get_RKStats()
 t <- get_Teams()
+y <- get_Schedule()
 }
