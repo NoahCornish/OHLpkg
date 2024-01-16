@@ -2,18 +2,17 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.5.0-teal){width="119" height="24"}
+![](https://img.shields.io/badge/OHLpkg-v1.5.0-teal)
 
-[![](https://img.shields.io/github/commit-activity/w/NoahCornish/OHLpkg/main){width="188" height="25"}](https://github.com/NoahCornish/OHLpkg/commits/main/)
+[![](https://img.shields.io/github/commit-activity/w/NoahCornish/OHLpkg/main)
 
-[![](https://img.shields.io/github/issues/NoahCornish/OHLpkg){width="115" height="26"}](https://github.com/NoahCornish/OHLpkg/issues)
+[![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
 
-![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total){width="122" height="28"}
+![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total)
 
-![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg){width="142" height="25"}
+![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)
 
-[![](https://img.shields.io/github/license/NoahCornish/OHLpkg){width="102"}](https://github.com/NoahCornish/OHLpkg/blob/main/LICENSE)
-
+[![](https://img.shields.io/github/license/NoahCornish/OHLpkg)
 ------------------------------------------------------------------------
 
 #### **Download this Package**
