@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.5.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v1.6.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -12,7 +12,9 @@
 
 ![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)
 
-![GitHub License](https://img.shields.io/github/license/NoahCornish/OHLpkg)
+![](https://img.shields.io/github/license/NoahCornish/OHLpkg)
+
+![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
 ------------------------------------------------------------------------
 
@@ -26,21 +28,22 @@
 
 #### **Latest Version Update**
 
-***Version 1.5.0*** has added a function to retrieve the 2023-2024 Ontario Hockey League (OHL) regular season schedule.
+**Version 1.6.0** has added a function to retrieve the 2023-2024 Ontario Hockey League (OHL) goalie statistics.
 
 ------------------------------------------------------------------------
 
-#### **Current Package Functions**
+#### **Package Functions**
 
-| Function           | Information                                                                |
-|-------------------|-----------------------------------------------------|
-| **get_Stats()**    | Returns all skaters statistics                                             |
-| **get_EVStats()**  | Returns skaters (GP\>9) even-strength statistics                           |
-| **get_SHStats()**  | Returns skaters (GP\>9) short-handed statistics                            |
-| **get_DYStats()**  | Returns skaters (GP\>9) statistics who are NHL draft year (DY-0) eligible  |
-| **get_RKStats()**  | Returns skaters (GP\>9) statistics who are playing in their first OHL year |
-| **get_Teams()**    | Returns a data table consisting of all 20 OHL teams                        |
-| **get_Schedule()** | Returns a data table consisting of the league schedule and results.        |
+| Function              | Information                                                                |
+|-----------------|-------------------------------------------------------|
+| **get_Stats()**       | Returns all skaters statistics                                             |
+| **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
+| **get_EVStats()**     | Returns skaters (GP\>9) even-strength statistics                           |
+| **get_SHStats()**     | Returns skaters (GP\>9) short-handed statistics                            |
+| **get_DYStats()**     | Returns skaters (GP\>9) statistics who are NHL draft year (DY-0) eligible  |
+| **get_RKStats()**     | Returns skaters (GP\>9) statistics who are playing in their first OHL year |
+| **get_Teams()**       | Returns a data table consisting of all 20 OHL teams                        |
+| **get_Schedule()**    | Returns a data table consisting of the league schedule and results.        |
 
 ------------------------------------------------------------------------
 
