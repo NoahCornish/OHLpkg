@@ -33,7 +33,7 @@
 #### **Current Package Functions**
 
 | Function           | Information                                                                |
-|--------------------|----------------------------------------------------------------------------|
+|-----------------|-------------------------------------------------------|
 | **get_Stats()**    | Returns all skaters statistics                                             |
 | **get_EVStats()**  | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats()**  | Returns skaters (GP\>9) short-handed statistics                            |
