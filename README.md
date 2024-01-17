@@ -16,7 +16,7 @@
 
 ![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
-![](OHLpkg_logo.png){width="112"}
+![](OHLpkg_logo.png)
 
 ------------------------------------------------------------------------
 
