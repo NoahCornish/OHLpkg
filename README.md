@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.6.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v1.6.1-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -28,14 +28,14 @@
 
 #### **Latest Version Update**
 
-**Version 1.6.0** has added a function to retrieve the 2023-2024 Ontario Hockey League (OHL) goalie statistics.
+**Version 1.6.1** has adjusted the file structure for the various functions. No personal code adjustments are necessary.
 
 ------------------------------------------------------------------------
 
 #### **Package Functions**
 
 | Function              | Information                                                                |
-|-----------------|-------------------------------------------------------|
+|-----------------------|----------------------------------------------------------------------------|
 | **get_Stats()**       | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
 | **get_EVStats()**     | Returns skaters (GP\>9) even-strength statistics                           |
