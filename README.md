@@ -16,6 +16,8 @@
 
 ![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
+![](OHLpkg_logo.png){width="112"}
+
 ------------------------------------------------------------------------
 
 #### **Download this Package**
@@ -35,7 +37,7 @@
 #### **Package Functions**
 
 | Function              | Information                                                                |
-|-----------------------|----------------------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | **get_Stats()**       | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
 | **get_EVStats()**     | Returns skaters (GP\>9) even-strength statistics                           |
