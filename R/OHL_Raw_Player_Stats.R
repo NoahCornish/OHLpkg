@@ -1,11 +1,10 @@
 # Version 1.7.0
-# OHL_SH_Stats.R
+# OHL_Player_Stats.R
 # Created by: Noah Cornish
-# This function returns a data frame with short-handed OHL stats
+# This function returns a data frame with the entire league statistics
 
-#New Function
 # GP > 9
-get_SHStats <- function(SHStats){
+get_RawStats <- function(RawLeagueStats) {
 
   library(rsconnect)
   library(ggplot2)
@@ -71,7 +70,7 @@ get_SHStats <- function(SHStats){
            PIM = "penalty_minutes",
            Active = "active") %>%
     filter(Active == 1) %>%
-    filter(GP > 9) %>%
+    #filter(GP > 9) %>%
     mutate(PPP = PPG + PPA) %>%
     filter(Pos != "G")
 
@@ -85,16 +84,8 @@ get_SHStats <- function(SHStats){
 
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
-  SHStats <- LeagueStats %>%
-    select(Name, BD, Pos, Team,
-           GP, SHG, SHA, SHPTS, PTS) %>%
-    mutate(`SHPTS/G` = round((SHPTS / GP), 2),
-           `SHPTS%` = round((SHPTS / PTS) * 100)) %>%
-    arrange(desc(SHPTS)) %>%  # Sort by SHPTS in descending order
-    select(
-      Name, BD, Pos, Team,
-      GP, SHG, SHA, SHPTS,
-      `SHPTS/G`, `SHPTS%`)
+  RawLeagueStats <- LeagueStats
 
-  return(SHStats)
+  return(RawLeagueStats)
+
 }

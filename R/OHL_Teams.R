@@ -1,4 +1,7 @@
-
+# Version 1.7.0
+# OHL_Teams.R
+# Created by: Noah Cornish
+# This function returns a data frame with all 20 OHL teams
 
 # No minimum data requirement
 get_Teams <- function(Teams){
@@ -86,3 +89,6 @@ get_Teams <- function(Teams){
   return(Teams)
 
 }
+
+
+

@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.6.1-teal)
+![](https://img.shields.io/badge/OHLpkg-v1.7.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -16,7 +16,7 @@
 
 ![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
-![](OHLpkg_logo.png)
+![](OHLpkg_logo.png){width="112"}
 
 ------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@
 
 #### **Latest Version Update**
 
-**Version 1.6.1** has adjusted the file structure for the various functions. No personal code adjustments are necessary.
+**Version 1.7.0** has added a new function (`get_RawStats()`)
 
 ------------------------------------------------------------------------
 
@@ -38,7 +38,8 @@
 
 | Function              | Information                                                                |
 |------------------|------------------------------------------------------|
-| **get_Stats()**       | Returns all skaters statistics                                             |
+| **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
+| **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
 | **get_EVStats()**     | Returns skaters (GP\>9) even-strength statistics                           |
 | **get_SHStats()**     | Returns skaters (GP\>9) short-handed statistics                            |

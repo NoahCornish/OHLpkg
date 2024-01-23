@@ -1,5 +1,7 @@
-
-
+# Version 1.7.0
+# OHL_Goalie_Stats.R
+# Created by: Noah Cornish
+# This function returns a data frame with goalie stats from 2023-2024
 
 #Goalies
 # GP >9

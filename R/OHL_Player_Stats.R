@@ -1,6 +1,9 @@
+# Version 1.7.0
+# OHL_Player_Stats.R
+# Created by: Noah Cornish
+# This function returns a data frame with the entire league statistics
 
-
-# GP > 0
+# GP > 9
 get_Stats <- function(LeagueStats) {
 
   library(rsconnect)
@@ -67,7 +70,7 @@ get_Stats <- function(LeagueStats) {
            PIM = "penalty_minutes",
            Active = "active") %>%
     filter(Active == 1) %>%
-    #filter(GP > 9) %>%
+    filter(GP > 9) %>%
     mutate(PPP = PPG + PPA) %>%
     filter(Pos != "G")
 

@@ -1,4 +1,7 @@
-
+# Version 1.7.0
+# OHL_Rookie_Stats.R
+# Created by: Noah Cornish
+# This function returns a data frame with first-year player stats
 
 # GP > 9
 get_RKStats <- function(RKStats){

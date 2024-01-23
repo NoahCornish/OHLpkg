@@ -1,4 +1,7 @@
-
+# Version 1.7.0
+# OHL_DraftYear_Stats.R
+# Created by: Noah Cornish
+# This function returns a data frame with NHL DY-0 stats for 2023-2024
 
 # GP > 9
 get_DYStats <- function(DYStats){
