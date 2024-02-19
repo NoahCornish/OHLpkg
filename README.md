@@ -52,6 +52,8 @@
 
 More information about the package can be viewed at (<https://github.com/NoahCornish/OHLpkg/wiki>)
 
+Future releases will include new functions.
+
 Created by:\
 Noah Cornish
 
