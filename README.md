@@ -33,6 +33,11 @@
 **Version 1.7.0** has added a new function (`get_RawStats()`)
 
 ------------------------------------------------------------------------
+#### **Upcoming Version**
+
+**Version 2.0.0** will add 2023-2024 Playoff Stats to applicable functions
+
+------------------------------------------------------------------------
 
 #### **Package Functions**
 
