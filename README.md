@@ -16,6 +16,8 @@
 
 ![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
+Created by: Noah Cornish
+
 ![](OHLpkg_logo.png){width="112"}
 
 ------------------------------------------------------------------------
@@ -31,6 +33,11 @@
 #### **Latest Version Update**
 
 **Version 2.0.0** has created arguments for certain package functions. The default argument is set for the 2024 Regular Season.
+
+------------------------------------------------------------------------
+#### **Upcoming Version**
+
+**Version 2.0.0** will add 2023-2024 Playoff Stats to applicable functions
 
 ------------------------------------------------------------------------
 
