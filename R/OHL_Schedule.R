@@ -1,4 +1,4 @@
-# Version 1.7.0
+# Version 2.0.0
 # OHL_Schedule.R
 # Created by: Noah Cornish
 # This function returns a data frame with 2023-2024 league schedule

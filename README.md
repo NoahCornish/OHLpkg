@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v1.7.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.0.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -30,14 +30,14 @@
 
 #### **Latest Version Update**
 
-**Version 1.7.0** has added a new function (`get_RawStats()`)
+**Version 2.0.0** has created arguments for certain package functions. The default argument is set for the 2024 Regular Season.
 
 ------------------------------------------------------------------------
 
 #### **Package Functions**
 
 | Function              | Information                                                                |
-|------------------|------------------------------------------------------|
+|-----------------------|----------------------------------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -50,9 +50,29 @@
 
 ------------------------------------------------------------------------
 
-More information about the package can be viewed at (<https://github.com/NoahCornish/OHLpkg/wiki>)
+**Package Arguments**
 
-Future releases will include new functions.
+| Function              | Argument    |
+|-----------------------|-------------|
+| **get_RawStats()**    | season_name |
+| **get_Stats()**       | season_name |
+| **get_GoalieStats()** | season_name |
+| **get_RKStats()**     | season_name |
+
+Example:
+
+*`x <- get_RawStats(season_name = "2024 Season")`*
+
+Seasons:
+
+1.  2024 Playoffs
+2.  2024 Season
+3.  2023 Playoffs
+4.  2023 Season
+
+*A future update arriving very soon will expand the selection of available seasons for even more comprehensive data access.*
+
+------------------------------------------------------------------------
 
 Created by:\
 Noah Cornish

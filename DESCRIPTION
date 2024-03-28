@@ -1,7 +1,7 @@
 Package: OHLpkg
 Type: Package
 Title: OHLpkg: R Package for Ontario Hockey League (OHL)
-Version: 1.7.0
+Version: 2.0.0
 Author: Noah Cornish
 Maintainer: Noah Cornish <noahcornish.github@gmail.com>
 Description: "This R package offers a comprehensive solution for accessing and analyzing Ontario Hockey League (OHL) data. It is designed to retrieve OHL data, which is then cleaned, organized, and converted into user-friendly data frames. This streamlined process ensures the data is ready for in-depth analysis."

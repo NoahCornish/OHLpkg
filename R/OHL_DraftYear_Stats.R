@@ -1,4 +1,4 @@
-# Version 1.7.0
+# Version 2.0.0
 # OHL_DraftYear_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with NHL DY-0 stats for 2023-2024
@@ -15,6 +15,8 @@ get_DYStats <- function(DYStats){
   library(jsonlite)
   library(dplyr)
   library(scales)
+
+
 
   url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=76&first=0&limit=50000&sort=active&stat=all&order_direction="
 

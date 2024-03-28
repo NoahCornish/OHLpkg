@@ -1,11 +1,11 @@
-# Version 1.7.0
+# Version 2.0.0
 # OHL_Goalie_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with goalie stats from 2023-2024
 
 #Goalies
 # GP >9
-get_GoalieStats <- function(goalie_stats){
+get_GoalieStats <- function(goalie_stats, season_name = "2024 Season"){
 
   library(rsconnect)
   library(ggplot2)
@@ -17,7 +17,20 @@ get_GoalieStats <- function(goalie_stats){
   library(dplyr)
   library(scales)
 
-  url_goalies <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topgoalies&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=76&first=0&limit=50000&sort=active&stat=all&order_direction="
+  # Map the updated season names to their respective season_ids
+  season_ids <- c("2024 Season" = 76,
+                  "2024 Playoffs" = 77,
+                  "2023 Season" = 73,
+                  "2023 Playoffs" = 74)
+
+  # Validate the input season_name and retrieve the corresponding season_id
+  if (!season_name %in% names(season_ids)) {
+    stop("Invalid season name. Please refer to package help.")
+  }
+
+  season_id <- season_ids[season_name]
+
+  url_goalies <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topgoalies&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
 
   # use jsonlite::fromJSON to handle NULL values
   json_data_goalies <- jsonlite::fromJSON(url_goalies, simplifyDataFrame = TRUE)

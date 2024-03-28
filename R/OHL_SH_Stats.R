@@ -1,4 +1,4 @@
-# Version 1.7.0
+# Version 2.0.0
 # OHL_SH_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with short-handed OHL stats
