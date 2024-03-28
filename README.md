@@ -2,23 +2,23 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.1.0-teal){width="144" height="29"}
+![](https://img.shields.io/badge/OHLpkg-v2.1.0-teal)
 
-![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main){width="144"}
+![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
-![](https://img.shields.io/github/issues/NoahCornish/OHLpkg){width="144"}
+![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
 
-![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total){width="142" height="28"}
+![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total)
 
-![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg){width="142" height="26"}
+![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)
 
-![](https://img.shields.io/github/license/NoahCornish/OHLpkg){width="143"}
+![](https://img.shields.io/github/license/NoahCornish/OHLpkg)
 
-![](https://img.shields.io/badge/Package-Operational-brightgreen.svg){width="147"}
+![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
 Created by: Noah Cornish
 
-![](OHLpkg_logo.png){width="112"}
+![](OHLpkg_logo.png)
 
 ------------------------------------------------------------------------
 
