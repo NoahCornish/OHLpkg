@@ -58,10 +58,11 @@ get_GoalieStats()
 get_RKStats()
 
 These functions above have arguments.
-Example <- get_RawStats(season_name = "2024 Season")
+Reg <- get_RawStats(season_name = "2024 Season")
+Plof <- get_RawStats(season_name = "2024 Playoffs")
 
-2023 Season, 2023 Playoffs, 2024 Season, and 2024 Playoff are available arguments.
-The default argument is the 2024 Season.
+Regular season and playoff data is available from 2016->2024.
+Additional regular season and playoff data will be provided incrementally.
 
 }
 \examples{
@@ -69,8 +70,9 @@ q <- get_Stats()
 w <- get_RawStats()
 e <- get_GoalieStats()
 r <- get_EVStats()
-t <- get_DYStats()
-y <- get_RKStats()
-u <- get_Teams()
-i <- get_Schedule()
+t <- get_SHStats()
+y <- get_DYStats()
+u <- get_RKStats()
+i <- get_Teams()
+o <- get_Schedule()
 }

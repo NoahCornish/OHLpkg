@@ -1,4 +1,4 @@
-# Version 2.0.0
+# Version 2.1.0
 # OHL_EV_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with even-strength stats for the 2023-2024 season

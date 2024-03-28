@@ -1,4 +1,4 @@
-# Version 2.0.0
+# Version 2.1.0
 # OHL_Player_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with the entire league statistics
@@ -20,7 +20,18 @@ get_Stats <- function(LeagueStats, season_name = "2024 Season") {
   season_ids <- c("2024 Season" = 76,
                   "2024 Playoffs" = 77,
                   "2023 Season" = 73,
-                  "2023 Playoffs" = 74)
+                  "2023 Playoffs" = 74,
+                  "2022 Season" = 70,
+                  "2022 Playoffs" = 71,
+                  "2020 Season" = 68,
+                  "2019 Season" = 63,
+                  "2019 Playoffs" = 66,
+                  "2018 Season" = 60,
+                  "2018 Playoffs" = 61,
+                  "2017 Season" = 56,
+                  "2017 Playoffs" = 57,
+                  "2016 Season" = 54,
+                  "2016 Playoffs" = 55)
 
   # Validate the input season_name and retrieve the corresponding season_id
   if (!season_name %in% names(season_ids)) {

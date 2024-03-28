@@ -2,19 +2,19 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.0.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.1.0-teal){width="144" height="29"}
 
-![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
+![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main){width="144"}
 
-![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
+![](https://img.shields.io/github/issues/NoahCornish/OHLpkg){width="144"}
 
-![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total)
+![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total){width="142" height="28"}
 
-![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)
+![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg){width="142" height="26"}
 
-![](https://img.shields.io/github/license/NoahCornish/OHLpkg)
+![](https://img.shields.io/github/license/NoahCornish/OHLpkg){width="143"}
 
-![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
+![](https://img.shields.io/badge/Package-Operational-brightgreen.svg){width="147"}
 
 Created by: Noah Cornish
 
@@ -32,14 +32,7 @@ Created by: Noah Cornish
 
 #### **Latest Version Update**
 
-**Version 2.0.0** has created arguments for certain package functions. The default argument is set for the 2024 Regular Season.
-
-------------------------------------------------------------------------
-#### **Upcoming Version**
-
-**Version 2.0.0** will add 2023-2024 Playoff Stats to applicable functions
-
-------------------------------------------------------------------------
+**Version 2.1.0** has added more seasons for the package argument.
 
 #### **Package Functions**
 
@@ -72,12 +65,9 @@ Example:
 
 Seasons:
 
-1.  2024 Playoffs
-2.  2024 Season
-3.  2023 Playoffs
-4.  2023 Season
+Regular season and playoff data is available from 2016-\>2024.
 
-*A future update arriving very soon will expand the selection of available seasons for even more comprehensive data access.*
+Additional regular season and playoff data will be provided incrementally.
 
 ------------------------------------------------------------------------
 
