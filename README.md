@@ -37,7 +37,7 @@ Created by: Noah Cornish
 #### **Package Functions**
 
 | Function              | Information                                                                |
-|------------------|------------------------------------------------------|
+|-----------------------|----------------------------------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -62,6 +62,8 @@ Created by: Noah Cornish
 Example:
 
 *`x <- get_RawStats(season_name = "2024 Season")`*
+
+*`y <- get_RawStats(season_name = "2024 Playoffs")`*
 
 Seasons:
 

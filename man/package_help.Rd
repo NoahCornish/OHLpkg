@@ -47,23 +47,18 @@ get_Schedule()
 - creates a dataframe with the 2023-2024 OHL regular season schedule.
 
 }
-\Arguments{
-
+\arguments{
 get_RawStats()
-
 get_Stats()
-
 get_GoalieStats()
-
 get_RKStats()
-
 These functions above have arguments.
+
 Reg <- get_RawStats(season_name = "2024 Season")
 Plof <- get_RawStats(season_name = "2024 Playoffs")
 
 Regular season and playoff data is available from 2016->2024.
 Additional regular season and playoff data will be provided incrementally.
-
 }
 \examples{
 q <- get_Stats()
