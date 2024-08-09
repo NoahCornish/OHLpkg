@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.1.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.2.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -32,9 +32,17 @@ Created by: Noah Cornish
 
 #### **Latest Version Update**
 
-**Version 2.1.0** has added more seasons for the package argument.
+**Version 2.2.0:**
 
-#### **Package Functions**
+-   added more regular season data
+
+-   added more playoff data
+
+-   temporarily added selective pre-season data (*see footnotes)*
+
+------------------------------------------------------------------------
+
+#### **Functions**
 
 | Function              | Information                                                                |
 |-----------------------|----------------------------------------------------------------------------|
@@ -50,7 +58,7 @@ Created by: Noah Cornish
 
 ------------------------------------------------------------------------
 
-**Package Arguments**
+#### **Arguments**
 
 | Function              | Argument    |
 |-----------------------|-------------|
@@ -59,17 +67,19 @@ Created by: Noah Cornish
 | **get_GoalieStats()** | season_name |
 | **get_RKStats()**     | season_name |
 
-Example:
+`x <- get_RawStats(season_name = "2025 Season")`
 
-*`x <- get_RawStats(season_name = "2024 Season")`*
+`y <- get_RawStats(season_name = "2025 Playoffs")`
 
-*`y <- get_RawStats(season_name = "2024 Playoffs")`*
+`z <- get_RawStats(season_name = "2025 Pre-Season")`
 
-Seasons:
+------------------------------------------------------------------------
 
-Regular season and playoff data is available from 2016-\>2024.
+#### **Footnotes**
 
-Additional regular season and playoff data will be provided incrementally.
+Regular season and playoff data is available from 1998-\>2025. Regular season and playoff data is only available for the functions (`get_Stats(), get_RawStats(), get_RKStats()`). All other functions will return the current "season" such as the pre-season, regular season, or playoff data.
+
+Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once the 2025 OHL regular season starts, the pre-season data will be removed.**
 
 ------------------------------------------------------------------------
 

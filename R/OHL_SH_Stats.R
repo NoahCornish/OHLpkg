@@ -1,4 +1,4 @@
-# Version 2.1.0
+# Version 2.2.0
 # OHL_SH_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with short-handed OHL stats
@@ -17,7 +17,7 @@ get_SHStats <- function(SHStats){
   library(dplyr)
   library(scales)
 
-  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=76&first=0&limit=50000&sort=active&stat=all&order_direction="
+  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=78&first=0&limit=50000&sort=active&stat=all&order_direction="
 
   # use jsonlite::fromJSON to handle NULL values
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)

@@ -1,7 +1,7 @@
-# Version 2.1.0
+# Version 2.2.0
 # OHL_Goalie_Stats.R
 # Created by: Noah Cornish
-# This function returns a data frame with goalie stats from 2023-2024
+# This function returns a data frame with goalie stats from the requested season
 
 #Goalies
 # GP >9
@@ -18,8 +18,11 @@ get_GoalieStats <- function(goalie_stats, season_name = "2024 Season"){
   library(scales)
 
   # Map the updated season names to their respective season_ids
-  season_ids <- c("2024 Season" = 76,
+  season_ids <- c("2025 Season" = 79,
+                  "2025 Pre-Season" = 78,
+                  "2024 Season" = 76,
                   "2024 Playoffs" = 77,
+                  "2024 Pre-Season" = 75,
                   "2023 Season" = 73,
                   "2023 Playoffs" = 74,
                   "2022 Season" = 70,
@@ -32,7 +35,43 @@ get_GoalieStats <- function(goalie_stats, season_name = "2024 Season"){
                   "2017 Season" = 56,
                   "2017 Playoffs" = 57,
                   "2016 Season" = 54,
-                  "2016 Playoffs" = 55)
+                  "2016 Playoffs" = 55,
+                  "2015 Season" = 51,
+                  "2015 Playoffs" = 52,
+                  "2014 Season" = 49,
+                  "2014 Playoffs" = 50,
+                  "2013 Season" = 46,
+                  "2013 Playoffs" = 48,
+                  "2012 Season" = 44,
+                  "2012 Playoffs" = 45,
+                  "2011 Season" = 42,
+                  "2011 Playoffs" = 43,
+                  "2010 Season" = 38,
+                  "2010 Playoffs" = 41,
+                  "2009 Season" = 35,
+                  "2009 Playoffs" = 37,
+                  "2008 Season" = 32,
+                  "2008 Playoffs" = 34,
+                  "2007 Season" = 29,
+                  "2007 Playoffs" = 31,
+                  "2006 Season" = 26,
+                  "2006 Playoffs" = 28,
+                  "2005 Season" = 24,
+                  "2005 Playoffs" = 25,
+                  "2004 Season" = 21,
+                  "2004 Playoffs" = 23,
+                  "2003 Season" = 17,
+                  "2003 Playoffs" = 20,
+                  "2002 Season" = 14,
+                  "2002 Playoffs" = 15,
+                  "2001 Season" = 11,
+                  "2001 Playoffs" = 12,
+                  "2000 Season" = 9,
+                  "2000 Playoffs" = 10,
+                  "1999 Season" = 6,
+                  "1999 Playoffs" = 7,
+                  "1998 Season" = 4,
+                  "1998 Playoffs" = 5)
 
   # Validate the input season_name and retrieve the corresponding season_id
   if (!season_name %in% names(season_ids)) {

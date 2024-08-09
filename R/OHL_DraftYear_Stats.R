@@ -1,7 +1,7 @@
-# Version 2.1.0
+# Version 2.2.0
 # OHL_DraftYear_Stats.R
 # Created by: Noah Cornish
-# This function returns a data frame with NHL DY-0 stats for 2023-2024
+# This function returns a data frame with NHL DY-0 stats for 2024-2025
 
 # GP > 9
 get_DYStats <- function(DYStats){
@@ -18,7 +18,7 @@ get_DYStats <- function(DYStats){
 
 
 
-  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=76&first=0&limit=50000&sort=active&stat=all&order_direction="
+  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=78&first=0&limit=50000&sort=active&stat=all&order_direction="
 
   # use jsonlite::fromJSON to handle NULL values
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
@@ -88,7 +88,7 @@ get_DYStats <- function(DYStats){
 
 
   DY <- LeagueStats %>%
-    filter(BD >= as.Date("2005-09-16") & BD <= as.Date("2006-09-15")) %>%
+    filter(BD >= as.Date("2006-09-16") & BD <= as.Date("2007-09-15")) %>%
     select(Name, Rookie, BD, Hgt, Wgt, Pos, Team,
            GP, G, A, PTS, `Pts/G`, `+/-`, PPG,
            PPA, PPP, GWG, ENG, PIM)
