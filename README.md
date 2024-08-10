@@ -22,7 +22,19 @@ Created by: Noah Cornish
 
 ------------------------------------------------------------------------
 
+#### **Introduction**
+
+The \`OHLpkg\` R package provides a comprehensive suite of tools for accessing, analyzing, and visualizing Ontario Hockey League (OHL) data. Designed for hockey analysts, enthusiasts, and data scientists, this package facilitates easy access to OHL statistics, including player stats, team stats, schedules, and more.
+
+The Ontario Hockey League (OHL) is one of the three major junior ice hockey leagues that constitute the Canadian Hockey League (CHL). The OHL is known for producing a significant number of NHL players and is a key developmental league for young hockey talent.
+
+Whether you're conducting a detailed statistical analysis or simply want to explore the latest season data, \`OHLpkg\` provides all the essential functions you need to work with OHL data in R.
+
+------------------------------------------------------------------------
+
 #### **Download this Package**
+
+To get started with \`OHLpkg\`, you can install it directly from GitHub using the following commands:
 
 **`devtools::install_github('NoahCornish/OHLpkg')`**
 
@@ -45,7 +57,7 @@ Created by: Noah Cornish
 #### **Functions**
 
 | Function              | Information                                                                |
-|-----------------------|----------------------------------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -72,6 +84,10 @@ Created by: Noah Cornish
 `y <- get_RawStats(season_name = "2025 Playoffs")`
 
 `z <- get_RawStats(season_name = "2025 Pre-Season")`
+
+Version 3.0.0 will include more arguments for various functions. This upcoming major version will be released by the start of the 2025 OHL regular season.
+
+[OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
 
 ------------------------------------------------------------------------
 
