@@ -24,11 +24,8 @@ Created by: Noah Cornish
 
 #### **Introduction**
 
-<<<<<<< HEAD
 The *OHLpkg* R package provides a comprehensive suite of tools for accessing, analyzing, and visualizing Ontario Hockey League (OHL) data. Designed for hockey analysts, enthusiasts, and data scientists, this package facilitates easy access to OHL statistics, including player stats, team stats, schedules, and more.
-=======
-The _OHLpkg_ R package provides a comprehensive suite of tools for accessing, analyzing, and visualizing Ontario Hockey League (OHL) data. Designed for hockey analysts, enthusiasts, and data scientists, this package facilitates easy access to OHL statistics, including player stats, team stats, schedules, and more.
->>>>>>> 8fa9d2acf4970d02e290f42bfb6da54578c1edd1
+
 
 The Ontario Hockey League (OHL) is one of the three major junior ice hockey leagues that constitute the Canadian Hockey League (CHL). The OHL is known for producing a significant number of NHL players and is a key developmental league for young hockey talent.
 
