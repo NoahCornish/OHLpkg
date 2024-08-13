@@ -29,13 +29,13 @@ The *OHLpkg* R package provides a comprehensive suite of tools for accessing, an
 
 The Ontario Hockey League (OHL) is one of the three major junior ice hockey leagues that constitute the Canadian Hockey League (CHL). The OHL is known for producing a significant number of NHL players and is a key developmental league for young hockey talent.
 
-Whether you're conducting a detailed statistical analysis or simply want to explore the latest season data, \`OHLpkg\` provides all the essential functions you need to work with OHL data in R.
+Whether you're conducting a detailed statistical analysis or simply want to explore the latest season data, *OHLpkg* provides all the essential functions you need to work with OHL data in R.
 
 ------------------------------------------------------------------------
 
 #### **Download this Package**
 
-To get started with \`OHLpkg\`, you can install it directly from GitHub using the following commands:
+To get started with *OHLpkg*, you can install it directly from GitHub using the following commands:
 
 **`devtools::install_github('NoahCornish/OHLpkg')`**
 
@@ -51,7 +51,7 @@ To get started with \`OHLpkg\`, you can install it directly from GitHub using th
 
 -   added more playoff data
 
--   temporarily added selective pre-season data (*see footnotes)*
+-   temporarily added selective pre-season data (*see footnotes*)
 
 ------------------------------------------------------------------------
 
@@ -86,7 +86,8 @@ To get started with \`OHLpkg\`, you can install it directly from GitHub using th
 
 `z <- get_RawStats(season_name = "2025 Pre-Season")`
 
-Version 3.0.0 will include more arguments for various functions. This upcoming major version will be released by the start of the 2025 OHL regular season.
+Version 2.3.0 will include more arguments for various functions. 
+This upcoming minor version will be released by the end of August.
 
 [OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
 
