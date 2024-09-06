@@ -1,0 +1,6 @@
+
+devtools::install_github('NoahCornish/OHLpkg')
+library(OHLpkg)
+x <- get_RawStats(season_name = "2025 Pre-Season")
+
+game_data <- get_GameEvents(game_id = 28003)

@@ -10,6 +10,8 @@ get_SHStats()
 get_DYStats()
 get_RKStats()
 get_Schedule()
+get_PlayerInfo()
+get_GameEvents()
 }
 \description{
 get_Stats()
@@ -39,6 +41,12 @@ get_RKStats()
 - creates a dataframe with the requested rookie Skaters stats
 - filters out players who haven't played at least 10 games.
 
+get_GameEvents()
+- creates a dataframe with the game events of a specific game.
+
+get_PlayerInfo()
+- creates a dataframe of player metrics from a requested season.
+
 get_Teams()
 - creates a dataframe with the 2024-2025 Teams.
 
@@ -51,14 +59,19 @@ get_RawStats()
 get_Stats()
 get_GoalieStats()
 get_RKStats()
+get_PlayerInfo()
+get_GameEvents()
 These functions above have arguments.
 
 Ex/
-Reg <- get_RawStats(season_name = "2024 Season")
-Plof <- get_RawStats(season_name = "2024 Playoffs")
+Reg <- get_RawStats(season_name = "2025 Season")
+Plof <- get_RawStats(season_name = "2025 Playoffs")
+info <- get_PlayerInfo(season_name = "2025 Season")
+game <- get_GameEvents(game_id = 12345)
 
 Regular season and playoff data is available from 1998->2025.
 Pre-Season data is temporarily available for the 2024 and 2025 season.
+This will be removed when the 2024-2025 season starts.
 }
 \examples{
 q <- get_Stats()
@@ -70,4 +83,6 @@ y <- get_DYStats()
 u <- get_RKStats()
 i <- get_Teams()
 o <- get_Schedule()
+p <- get_PlayerInfo()
+a <- get_GameEvents()
 }

@@ -1,4 +1,4 @@
-# Version 2.2.0
+# Version 2.3.0
 # OHL_Rookie_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with first-year player stats

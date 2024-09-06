@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.2.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.3.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -26,7 +26,6 @@ Created by: Noah Cornish
 
 The *OHLpkg* R package provides a comprehensive suite of tools for accessing, analyzing, and visualizing Ontario Hockey League (OHL) data. Designed for hockey analysts, enthusiasts, and data scientists, this package facilitates easy access to OHL statistics, including player stats, team stats, schedules, and more.
 
-
 The Ontario Hockey League (OHL) is one of the three major junior ice hockey leagues that constitute the Canadian Hockey League (CHL). The OHL is known for producing a significant number of NHL players and is a key developmental league for young hockey talent.
 
 Whether you're conducting a detailed statistical analysis or simply want to explore the latest season data, *OHLpkg* provides all the essential functions you need to work with OHL data in R.
@@ -45,20 +44,20 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Latest Version Update**
 
-**Version 2.2.0:**
+**Version 2.3.0:**
 
--   added more regular season data
+-   added new function for individual game data
 
--   added more playoff data
+-   added new function for player metrics
 
--   temporarily added selective pre-season data (*see footnotes*)
+-   bug fix on `get_RawStats()`
 
 ------------------------------------------------------------------------
 
 #### **Functions**
 
 | Function              | Information                                                                |
-|-----------------------|------------------------------------------------|
+|------------------|------------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -68,17 +67,21 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 | **get_RKStats()**     | Returns skaters (GP\>9) statistics who are playing in their first OHL year |
 | **get_Teams()**       | Returns a data table consisting of all 20 OHL teams                        |
 | **get_Schedule()**    | Returns a data table consisting of the league schedule and results.        |
+| **get_GameEvents()**  | Returns a data table consisting of single game events.                     |
+| **get_PlayerInfo()**  | Returns a data table consisting of player metrics.                         |
 
 ------------------------------------------------------------------------
 
 #### **Arguments**
 
-| Function              | Argument    |
-|-----------------------|-------------|
-| **get_RawStats()**    | season_name |
-| **get_Stats()**       | season_name |
-| **get_GoalieStats()** | season_name |
-| **get_RKStats()**     | season_name |
+| Function              | Argument    | **Description**                      |
+|-----------------------|-------------|--------------------------------------|
+| **get_RawStats()**    | season_name | Retrieve skater statistics by season |
+| **get_Stats()**       | season_name | Retrieve skater statistics by season |
+| **get_GoalieStats()** | season_name | Retrieve goalie statistics by season |
+| **get_RKStats()**     | season_name | Retrieve rookie statistics by season |
+| **get_GameEvents()**  | game_id     | Retrieve events for a specific game  |
+| **get_PlayerInfo()**  | season_name | Retrieve skater metrics by season    |
 
 `x <- get_RawStats(season_name = "2025 Season")`
 
@@ -86,8 +89,9 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 `z <- get_RawStats(season_name = "2025 Pre-Season")`
 
-Version 2.3.0 will include more arguments for various functions. 
-This upcoming minor version will be released by the end of August.
+`p <- get_GameEvents(game_id = 12345)`
+
+Version 3.0.0 will include more arguments for various functions. This upcoming major version will be released by the start of the 2024-2025 OHL Season.
 
 [OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
 

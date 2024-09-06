@@ -1,4 +1,4 @@
-# Version 2.2.0
+# Version 2.3.0
 # OHL_DraftYear_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with NHL DY-0 stats for 2024-2025

@@ -1,10 +1,10 @@
-# Version 2.2.0
+# Version 2.3.0
 # OHL_Player_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with the entire league statistics
 
 # GP > 9
-get_RawStats <- function(RawLeagueStats, season_name = "2024 Season") {
+get_RawStats <- function(season_name = "2024 Season", RawLeagueStats = NULL) {
 
   library(rsconnect)
   library(ggplot2)
@@ -82,10 +82,8 @@ get_RawStats <- function(RawLeagueStats, season_name = "2024 Season") {
   # Use the correct season_id in the URL
   url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
 
-
   # use jsonlite::fromJSON to handle NULL values
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
-
 
   # create data frame
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
@@ -104,8 +102,6 @@ get_RawStats <- function(RawLeagueStats, season_name = "2024 Season") {
                                                "\\'", simplify = TRUE, n = 2)[,2]) %>%
     mutate(birthdate_year = as.numeric(birthdate_year)) %>%
     mutate(birthdate_year = 2000 + birthdate_year)
-
-
 
   # create data frame with columns required for tableau viz
   LeagueStats <- df %>%
@@ -135,7 +131,6 @@ get_RawStats <- function(RawLeagueStats, season_name = "2024 Season") {
            PIM = "penalty_minutes",
            Active = "active") %>%
     filter(Active == 1) %>%
-    #filter(GP > 9) %>%
     mutate(PPP = PPG + PPA) %>%
     filter(Pos != "G")
 
