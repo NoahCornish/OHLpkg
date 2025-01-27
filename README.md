@@ -18,6 +18,8 @@
 
 Created by: Noah Cornish
 
+*Next anticipated package update: February 1st, 2025*
+
 ![](OHLpkg_logo.png)
 
 ------------------------------------------------------------------------
@@ -57,7 +59,7 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 #### **Functions**
 
 | Function              | Information                                                                |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -90,8 +92,6 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 `z <- get_RawStats(season_name = "2025 Pre-Season")`
 
 `p <- get_GameEvents(game_id = 12345)`
-
-Version 3.0.0 will include more arguments for various functions. This upcoming major version will be released by the start of the 2024-2025 OHL Season.
 
 [OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
 
