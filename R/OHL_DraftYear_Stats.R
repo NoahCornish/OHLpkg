@@ -1,10 +1,12 @@
-# Version 2.3.0
+# Version 2.4.0
 # OHL_DraftYear_Stats.R
 # Created by: Noah Cornish
-# This function returns a data frame with NHL DY-0 stats for 2024-2025
+# This function returns a data frame with NHL DY-0 stats for a selected season
+
+# Only works from 2015-2026
 
 # GP > 9
-get_DYStats <- function(DYStats){
+get_DYStats <- function(DYStats, season_name = "2026 Season") {
 
   library(rsconnect)
   library(ggplot2)
@@ -16,13 +18,42 @@ get_DYStats <- function(DYStats){
   library(dplyr)
   library(scales)
 
+  # Map the updated season names to their respective season_ids
+  season_ids <- c("2026 Season" = 83,
+                  "2025 Playoffs" = 81,
+                  "2025 Season" = 79,
+                  "2025 Pre-Season" = 78,
+                  "2024 Season" = 76,
+                  "2024 Playoffs" = 77,
+                  "2024 Pre-Season" = 75,
+                  "2023 Season" = 73,
+                  "2023 Playoffs" = 74,
+                  "2022 Season" = 70,
+                  "2022 Playoffs" = 71,
+                  "2020 Season" = 68,
+                  "2019 Season" = 63,
+                  "2019 Playoffs" = 66,
+                  "2018 Season" = 60,
+                  "2018 Playoffs" = 61,
+                  "2017 Season" = 56,
+                  "2017 Playoffs" = 57,
+                  "2016 Season" = 54,
+                  "2016 Playoffs" = 55,
+                  "2015 Season" = 51,
+                  "2015 Playoffs" = 52)
 
+  # Validate the input season_name and retrieve the corresponding season_id
+  if (!season_name %in% names(season_ids)) {
+    stop("Invalid season name. Please refer to package help.")
+  }
 
-  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=78&first=0&limit=50000&sort=active&stat=all&order_direction="
+  season_id <- season_ids[season_name]
+
+  # Use the correct season_id in the URL
+  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
 
   # use jsonlite::fromJSON to handle NULL values
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
-
 
   # create data frame
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
@@ -41,8 +72,6 @@ get_DYStats <- function(DYStats){
                                                "\\'", simplify = TRUE, n = 2)[,2]) %>%
     mutate(birthdate_year = as.numeric(birthdate_year)) %>%
     mutate(birthdate_year = 2000 + birthdate_year)
-
-
 
   # create data frame with columns required for tableau viz
   LeagueStats <- df %>%
@@ -83,18 +112,47 @@ get_DYStats <- function(DYStats){
   #fix and adjust the BD column
   LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
   LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
-
   DY <- LeagueStats %>%
-    filter(BD >= as.Date("2006-09-16") & BD <= as.Date("2007-09-15")) %>%
+    # Adjust birthdate range based on the season_name
+    filter(
+      if (startsWith(season_name, "2026")) {
+        BD >= as.Date("2007-09-16") & BD <= as.Date("2008-09-15")
+      } else if (startsWith(season_name, "2025")) {
+        BD >= as.Date("2006-09-16") & BD <= as.Date("2007-09-15")
+      } else if (startsWith(season_name, "2024")) {
+        BD >= as.Date("2005-09-16") & BD <= as.Date("2006-09-15")
+      } else if (startsWith(season_name, "2023")) {
+        BD >= as.Date("2004-09-16") & BD <= as.Date("2005-09-15")
+      } else if (startsWith(season_name, "2022")) {
+        BD >= as.Date("2003-09-16") & BD <= as.Date("2004-09-15")
+      } else if (startsWith(season_name, "2021")) {
+        BD >= as.Date("2002-09-16") & BD <= as.Date("2003-09-15")
+      } else if (startsWith(season_name, "2020")) {
+        BD >= as.Date("2001-09-16") & BD <= as.Date("2002-09-15")
+      } else if (startsWith(season_name, "2019")) {
+        BD >= as.Date("2000-09-16") & BD <= as.Date("2001-09-15")
+      } else if (startsWith(season_name, "2018")) {
+        BD >= as.Date("1999-09-16") & BD <= as.Date("2000-09-15")
+      } else if (startsWith(season_name, "2017")) {
+        BD >= as.Date("1998-09-16") & BD <= as.Date("1999-09-15")
+      } else if (startsWith(season_name, "2016")) {
+        BD >= as.Date("1997-09-16") & BD <= as.Date("1998-09-15")
+      } else if (startsWith(season_name, "2015")) {
+        BD >= as.Date("1996-09-16") & BD <= as.Date("1997-09-15")
+      } else {
+        stop("Season not supported for dynamic birthdate range adjustment.")
+      }
+    ) %>%
     select(Name, Rookie, BD, Hgt, Wgt, Pos, Team,
            GP, G, A, PTS, `Pts/G`, `+/-`, PPG,
            PPA, PPP, GWG, ENG, PIM)
 
+
   DYStats <- DY
 
-  return(DYStats)
 
+  return(DYStats)
 }
+

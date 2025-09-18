@@ -1,6 +1,8 @@
                   Season IDs
 
-
+                  "2026 Season" = 83,
+                  "2026 Pre-Season" = 82,
+                  "2025 Playoffs" = 81,
                   "2025 Season" = 79,
                   "2025 Pre-Season" = 78,
                   "2024 Season" = 76,

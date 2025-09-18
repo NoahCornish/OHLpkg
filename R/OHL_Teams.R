@@ -1,7 +1,9 @@
-# Version 2.3.0
+# Version 2.4.0
 # OHL_Teams.R
 # Created by: Noah Cornish
 # This function returns a data frame with all 20 OHL teams
+
+# 2025-2026 season id = 83
 
 # No minimum data requirement
 get_Teams <- function(Teams){
@@ -16,7 +18,7 @@ get_Teams <- function(Teams){
   library(dplyr)
   library(scales)
 
-  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=78&first=0&limit=50000&sort=active&stat=all&order_direction="
+  url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=83&first=0&limit=50000&sort=active&stat=all&order_direction="
 
   # use jsonlite::fromJSON to handle NULL values
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)

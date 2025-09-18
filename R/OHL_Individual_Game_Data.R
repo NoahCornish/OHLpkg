@@ -1,7 +1,8 @@
-# Version 2.3.0
+# Version 2.4.0
 # OHL_Individual_Game_Data.R
 # Created by: Noah Cornish
 # This function returns unprocessed individual game data.
+# The user must enter the desired game_id
 
 
 # Load necessary libraries

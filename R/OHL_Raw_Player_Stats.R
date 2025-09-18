@@ -1,10 +1,10 @@
-# Version 2.3.0
+# Version 2.4.0
 # OHL_Player_Stats.R
 # Created by: Noah Cornish
 # This function returns a data frame with the entire league statistics
 
 # GP > 9
-get_RawStats <- function(season_name = "2024 Season", RawLeagueStats = NULL) {
+get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
 
   library(rsconnect)
   library(ggplot2)
@@ -17,7 +17,9 @@ get_RawStats <- function(season_name = "2024 Season", RawLeagueStats = NULL) {
   library(scales)
 
   # Map the updated season names to their respective season_ids
-  season_ids <- c("2025 Season" = 79,
+  season_ids <- c("2026 Season" = 83,
+                  "2025 Playoffs" = 81,
+                  "2025 Season" = 79,
                   "2025 Pre-Season" = 78,
                   "2024 Season" = 76,
                   "2024 Playoffs" = 77,

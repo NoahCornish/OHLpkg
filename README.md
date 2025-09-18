@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.3.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.4.0-teal)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -17,8 +17,6 @@
 ![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
 
 Created by: Noah Cornish
-
-*Next anticipated package update: February 1st, 2025*
 
 ![](OHLpkg_logo.png)
 
@@ -46,20 +44,16 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Latest Version Update**
 
-**Version 2.3.0:**
+**Version 2.4.0:**
 
--   added new function for individual game data
-
--   added new function for player metrics
-
--   bug fix on `get_RawStats()`
+-   Added the ability to view and pull 2025-2026 season data.
 
 ------------------------------------------------------------------------
 
 #### **Functions**
 
 | Function              | Information                                                                |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -85,7 +79,9 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 | **get_GameEvents()**  | game_id     | Retrieve events for a specific game  |
 | **get_PlayerInfo()**  | season_name | Retrieve skater metrics by season    |
 
-`x <- get_RawStats(season_name = "2025 Season")`
+**Example Usage**
+
+`x <- get_RawStats(season_name = "2026 Season")`
 
 `y <- get_RawStats(season_name = "2025 Playoffs")`
 
@@ -99,9 +95,11 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Footnotes**
 
-Regular season and playoff data is available from 1998-\>2025. Regular season and playoff data is only available for the functions (`get_Stats(), get_RawStats(), get_RKStats()`). All other functions will return the current "season" such as the pre-season, regular season, or playoff data.
+Regular season and playoff data is available from 1998-\>2026. Regular season and playoff data is only available for the functions (`get_Stats(), get_RawStats(), get_RKStats()`). All other functions will return the current "season" such as the pre-season, regular season, or playoff data.
 
-Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once the 2025 OHL regular season starts, the pre-season data will be removed.**
+Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once every team has played 10 games, the 2024 and 2025 pre-season data will be removed.**
+
+This was a temporary addition.
 
 ------------------------------------------------------------------------
 

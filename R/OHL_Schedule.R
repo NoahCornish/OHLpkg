@@ -1,8 +1,9 @@
-# Version 2.3.0
+# Version 2.4.0
 # OHL_Schedule.R
 # Created by: Noah Cornish
 # This function returns a data frame with 2024-2025 league schedule
 
+# 2025-2026 season id = 83
 
 # No minimum data requirements. This lists the full 2024-2025 Regular Season
 get_Schedule <- function(Schedule){
@@ -22,7 +23,7 @@ get_Schedule <- function(Schedule){
   library(furrr)
   library(devtools)
 
-  url_schedule <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=scorebar&client_code=ohl&numberofdaysahead=100&numberofdaysback=90&season_id=78&team_id=&key=f1aa699db3d81487"
+  url_schedule <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=scorebar&client_code=ohl&numberofdaysahead=100&numberofdaysback=90&season_id=83&team_id=&key=f1aa699db3d81487"
 
   json_data_schedule <- jsonlite::fromJSON(url_schedule, simplifyDataFrame = TRUE)
 

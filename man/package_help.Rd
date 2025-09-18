@@ -34,8 +34,9 @@ get_SHStats()
 - filters out players who haven't played at least 10 games.
 
 get_DYStats()
-- creates a dataframe with the 2024-2025 Draft Eligible Skaters stats.
+- creates a dataframe with the requested Draft Eligible Skaters stats.
 - filters out players who haven't played at least 10 games.
+- This function only works for seasons from 2015 -> 2025.
 
 get_RKStats()
 - creates a dataframe with the requested rookie Skaters stats
@@ -69,9 +70,9 @@ Plof <- get_RawStats(season_name = "2025 Playoffs")
 info <- get_PlayerInfo(season_name = "2025 Season")
 game <- get_GameEvents(game_id = 12345)
 
-Regular season and playoff data is available from 1998->2025.
+Regular season and playoff data is available from 1998->2026.
 Pre-Season data is temporarily available for the 2024 and 2025 season.
-This will be removed when the 2024-2025 season starts.
+This will be removed when each team has played 10 games in the 2025-2026 season.
 }
 \examples{
 q <- get_Stats()
