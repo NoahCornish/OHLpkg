@@ -13,6 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- D3.js for Data Visualization -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -46,6 +49,17 @@
         .icon-shadow {
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
         }
+        .chart-tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -58,6 +72,7 @@
                 <nav class="hidden md:block">
                     <a href="#about" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">About</a>
                     <a href="#features" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Features</a>
+                    <a href="#dashboard" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Dashboard</a>
                     <a href="#installation" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Installation</a>
                     <a href="#usage" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Usage</a>
                 </nav>
@@ -136,6 +151,35 @@
                         </p>
                     </div>
                 </div>
+            </section>
+
+            <!-- Data Dashboard Section -->
+            <section id="dashboard" class="bg-white rounded-2xl shadow-xl p-8 mb-16">
+                <h3 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Data Dashboard</h3>
+                <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">
+                    Get a glimpse of the kind of data you can access with `OHLpkg`. Below is a small, static dashboard displaying sample player statistics.
+                </p>
+                <div class="flex flex-col lg:flex-row items-center justify-center gap-10">
+                    <div class="lg:w-1/2 flex justify-center">
+                         <div id="player-points-chart" class="w-full h-80"></div>
+                    </div>
+                    <div class="lg:w-1/2 overflow-x-auto w-full">
+                        <table class="min-w-full divide-y divide-gray-200 rounded-lg shadow-md">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tl-lg">Player</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Team</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Points</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tr-lg">Goals</th>
+                                </tr>
+                            </thead>
+                            <tbody id="player-data-table" class="bg-white divide-y divide-gray-200">
+                                <!-- Data will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="tooltip" class="chart-tooltip"></div>
             </section>
 
             <!-- How It Works Section -->
@@ -252,5 +296,84 @@ head(game_events)
             </div>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const players = [
+                { name: 'Porter Martone', team: 'Brampton Steelheads', goals: 37, assists: 61, points: 98 }
+               // { name: 'Player B', team: 'London', goals: 30, assists: 32, points: 62 },
+               // { name: 'Player C', team: 'Windsor', goals: 20, assists: 45, points: 65 },
+               //  { name: 'Player D', team: 'Sarnia', goals: 15, assists: 50, points: 65 },
+               // { name: 'Player E', team: 'Kitchener', goals: 40, assists: 20, points: 60 }
+            ];
+
+            // Render the table
+            const tableBody = document.getElementById('player-data-table');
+            players.forEach(player => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${player.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.team}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.points}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.goals}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Set up the bar chart
+            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
+            const width = 500 - margin.left - margin.right;
+            const height = 300 - margin.top - margin.bottom;
+
+            const svg = d3.select("#player-points-chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .range([0, width])
+                .domain(players.map(d => d.name))
+                .padding(0.2);
+
+            const y = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(players, d => d.points) + 10]);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "chart-tooltip");
+
+            svg.selectAll(".bar")
+                .data(players)
+                .enter().append("rect")
+                .attr("class", "bar fill-blue-600 hover:fill-blue-800 transition-colors duration-200 cursor-pointer")
+                .attr("x", d => x(d.name))
+                .attr("y", d => y(d.points))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.points))
+                .on("mouseover", function(event, d) {
+                    d3.select(this).style("fill", "#1d4ed8");
+                    tooltip.style("opacity", 1)
+                        .html(`<strong>${d.name}</strong><br>Points: ${d.points}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this).style("fill", "#2563eb");
+                    tooltip.style("opacity", 0);
+                });
+        });
+    </script>
 </body>
 </html>
