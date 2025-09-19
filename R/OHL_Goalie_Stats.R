@@ -1,10 +1,19 @@
-# Version 2.4.0
-# OHL_Goalie_Stats.R
+# Version 2.4.1
+# get_GoalieStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with goalie stats from the requested season
+# Description: Get goalie statistics for a given season.
 
-#Goalies
-# GP >9
+#' Get goalie stats
+#'
+#' @description Retrieves goalie statistics for the specified season,
+#' excluding goalies with fewer than 10 games played.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with goalie statistics.
+#' @examples
+#' gl <- get_GoalieStats("2026 Season")
+#' head(gl)
+#' @export
+
 get_GoalieStats <- function(goalie_stats, season_name = "2026 Season"){
 
   library(rsconnect)

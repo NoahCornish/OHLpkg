@@ -1,9 +1,19 @@
-# Version 2.4.0
-# OHL_Rookie_Stats.R
+# Version 2.4.1
+# get_RKStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with first-year player stats
+# Description: Get rookie skater stats for a given season.
 
-# GP > 9
+#' Get rookie skater stats
+#'
+#' @description Retrieves rookie skater statistics for the specified season,
+#' filtering out players with too few games.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with rookie skater statistics.
+#' @examples
+#' rk <- get_RKStats("2026 Season")
+#' head(rk)
+#' @export
+
 get_RKStats <- function(RKStats, season_name = "2026 Season"){
 
   library(rsconnect)

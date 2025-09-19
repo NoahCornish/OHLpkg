@@ -1,11 +1,18 @@
-# Version 2.4.0
-# OHL_Individual_Game_Data.R
+# Version 2.4.1
+# get_GameEvents.R
 # Created by: Noah Cornish
-# This function returns unprocessed individual game data.
-# The user must enter the desired game_id
+# Description: Get play-by-play events for a specific game.
 
+#' Get game events
+#'
+#' @description Retrieves game event data (play-by-play) for a given game.
+#' @param game_id Numeric. The unique game ID.
+#' @return A data frame with play-by-play events.
+#' @examples
+#' events <- get_GameEvents(game_id = 12345)
+#' head(events)
+#' @export
 
-# Load necessary libraries
 library(httr)
 library(jsonlite)
 library(dplyr)

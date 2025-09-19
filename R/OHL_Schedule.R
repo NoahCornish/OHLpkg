@@ -1,11 +1,17 @@
-# Version 2.4.0
-# OHL_Schedule.R
+# Version 2.4.1
+# get_Schedule.R
 # Created by: Noah Cornish
-# This function returns a data frame with 2024-2025 league schedule
+# Description: Get the OHL regular season schedule.
 
-# 2025-2026 season id = 83
+#' Get OHL schedule
+#'
+#' @description Retrieves the OHL regular season schedule for the current season.
+#' @return A data frame with the OHL regular season schedule.
+#' @examples
+#' sched <- get_Schedule()
+#' head(sched)
+#' @export
 
-# No minimum data requirements. This lists the full 2024-2025 Regular Season
 get_Schedule <- function(Schedule){
 
   library(rsconnect)

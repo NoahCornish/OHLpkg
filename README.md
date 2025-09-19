@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.4.0-teal)
+![](https://img.shields.io/badge/OHLpkg-v2.4.1-red)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -44,16 +44,22 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Latest Version Update**
 
-**Version 2.4.0:**
+**Version 2.4.1:**
 
--   Added the ability to view and pull 2025-2026 season data.
+-   Patched a critical error where only `get_Stats()` was available in v2.4.0.
+-   All core functions are now properly exported and available after loading the package.
+
+**Version 2.4.0**
+
+-   Added the ability to view and pull 2024-2025 Playoff data.
+-   Added the ability to view and pull 2025-2026 Regular Season data.
 
 ------------------------------------------------------------------------
 
 #### **Functions**
 
 | Function              | Information                                                                |
-|--------------------|----------------------------------------------------|
+|-----------------------|----------------------------------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -85,9 +91,7 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 `y <- get_RawStats(season_name = "2025 Playoffs")`
 
-`z <- get_RawStats(season_name = "2025 Pre-Season")`
-
-`p <- get_GameEvents(game_id = 12345)`
+`z <- get_GameEvents(game_id = 12345)`
 
 [OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
 
@@ -97,7 +101,7 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 Regular season and playoff data is available from 1998-\>2026. Regular season and playoff data is only available for the functions (`get_Stats(), get_RawStats(), get_RKStats()`). All other functions will return the current "season" such as the pre-season, regular season, or playoff data.
 
-Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once every team has played 10 games, the 2024 and 2025 pre-season data will be removed.**
+Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once every team has played 10 games in the 2025-2026 season, the 2024 and 2025 pre-season data will be removed.**
 
 This was a temporary addition.
 

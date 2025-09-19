@@ -7,13 +7,19 @@
 get_Stats(LeagueStats, season_name = "2026 Season")
 }
 \arguments{
-\item{LeagueStats}{Optional data frame of league stats to filter.}
+\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
 
-\item{season_name}{The season to filter for. Defaults to "2026 Season".}
+\item{min_games}{Numeric. Minimum games played before including a skater (default = 10).}
 }
 \value{
-A data frame with regular season stats.
+A data frame with skater statistics.
 }
 \description{
 Retrieves regular season player statistics for the specified season.
+Filters out skaters who haven’t played a minimum number of games (default 10).
+}
+\examples{
+stats <- get_Stats("2026 Season")
+stats_all <- get_Stats("2026 Season", min_games = 0)
+head(stats_all)
 }

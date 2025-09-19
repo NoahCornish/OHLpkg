@@ -1,12 +1,19 @@
-# Version 2.4.0
-# OHL_SH_Stats.R
+# Version 2.4.1
+# get_SHStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with short-handed OHL stats
+# Description: Get short-handed player stats for a given season.
 
-# 2025-2026 season id = 83
+#' Get short-handed player stats
+#'
+#' @description Retrieves statistics for players while short-handed (SH) for the specified season,
+#' filtering out players with too few games.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with short-handed player statistics.
+#' @examples
+#' sh_stats <- get_SHStats("2026 Season")
+#' head(sh_stats)
+#' @export
 
-#New Function
-# GP > 9
 get_SHStats <- function(SHStats){
 
   library(rsconnect)

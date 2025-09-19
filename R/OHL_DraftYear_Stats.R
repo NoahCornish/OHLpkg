@@ -1,11 +1,19 @@
-# Version 2.4.0
-# OHL_DraftYear_Stats.R
+# Version 2.4.1
+# get_DYStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with NHL DY-0 stats for a selected season
+# Description: Get draft-eligible skater stats for a given season.
 
-# Only works from 2015-2026
+#' Get draft-eligible skater stats
+#'
+#' @description Retrieves statistics for draft-eligible skaters (DY) for the specified season.
+#' Works for seasons 2015 → 2026.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with draft-eligible skater statistics.
+#' @examples
+#' dy <- get_DYStats("2026 Season")
+#' head(dy)
+#' @export
 
-# GP > 9
 get_DYStats <- function(DYStats, season_name = "2026 Season") {
 
   library(rsconnect)

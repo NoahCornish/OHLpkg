@@ -1,10 +1,18 @@
-# Version 2.4.0
-# OHL_Player_Info.R
+# Version 2.4.1
+# get_PlayerInfo.R
 # Created by: Noah Cornish
-# This function returns player information data (no stats).
+# Description: Get player info and metrics for a season.
 
+#' Get player information
+#'
+#' @description Retrieves player information and metrics for a given season.
+#' @param season_name Character. The season to fetch info for, e.g. "2026 Season".
+#' @return A data frame with player information.
+#' @examples
+#' info <- get_PlayerInfo("2026 Season")
+#' head(info)
+#' @export
 
-# Load necessary libraries
 library(httr)
 library(jsonlite)
 library(dplyr)

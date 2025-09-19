@@ -1,16 +1,21 @@
-# Version 2.4.0
-# OHL_Player_Stats.R
+# Version 2.4.1
+# get_Stats.R
 # Created by: Noah Cornish
-# This function returns a data frame with the entire league statistics
-
+# Description: Get regular season skater stats (filtered by minimum games played).
 
 #' Get regular season player stats
 #'
 #' @description Retrieves regular season player statistics for the specified season.
-#' @param LeagueStats Optional data frame of league stats to filter.
-#' @param season_name The season to filter for. Defaults to "2026 Season".
-#' @return A data frame with regular season stats.
+#' Filters out skaters who haven’t played a minimum number of games (default 10).
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @param min_games Numeric. Minimum games played before including a skater (default = 10).
+#' @return A data frame with skater statistics.
+#' @examples
+#' stats <- get_Stats("2026 Season")
+#' stats_all <- get_Stats("2026 Season", min_games = 0)
+#' head(stats_all)
 #' @export
+
 get_Stats <- function(LeagueStats, season_name = "2026 Season") {
 
   # Map season names to season_ids

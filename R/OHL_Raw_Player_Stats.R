@@ -1,9 +1,19 @@
-# Version 2.4.0
-# OHL_Player_Stats.R
+# Version 2.4.1
+# get_RawStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with the entire league statistics
+# Description: Get raw skater stats (no GP cutoff).
 
-# GP > 9
+#' Get raw player stats
+#'
+#' @description Retrieves all active skater statistics for the specified season,
+#' without filtering by minimum games played.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with raw skater statistics.
+#' @examples
+#' raw <- get_RawStats("2026 Season")
+#' head(raw)
+#' @export
+
 get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
 
   library(rsconnect)

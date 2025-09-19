@@ -1,9 +1,19 @@
-# Version 2.4.0
-# OHL_EV_Stats.R
+# Version 2.4.1
+# get_EVStats.R
 # Created by: Noah Cornish
-# This function returns a data frame with even-strength stats for the 2024-2025 season
+# Description: Get even-strength player stats for a given season.
 
-# GP > 9
+#' Get even-strength player stats
+#'
+#' @description Retrieves statistics for players at even strength (EV) for the specified season,
+#' filtering out players with too few games.
+#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @return A data frame with even-strength player statistics.
+#' @examples
+#' ev_stats <- get_EVStats("2026 Season")
+#' head(ev_stats)
+#' @export
+
 get_EVStats <- function(EVStats) {
 
   library(rsconnect)

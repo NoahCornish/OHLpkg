@@ -1,11 +1,17 @@
-# Version 2.4.0
-# OHL_Teams.R
+# Version 2.4.1
+# get_Teams.R
 # Created by: Noah Cornish
-# This function returns a data frame with all 20 OHL teams
+# Description: Get team information for the current season.
 
-# 2025-2026 season id = 83
+#' Get OHL teams
+#'
+#' @description Retrieves a data frame with team information for the 2024–2025 or 2025–2026 season.
+#' @return A data frame with OHL team details.
+#' @examples
+#' teams <- get_Teams()
+#' head(teams)
+#' @export
 
-# No minimum data requirement
 get_Teams <- function(Teams){
 
   library(rsconnect)
