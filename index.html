@@ -1,379 +1,176 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OHLpkg - An R Package for OHL Data</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OHLpkg - Complete Documentation</title>
 
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
-    <!-- Inter Font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-    <!-- D3.js for Data Visualization -->
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Softer, lighter background */
-        }
-        .code-block {
-            background-color: #1a202c; /* Deeper dark background */
-            color: #e2e8f0;
-            border-radius: 0.75rem; /* More rounded corners */
-            padding: 1.5rem;
-            overflow-x: auto;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-        .hero-gradient {
-            background-image: linear-gradient(135deg, #1d4ed8, #2563eb); /* Deeper blue gradient */
-        }
-        .btn {
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.4);
-        }
-        .card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        }
-        .card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-        .icon-shadow {
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-        }
-        .chart-tooltip {
-            position: absolute;
-            background-color: #333;
-            color: white;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 14px;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-    </style>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .code-block { background-color: #1e293b; color: #e2e8f0; border-radius: 0.75rem; padding: 1rem; overflow-x: auto; }
+    .hero-gradient { background-image: linear-gradient(135deg, #1d4ed8, #2563eb); }
+    .btn { transition: all 0.3s ease; }
+    .btn:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(37, 99, 235, 0.4); }
+    .card { transition: all 0.3s ease; }
+    .card:hover { transform: scale(1.03); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); }
+    .chart-tooltip { position: absolute; background: #333; color: white; padding: 8px; border-radius: 6px; font-size: 14px; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+  </style>
 </head>
 <body class="antialiased text-gray-800">
 
-    <div class="min-h-screen flex flex-col">
-        <!-- Header Section -->
-        <header class="w-full bg-white shadow-lg py-4 px-4 sm:px-6 lg:px-8 sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <h1 class="text-4xl font-extrabold text-gray-900">OHL<span class="text-blue-600">pkg</span></h1>
-                <nav class="hidden md:block">
-                    <a href="#about" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">About</a>
-                    <a href="#features" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Features</a>
-                    <a href="#dashboard" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Dashboard</a>
-                    <a href="#installation" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Installation</a>
-                    <a href="#usage" class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-md transition-colors duration-200 font-semibold">Usage</a>
-                </nav>
-            </div>
-        </header>
+<div class="min-h-screen flex flex-col">
 
-        <!-- Main Content -->
-        <main class="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-
-            <!-- Hero Section -->
-            <section class="hero-gradient text-white rounded-3xl shadow-2xl p-8 md:p-16 mb-16 text-center overflow-hidden relative">
-                <img src="https://raw.githubusercontent.com/NoahCornish/OHLpkg/main/OHLpkg_logo.png" alt="OHLpkg Logo" class="h-24 md:h-32 mx-auto mb-6">
-                <h2 class="text-4xl sm:text-6xl lg:text-7xl font-black mb-4 z-10 relative">
-                    Power Up Your Hockey Analysis
-                </h2>
-                <p class="text-lg md:text-xl font-light max-w-3xl mx-auto mb-8 z-10 relative">
-                    `OHLpkg` is the definitive R package for accessing, cleaning, and analyzing Ontario Hockey League data, built for data-driven hockey insights.
-                </p>
-                <a href="https://github.com/NoahCornish/OHLpkg" target="_blank" rel="noopener noreferrer" class="btn inline-block bg-white text-blue-600 font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-all duration-300 z-10 relative">
-                    Get Started on GitHub
-                </a>
-            </section>
-
-            <!-- About Section -->
-            <section id="about" class="bg-white rounded-xl shadow-lg p-8 mb-12">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-4 text-center">What is OHLpkg?</h3>
-                <p class="text-gray-600 leading-relaxed text-lg max-w-4xl mx-auto text-center">
-                    `OHLpkg` is an R package meticulously crafted to provide a seamless and efficient way to interact with Ontario Hockey League data. It takes the hassle out of manual data collection by programmatically retrieving data from official OHL sources, sanitizing it, and presenting it in a clean, organized format that is ready for statistical analysis and visualization. Whether you're a sports journalist, a data science student, or a die-hard hockey fan, `OHLpkg` is your go-to tool.
-                </p>
-            </section>
-
-            <!-- Key Features Section -->
-            <section id="features" class="mb-16">
-                <h3 class="text-4xl font-extrabold text-center text-gray-900 mb-12">Key Features</h3>
-                <div class="grid md:grid-cols-3 gap-10">
-                    <!-- Comprehensive Data Card -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 text-center card">
-                        <div class="flex justify-center mb-6">
-                            <!-- Custom SVG for Data Icon -->
-                            <svg class="h-20 w-20 text-blue-500 icon-shadow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16 11H8V13H16V11Z" fill="currentColor" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M20 5H4C2.89543 5 2 5.89543 2 7V17C2 18.1046 2.89543 19 4 19H20C21.1046 19 22 18.1046 22 17V7C22 5.89543 21.1046 5 20 5ZM4 7H20V17H4V7ZM8 9V15H16V9H8Z" fill="currentColor" />
-                            </svg>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-2 text-gray-900">Comprehensive Data</h4>
-                        <p class="text-gray-600 leading-relaxed">
-                            Access a wide range of data points including player stats, team summaries, game events, and schedules for multiple seasons.
-                        </p>
-                    </div>
-
-                    <!-- Lightning Fast Card -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 text-center card">
-                        <div class="flex justify-center mb-6">
-                            <!-- Custom SVG for Speed Icon -->
-                            <svg class="h-20 w-20 text-blue-500 icon-shadow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13 3L4 14H11V21L20 10H13V3Z" fill="currentColor" />
-                            </svg>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-2 text-gray-900">Lightning Fast</h4>
-                        <p class="text-gray-600 leading-relaxed">
-                            Efficiently retrieves data with minimal latency, allowing you to quickly get the information you need for real-time analysis.
-                        </p>
-                    </div>
-
-                    <!-- User-Friendly Card -->
-                    <div class="bg-white rounded-2xl shadow-xl p-8 text-center card">
-                        <div class="flex justify-center mb-6">
-                            <!-- Custom SVG for User Icon -->
-                            <svg class="h-20 w-20 text-blue-500 icon-shadow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zM4 21a8 8 0 0116 0h-2c0-3.3137-2.6863-6-6-6s-6 2.6863-6 6H4z" fill="currentColor" />
-                            </svg>
-                        </div>
-                        <h4 class="text-2xl font-bold mb-2 text-gray-900">User-Friendly</h4>
-                        <p class="text-gray-600 leading-relaxed">
-                            The retrieved data is automatically cleaned and formatted into R data frames, making it immediately usable without extra effort.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Data Dashboard Section -->
-            <section id="dashboard" class="bg-white rounded-2xl shadow-xl p-8 mb-16">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Data Dashboard</h3>
-                <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">
-                    Get a glimpse of the kind of data you can access with `OHLpkg`. Below is a small, static dashboard displaying sample player statistics.
-                </p>
-                <div class="flex flex-col lg:flex-row items-center justify-center gap-10">
-                    <div class="lg:w-1/2 flex justify-center">
-                         <div id="player-points-chart" class="w-full h-80"></div>
-                    </div>
-                    <div class="lg:w-1/2 overflow-x-auto w-full">
-                        <table class="min-w-full divide-y divide-gray-200 rounded-lg shadow-md">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tl-lg">Player</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Team</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Points</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tr-lg">Goals</th>
-                                </tr>
-                            </thead>
-                            <tbody id="player-data-table" class="bg-white divide-y divide-gray-200">
-                                <!-- Data will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="tooltip" class="chart-tooltip"></div>
-            </section>
-
-            <!-- How It Works Section -->
-            <section class="bg-white rounded-2xl shadow-xl p-8 mb-16">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">How It Works</h3>
-                <div class="grid md:grid-cols-2 gap-12 items-center">
-                    <div class="order-2 md:order-1">
-                        <p class="text-lg text-gray-600 leading-relaxed mb-4">
-                            `OHLpkg` acts as a powerful bridge, connecting your R environment directly to the official OHL data sources. It handles all the complex API calls, data scraping, and parsing in the background, so you can focus on what matters: exploring the data.
-                        </p>
-                        <p class="text-lg text-gray-600 leading-relaxed mb-4">
-                            With just a single function call, the package returns a meticulously cleaned and structured data frame. This process saves you countless hours of manual work and ensures your analysis is built on a reliable foundation of high-quality data.
-                        </p>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2 text-lg">
-                            <li><span class="font-semibold text-gray-800">Request:</span> You call a function like `get_RawStats()`.</li>
-                            <li><span class="font-semibold text-gray-800">Processing:</span> The package fetches data from OHL servers.</li>
-                            <li><span class="font-semibold text-gray-800">Output:</span> A clean data frame is returned directly to your R environment.</li>
-                        </ul>
-                    </div>
-                    <div class="order-1 md:order-2 flex justify-center">
-                        <!-- Custom SVG for Data Flow -->
-                        <svg class="h-48 w-48 text-blue-600 icon-shadow" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 10V7L16 11H12V14L8 10H12Z" fill="currentColor"/>
-                        </svg>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Installation Section -->
-            <section id="installation" class="bg-white rounded-2xl shadow-xl p-8 mb-16">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Installation</h3>
-                <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">
-                    To install `OHLpkg`, you need the `devtools` package installed in R. If you do not have it, install it first.
-                </p>
-                <div class="code-block">
-                    <pre><code>
-# Make sure devtools is installed
-install.packages("devtools")
-
-# Install the OHLpkg package directly from GitHub
-devtools::install_github("NoahCornish/OHLpkg")
-
-# Load the package into your R session
-library(OHLpkg)
-                    </code></pre>
-                </div>
-            </section>
-
-            <!-- Usage Section -->
-            <section id="usage" class="bg-white rounded-2xl shadow-xl p-8 mb-16">
-                <h3 class="text-4xl font-extrabold text-gray-900 mb-8 text-center">Usage Examples</h3>
-                <p class="text-gray-600 mb-6 text-center max-w-2xl mx-auto">
-                    Get started with these common functions to retrieve the OHL data you need.
-                </p>
-
-                <!-- Raw Stats Example -->
-                <div class="mb-8">
-                    <h4 class="text-2xl font-bold text-gray-900 mb-3">Retrieve Raw Statistics</h4>
-                    <p class="text-gray-600 mb-3">
-                        Use the `get_RawStats()` function to get a comprehensive data frame of player and team statistics for a specific season. If no season is specified, it defaults to the most recent completed season.
-                    </p>
-                    <div class="code-block">
-                        <pre><code>
-# Retrieve statistics for the 2025-2026 Regular Season (default)
-df_current_season <- get_RawStats()
-
-# Get data for a previous season, for example, 2023-2024
-df_previous_season <- get_RawStats(season_name = "2023-2024 Season")
-
-# You can also specify other types of seasons
-df_playoffs <- get_RawStats(season_name = "2025-2026 Playoffs")
-                        </code></pre>
-                    </div>
-                </div>
-
-                <!-- Game Events Example -->
-                <div class="mb-8">
-                    <h4 class="text-2xl font-bold text-gray-900 mb-3">Retrieve Game Events</h4>
-                    <p class="text-gray-600 mb-3">
-                        The `get_GameEvents()` function allows you to drill down into a single game, retrieving a play-by-play log of all events.
-                    </p>
-                    <div class="code-block">
-                        <pre><code>
-# Retrieve detailed events for a specific game ID
-game_events <- get_GameEvents(game_id = 12345)
-
-# Example of what the data frame looks like
-head(game_events)
-#   GameID Period Event Time AwayTeam HomeTeam Scorer Assist1 ...
-# 1 12345  1      Goal     12:30 Away     Home     PlayerA PlayerB ...
-# 2 12345  1      Penalty  15:00 Away     Home     ...
-                        </code></pre>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Call to Action -->
-            <section class="bg-blue-600 rounded-2xl shadow-2xl p-8 text-white text-center mb-16 relative overflow-hidden">
-                <h3 class="text-3xl sm:text-4xl font-extrabold mb-3 z-10 relative">Ready to Dive into OHL Data?</h3>
-                <p class="text-lg font-light mb-6 z-10 relative max-w-2xl mx-auto">
-                    Join the community and contribute to the package on GitHub. Whether you're a user or a developer, your input is what makes OHLpkg better.
-                </p>
-                <a href="https://github.com/NoahCornish/OHLpkg" target="_blank" rel="noopener noreferrer" class="btn inline-block bg-white text-blue-600 font-bold py-4 px-10 rounded-full shadow-lg hover:bg-gray-100 transition-all duration-300 z-10 relative">
-                    Explore the Repository
-                </a>
-            </section>
-        </main>
-
-        <!-- Footer Section -->
-        <footer class="w-full bg-gray-900 text-gray-400 py-6 px-4 sm:px-6 lg:px-8 mt-auto">
-            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center text-center">
-                <p class="text-sm font-light">&copy; 2025 OHLpkg. All rights reserved.</p>
-                <a href="#top" class="mt-4 sm:mt-0 text-gray-400 hover:text-white transition-colors duration-200 font-light">Back to top</a>
-            </div>
-        </footer>
+  <!-- Header -->
+  <header class="w-full bg-white shadow-md py-4 px-6 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-4xl font-extrabold">OHL<span class="text-blue-600">pkg</span></h1>
+      <nav class="hidden md:flex space-x-6 font-semibold">
+        <a href="#about" class="hover:text-blue-600">About</a>
+        <a href="#functions" class="hover:text-blue-600">Functions</a>
+        <a href="#arguments" class="hover:text-blue-600">Arguments</a>
+        <a href="#usage" class="hover:text-blue-600">Usage</a>
+        <a href="#changelog" class="hover:text-blue-600">Changelog</a>
+        <a href="#roadmap" class="hover:text-blue-600">Roadmap</a>
+      </nav>
     </div>
+  </header>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const players = [
-                { name: 'Porter Martone', team: 'Brampton Steelheads', goals: 37, assists: 61, points: 98 }
-               // { name: 'Player B', team: 'London', goals: 30, assists: 32, points: 62 },
-               // { name: 'Player C', team: 'Windsor', goals: 20, assists: 45, points: 65 },
-               //  { name: 'Player D', team: 'Sarnia', goals: 15, assists: 50, points: 65 },
-               // { name: 'Player E', team: 'Kitchener', goals: 40, assists: 20, points: 60 }
-            ];
+  <!-- Hero -->
+  <section class="hero-gradient text-white text-center py-16 px-6">
+    <img src="https://raw.githubusercontent.com/NoahCornish/OHLpkg/main/OHLpkg_logo.png" class="h-28 mx-auto mb-6" alt="OHLpkg Logo">
+    <h2 class="text-5xl font-black mb-4">Complete Access to Ontario Hockey League Data</h2>
+    <p class="text-lg max-w-3xl mx-auto mb-8">`OHLpkg` is an R package that provides programmatic access to OHL data: player stats, goalie stats, team info, game schedules, and play-by-play events. Built for analysts, fans, and developers.</p>
+    <a href="https://github.com/NoahCornish/OHLpkg" class="btn bg-white text-blue-600 font-bold py-3 px-8 rounded-full">View on GitHub</a>
+  </section>
 
-            // Render the table
-            const tableBody = document.getElementById('player-data-table');
-            players.forEach(player => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${player.name}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.team}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.points}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${player.goals}</td>
-                `;
-                tableBody.appendChild(row);
-            });
+  <!-- About -->
+  <section id="about" class="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-4">About OHLpkg</h3>
+    <p class="text-gray-700 mb-4">The Ontario Hockey League (OHL) is one of the premier junior leagues in the world. `OHLpkg` bridges R with the OHL’s data sources, pulling JSON feeds directly from HockeyTech. This package removes the need for manual scraping, and outputs clean, ready-to-analyze data frames.</p>
+    <p class="text-gray-700">Supported data spans <strong>1998 → 2026</strong>, including regular season, playoffs, and selected pre-season datasets.</p>
+  </section>
 
-            // Set up the bar chart
-            const margin = { top: 20, right: 30, bottom: 40, left: 50 };
-            const width = 500 - margin.left - margin.right;
-            const height = 300 - margin.top - margin.bottom;
+  <!-- Functions -->
+  <section id="functions" class="max-w-6xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-6 text-center">Functions Overview</h3>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_Stats(season_name, team)</h4>
+        <p>Returns filtered skater stats (GP > 9). Now includes optional <code>team</code> filter.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_RawStats(season_name, team)</h4>
+        <p>Returns full skater stats (no GP cutoff). Includes team filter.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_GoalieStats(season_name, team)</h4>
+        <p>Goalie stats (GP > 9). Includes team filter for v2.5.0.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_EVStats()</h4>
+        <p>Even-strength stats: calculates EVG, EVA, EVPTS, EVPTS/G, EVPTS%.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_SHStats()</h4>
+        <p>Short-handed stats, structured like EVStats but for SH goals/assists/points.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_DYStats(season_name)</h4>
+        <p>Filters draft-year eligible skaters (DY-0) based on dynamic birthdate cutoffs per season.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_RKStats(season_name, team)</h4>
+        <p>Filters rookie skaters (first OHL season). Team filter supported.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_Teams(team)</h4>
+        <p>Returns metadata for all 20 OHL teams, or a single team if specified.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_Schedule(season_name)</h4>
+        <p>Returns league schedule and results. Supports season argument.</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_GameEvents(game_id)</h4>
+        <p>Play-by-play log for a specific game ID (goals, penalties, shots).</p>
+      </div>
+      <div class="card p-6 bg-gray-50 rounded-xl">
+        <h4 class="text-xl font-bold mb-2">get_PlayerInfo(season_name)</h4>
+        <p>Player profile/metrics: height, weight, birthdate, position, team.</p>
+      </div>
+    </div>
+  </section>
 
-            const svg = d3.select("#player-points-chart")
-                .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
+  <!-- Arguments -->
+  <section id="arguments" class="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-6">Arguments & Filters</h3>
+    <ul class="list-disc pl-6 text-gray-700 space-y-2">
+      <li><code>season_name</code> — specify "2026 Season", "2025 Playoffs", etc. Defaults to latest season.</li>
+      <li><code>team</code> — filter output to a specific OHL team (v2.5.0+).</li>
+      <li><code>game_id</code> — numeric ID for single game events.</li>
+    </ul>
+  </section>
 
-            const x = d3.scaleBand()
-                .range([0, width])
-                .domain(players.map(d => d.name))
-                .padding(0.2);
+  <!-- Usage -->
+  <section id="usage" class="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-6">Usage Examples</h3>
+    <div class="code-block mb-6"><pre><code>
+# Install and load
+devtools::install_github("NoahCornish/OHLpkg")
+library(OHLpkg)
 
-            const y = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(players, d => d.points) + 10]);
+# Example 1: Get raw skater stats for 2026 Season
+df <- get_RawStats(season_name = "2026 Season")
 
-            svg.append("g")
-                .attr("transform", `translate(0,${height})`)
-                .call(d3.axisBottom(x))
-                .selectAll("text")
-                .attr("transform", "translate(-10,0)rotate(-45)")
-                .style("text-anchor", "end");
+# Example 2: Filter by team
+knights <- get_Stats("2026 Season", team = "London Knights")
 
-            svg.append("g")
-                .call(d3.axisLeft(y));
+# Example 3: Get goalie stats
+goalies <- get_GoalieStats("2026 Season", team = "Ottawa 67's")
 
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "chart-tooltip");
+# Example 4: Game events
+events <- get_GameEvents(game_id = 28151)
+head(events)
+    </code></pre></div>
+  </section>
 
-            svg.selectAll(".bar")
-                .data(players)
-                .enter().append("rect")
-                .attr("class", "bar fill-blue-600 hover:fill-blue-800 transition-colors duration-200 cursor-pointer")
-                .attr("x", d => x(d.name))
-                .attr("y", d => y(d.points))
-                .attr("width", x.bandwidth())
-                .attr("height", d => height - y(d.points))
-                .on("mouseover", function(event, d) {
-                    d3.select(this).style("fill", "#1d4ed8");
-                    tooltip.style("opacity", 1)
-                        .html(`<strong>${d.name}</strong><br>Points: ${d.points}`)
-                        .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function() {
-                    d3.select(this).style("fill", "#2563eb");
-                    tooltip.style("opacity", 0);
-                });
-        });
-    </script>
+  <!-- Changelog -->
+  <section id="changelog" class="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-6">Changelog</h3>
+    <ul class="list-disc pl-6 text-gray-700 space-y-2">
+      <li><strong>v2.5.0</strong> — Added team filter to major functions; improved GameEvents parsing; standardized docs.</li>
+      <li><strong>v2.4.1</strong> — Patch: fixed missing exports; all functions accessible.</li>
+      <li><strong>v2.4.0</strong> — Added 2025 Playoffs and 2026 Season support.</li>
+    </ul>
+  </section>
+
+  <!-- Roadmap -->
+  <section id="roadmap" class="max-w-5xl mx-auto p-8 bg-white rounded-2xl shadow-md my-12">
+    <h3 class="text-3xl font-extrabold mb-6">Future Roadmap</h3>
+    <ul class="list-disc pl-6 text-gray-700 space-y-2">
+      <li>Position filters alongside team filters.</li>
+      <li>CRAN submission for wider accessibility.</li>
+      <li>Enhanced visualization templates (ggplot2 integration).</li>
+      <li>Expanded testing and CI/CD with GitHub Actions.</li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full bg-gray-900 text-gray-400 py-6 px-6 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center">
+      <p class="text-sm">&copy; 2025 OHLpkg — Built by Noah Cornish</p>
+      <a href="#top" class="text-gray-400 hover:text-white">Back to top</a>
+    </div>
+  </footer>
+</div>
 </body>
 </html>
