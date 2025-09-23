@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------
 
-![](https://img.shields.io/badge/OHLpkg-v2.4.1-red)
+![](https://img.shields.io/badge/OHLpkg-v2.5.0-red)
 
 ![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
 
@@ -44,6 +44,10 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Latest Version Update**
 
+**Version 2.5.0:**
+
+-   Added new arguments to some functions to filter based on a selected team(s).
+
 **Version 2.4.1:**
 
 -   Patched a critical error where only `get_Stats()` was available in v2.4.0.
@@ -59,7 +63,7 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 #### **Functions**
 
 | Function              | Information                                                                |
-|-----------------------|----------------------------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
 | **get_RawStats()**    | Returns all skaters statistics                                             |
 | **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
@@ -76,14 +80,14 @@ To get started with *OHLpkg*, you can install it directly from GitHub using the 
 
 #### **Arguments**
 
-| Function              | Argument    | **Description**                      |
-|-----------------------|-------------|--------------------------------------|
-| **get_RawStats()**    | season_name | Retrieve skater statistics by season |
-| **get_Stats()**       | season_name | Retrieve skater statistics by season |
-| **get_GoalieStats()** | season_name | Retrieve goalie statistics by season |
-| **get_RKStats()**     | season_name | Retrieve rookie statistics by season |
-| **get_GameEvents()**  | game_id     | Retrieve events for a specific game  |
-| **get_PlayerInfo()**  | season_name | Retrieve skater metrics by season    |
+| Function              | Argument          | **Description**                                        |
+|---------------------|-----------------|-----------------------------------|
+| **get_RawStats()**    | season_name, team | Retrieve skater statistics by season and selected team |
+| **get_Stats()**       | season_name, team | Retrieve skater statistics by season and selected team |
+| **get_GoalieStats()** | season_name, team | Retrieve goalie statistics by season and selected team |
+| **get_RKStats()**     | season_name, team | Retrieve rookie statistics by season and selected team |
+| **get_GameEvents()**  | game_id           | Retrieve events for a specific game                    |
+| **get_PlayerInfo()**  | season_name, team | Retrieve skater metrics by season and selected team    |
 
 **Example Usage**
 

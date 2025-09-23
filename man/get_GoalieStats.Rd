@@ -4,10 +4,13 @@
 \alias{get_GoalieStats}
 \title{Get goalie stats}
 \usage{
-get_GoalieStats(goalie_stats, season_name = "2026 Season")
+get_GoalieStats(season_name = "2026 Season", team = NULL)
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
 A data frame with goalie statistics.
@@ -15,8 +18,12 @@ A data frame with goalie statistics.
 \description{
 Retrieves goalie statistics for the specified season,
 excluding goalies with fewer than 10 games played.
+Optionally filter by team(s).
 }
 \examples{
 gl <- get_GoalieStats("2026 Season")
 head(gl)
+
+knights_goalies <- get_GoalieStats("2026 Season", team = "London Knights")
+head(knights_goalies)
 }

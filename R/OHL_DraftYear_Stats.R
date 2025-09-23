@@ -1,32 +1,32 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_DYStats.R
 # Created by: Noah Cornish
-# Description: Get draft-eligible skater stats for a given season.
+# Description: Get draft-eligible skater stats for a given season with optional team filter.
 
 #' Get draft-eligible skater stats
 #'
 #' @description Retrieves statistics for draft-eligible skaters (DY) for the specified season.
 #' Works for seasons 2015 → 2026.
+#'
 #' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
 #' @return A data frame with draft-eligible skater statistics.
 #' @examples
 #' dy <- get_DYStats("2026 Season")
 #' head(dy)
+#'
+#' knights_dy <- get_DYStats("2026 Season", team = "London Knights")
+#' head(knights_dy)
 #' @export
+get_DYStats <- function(season_name = "2026 Season", team = NULL) {
 
-get_DYStats <- function(DYStats, season_name = "2026 Season") {
-
-  library(rsconnect)
-  library(ggplot2)
-  library(tidyverse)
-  library(janitor)
-  library(lubridate)
-  library(RJSONIO)
   library(jsonlite)
   library(dplyr)
-  library(scales)
+  library(stringr)
 
-  # Map the updated season names to their respective season_ids
+  # Map season names to their respective season_ids
   season_ids <- c("2026 Season" = 83,
                   "2025 Playoffs" = 81,
                   "2025 Season" = 79,
@@ -50,20 +50,23 @@ get_DYStats <- function(DYStats, season_name = "2026 Season") {
                   "2015 Season" = 51,
                   "2015 Playoffs" = 52)
 
-  # Validate the input season_name and retrieve the corresponding season_id
+  # Validate season_name
   if (!season_name %in% names(season_ids)) {
     stop("Invalid season name. Please refer to package help.")
   }
 
   season_id <- season_ids[season_name]
 
-  # Use the correct season_id in the URL
-  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
+  # API URL
+  url_reg <- sprintf(
+    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
+    season_id
+  )
 
-  # use jsonlite::fromJSON to handle NULL values
-  json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
+  # Fetch JSON
+  json_data <- fromJSON(url_reg, simplifyDataFrame = TRUE)
 
-  # create data frame
+  # Build df
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
     select(rank, player_id:num_teams) %>%
     select(-c(birthtown, birthprov, birthcntry,
@@ -71,17 +74,15 @@ get_DYStats <- function(DYStats, season_name = "2026 Season") {
               phonetic_name, last_years_club, suspension_games_remaining,
               suspension_indefinite)) %>%
     mutate(player_id = as.numeric(player_id)) %>%
-    mutate(across(active:age, ~as.numeric(.))) %>%
-    mutate(across(rookie:jersey_number, ~as.numeric(.))) %>%
+    mutate(across(active:age, as.numeric)) %>%
+    mutate(across(rookie:jersey_number, as.numeric)) %>%
     mutate(team_id = as.numeric(team_id)) %>%
-    mutate(across(games_played:faceoff_pct, ~as.numeric(.))) %>%
-    mutate(across(shots_on:num_teams, ~as.numeric(.))) %>%
-    mutate(birthdate_year = stringr::str_split(birthdate_year,
-                                               "\\'", simplify = TRUE, n = 2)[,2]) %>%
-    mutate(birthdate_year = as.numeric(birthdate_year)) %>%
-    mutate(birthdate_year = 2000 + birthdate_year)
+    mutate(across(games_played:faceoff_pct, as.numeric)) %>%
+    mutate(across(shots_on:num_teams, as.numeric)) %>%
+    mutate(birthdate_year = str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[,2]) %>%
+    mutate(birthdate_year = as.numeric(birthdate_year),
+           birthdate_year = 2000 + birthdate_year)
 
-  # create data frame with columns required for tableau viz
   LeagueStats <- df %>%
     select(Name = "name",
            Rookie = "rookie",
@@ -108,22 +109,14 @@ get_DYStats <- function(DYStats, season_name = "2026 Season") {
            ENG = "empty_net_goals",
            PIM = "penalty_minutes",
            Active = "active") %>%
-    filter(Active == 1) %>%
-    filter(GP > 9) %>%
-    mutate(PPP = PPG + PPA) %>%
-    filter(Pos != "G")
+    filter(Active == 1, GP > 9, Pos != "G") %>%
+    mutate(PPP = PPG + PPA)
 
-  #assign rookie values as YES or No instead of binary (1, 0)
-  LeagueStats$Rookie <- gsub('1', 'YES', LeagueStats$Rookie)
-  LeagueStats$Rookie <- gsub('0', 'NO', LeagueStats$Rookie)
+  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
+  LeagueStats$BD <- as.Date(as.POSIXct(gsub(",", "", LeagueStats$BD), format = "%B %d %Y"))
 
-  #fix and adjust the BD column
-  LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
-  LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-  LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
-
+  # Draft eligibility filter
   DY <- LeagueStats %>%
-    # Adjust birthdate range based on the season_name
     filter(
       if (startsWith(season_name, "2026")) {
         BD >= as.Date("2007-09-16") & BD <= as.Date("2008-09-15")
@@ -157,10 +150,10 @@ get_DYStats <- function(DYStats, season_name = "2026 Season") {
            GP, G, A, PTS, `Pts/G`, `+/-`, PPG,
            PPA, PPP, GWG, ENG, PIM)
 
+  # Optional team filter
+  if (!is.null(team)) {
+    DY <- DY %>% filter(Team %in% team)
+  }
 
-  DYStats <- DY
-
-
-  return(DYStats)
+  return(DY)
 }
-

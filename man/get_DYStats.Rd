@@ -4,10 +4,13 @@
 \alias{get_DYStats}
 \title{Get draft-eligible skater stats}
 \usage{
-get_DYStats(DYStats, season_name = "2026 Season")
+get_DYStats(season_name = "2026 Season", team = NULL)
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
 A data frame with draft-eligible skater statistics.
@@ -19,4 +22,7 @@ Works for seasons 2015 → 2026.
 \examples{
 dy <- get_DYStats("2026 Season")
 head(dy)
+
+knights_dy <- get_DYStats("2026 Season", team = "London Knights")
+head(knights_dy)
 }

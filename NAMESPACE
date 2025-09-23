@@ -2,7 +2,9 @@
 
 export(get_DYStats)
 export(get_EVStats)
+export(get_GameEvents)
 export(get_GoalieStats)
+export(get_PlayerInfo)
 export(get_RKStats)
 export(get_RawStats)
 export(get_SHStats)

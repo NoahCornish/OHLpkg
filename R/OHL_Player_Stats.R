@@ -1,4 +1,4 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_Stats.R
 # Created by: Noah Cornish
 # Description: Get regular season skater stats (filtered by minimum games played).
@@ -7,16 +7,22 @@
 #'
 #' @description Retrieves regular season player statistics for the specified season.
 #' Filters out skaters who haven’t played a minimum number of games (default 10).
+#' Optionally filter by team(s).
+#'
 #' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
 #' @param min_games Numeric. Minimum games played before including a skater (default = 10).
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
 #' @return A data frame with skater statistics.
+#'
 #' @examples
 #' stats <- get_Stats("2026 Season")
 #' stats_all <- get_Stats("2026 Season", min_games = 0)
-#' head(stats_all)
+#' stats_london <- get_Stats("2026 Season", team = "London Knights")
+#' head(stats_london)
 #' @export
-
-get_Stats <- function(LeagueStats, season_name = "2026 Season") {
+get_Stats <- function(season_name = "2026 Season", min_games = 10, team = NULL) {
 
   # Map season names to season_ids
   season_ids <- c(
@@ -119,11 +125,16 @@ get_Stats <- function(LeagueStats, season_name = "2026 Season") {
                   SHA = "short_handed_assists", SHPTS = "short_handed_points",
                   GWG = "game_winning_goals", ENG = "empty_net_goals",
                   PIM = "penalty_minutes", Active = "active") |>
-    dplyr::filter(Active == 1, GP > 9, Pos != "G") |>
+    dplyr::filter(Active == 1, GP >= min_games, Pos != "G") |>
     dplyr::mutate(PPP = PPG + PPA)
 
   LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
   LeagueStats$BD <- as.Date(as.POSIXct(gsub(",", "", LeagueStats$BD), format = "%B %d %Y"))
+
+  # Optional team filter
+  if (!is.null(team)) {
+    LeagueStats <- LeagueStats |> dplyr::filter(Team %in% team)
+  }
 
   if (nrow(LeagueStats) == 0 && season_name == "2026 Season") {
     message("No 2026 season data available yet. Consider specifying season_name = '2025 Season'.")

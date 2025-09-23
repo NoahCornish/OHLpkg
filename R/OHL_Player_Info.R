@@ -1,4 +1,4 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_PlayerInfo.R
 # Created by: Noah Cornish
 # Description: Get player info and metrics for a season.
@@ -6,20 +6,27 @@
 #' Get player information
 #'
 #' @description Retrieves player information and metrics for a given season.
+#' Optionally filter by team(s).
+#'
 #' @param season_name Character. The season to fetch info for, e.g. "2026 Season".
-#' @return A data frame with player information.
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
+#' @return A tibble with player information.
+#'
 #' @examples
 #' info <- get_PlayerInfo("2026 Season")
 #' head(info)
+#'
+#' info_knights <- get_PlayerInfo("2026 Season", team = "London Knights")
+#' head(info_knights)
 #' @export
+get_PlayerInfo <- function(season_name = "2026 Season", team = NULL) {
 
-library(httr)
-library(jsonlite)
-library(dplyr)
-library(tibble)
-
-# Function to retrieve player information
-get_PlayerInfo <- function(season_name = "2026 Season") {
+  library(httr)
+  library(jsonlite)
+  library(dplyr)
+  library(tibble)
 
   # Map the updated season names to their respective season_ids
   season_ids <- c("2026 Season" = 83,
@@ -87,9 +94,10 @@ get_PlayerInfo <- function(season_name = "2026 Season") {
   season_id <- season_ids[season_name]
 
   # Construct the URL with the dynamic season_id
-  url_player <- paste0("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=",
-                       season_id,
-                       "&first=0&limit=10000&sort=active&stat=all&order_direction=")
+  url_player <- sprintf(
+    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=10000&sort=active&stat=all&order_direction=",
+    season_id
+  )
 
   # Retrieve and process the JSON data
   json_data_player <- fromJSON(url_player, simplifyDataFrame = TRUE)
@@ -98,11 +106,10 @@ get_PlayerInfo <- function(season_name = "2026 Season") {
   player_info <- as_tibble(json_data_player[["SiteKit"]][["Statviewtype"]]) %>%
     select(player_id, name, height, weight, birthdate, team_name, team_id)
 
+  # Optional team filter
+  if (!is.null(team)) {
+    player_info <- player_info %>% filter(team_name %in% team)
+  }
+
   return(player_info)
 }
-
-
-# Main code execution
-#player_info <- get_PlayerInfo(argument)
-#player_info <- get_PlayerInfo("2024 Season")
-

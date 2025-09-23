@@ -1,20 +1,34 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_RKStats.R
 # Created by: Noah Cornish
-# Description: Get rookie skater stats for a given season.
+# Description: Get rookie skater stats for a given season,
+# with optional filtering by team(s).
 
 #' Get rookie skater stats
 #'
 #' @description Retrieves rookie skater statistics for the specified season,
-#' filtering out players with too few games.
+#' filtering out players with too few games. Optionally filter by team(s).
+#'
 #' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
 #' @return A data frame with rookie skater statistics.
+#'
 #' @examples
+#' # Get all rookies in 2026 Season
 #' rk <- get_RKStats("2026 Season")
 #' head(rk)
+#'
+#' # Get rookies only from London Knights
+#' rk_knights <- get_RKStats("2026 Season", team = "London Knights")
+#'
+#' # Get rookies from multiple teams
+#' rk_subset <- get_RKStats("2026 Season",
+#'                          team = c("Erie Otters", "Saginaw Spirit"))
+#'
 #' @export
-
-get_RKStats <- function(RKStats, season_name = "2026 Season"){
+get_RKStats <- function(season_name = "2026 Season", team = NULL) {
 
   library(rsconnect)
   library(ggplot2)
@@ -25,79 +39,85 @@ get_RKStats <- function(RKStats, season_name = "2026 Season"){
   library(jsonlite)
   library(dplyr)
   library(scales)
+  library(stringr)
 
   # Map the updated season names to their respective season_ids
-  season_ids <- c("2026 Season" = 83,
-                  "2025 Playoffs" = 81,
-                  "2025 Season" = 79,
-                  "2025 Pre-Season" = 78,
-                  "2024 Season" = 76,
-                  "2024 Playoffs" = 77,
-                  "2024 Pre-Season" = 75,
-                  "2023 Season" = 73,
-                  "2023 Playoffs" = 74,
-                  "2022 Season" = 70,
-                  "2022 Playoffs" = 71,
-                  "2020 Season" = 68,
-                  "2019 Season" = 63,
-                  "2019 Playoffs" = 66,
-                  "2018 Season" = 60,
-                  "2018 Playoffs" = 61,
-                  "2017 Season" = 56,
-                  "2017 Playoffs" = 57,
-                  "2016 Season" = 54,
-                  "2016 Playoffs" = 55,
-                  "2015 Season" = 51,
-                  "2015 Playoffs" = 52,
-                  "2014 Season" = 49,
-                  "2014 Playoffs" = 50,
-                  "2013 Season" = 46,
-                  "2013 Playoffs" = 48,
-                  "2012 Season" = 44,
-                  "2012 Playoffs" = 45,
-                  "2011 Season" = 42,
-                  "2011 Playoffs" = 43,
-                  "2010 Season" = 38,
-                  "2010 Playoffs" = 41,
-                  "2009 Season" = 35,
-                  "2009 Playoffs" = 37,
-                  "2008 Season" = 32,
-                  "2008 Playoffs" = 34,
-                  "2007 Season" = 29,
-                  "2007 Playoffs" = 31,
-                  "2006 Season" = 26,
-                  "2006 Playoffs" = 28,
-                  "2005 Season" = 24,
-                  "2005 Playoffs" = 25,
-                  "2004 Season" = 21,
-                  "2004 Playoffs" = 23,
-                  "2003 Season" = 17,
-                  "2003 Playoffs" = 20,
-                  "2002 Season" = 14,
-                  "2002 Playoffs" = 15,
-                  "2001 Season" = 11,
-                  "2001 Playoffs" = 12,
-                  "2000 Season" = 9,
-                  "2000 Playoffs" = 10,
-                  "1999 Season" = 6,
-                  "1999 Playoffs" = 7,
-                  "1998 Season" = 4,
-                  "1998 Playoffs" = 5)
+  season_ids <- c(
+    "2026 Season" = 83,
+    "2025 Playoffs" = 81,
+    "2025 Season" = 79,
+    "2025 Pre-Season" = 78,
+    "2024 Season" = 76,
+    "2024 Playoffs" = 77,
+    "2024 Pre-Season" = 75,
+    "2023 Season" = 73,
+    "2023 Playoffs" = 74,
+    "2022 Season" = 70,
+    "2022 Playoffs" = 71,
+    "2020 Season" = 68,
+    "2019 Season" = 63,
+    "2019 Playoffs" = 66,
+    "2018 Season" = 60,
+    "2018 Playoffs" = 61,
+    "2017 Season" = 56,
+    "2017 Playoffs" = 57,
+    "2016 Season" = 54,
+    "2016 Playoffs" = 55,
+    "2015 Season" = 51,
+    "2015 Playoffs" = 52,
+    "2014 Season" = 49,
+    "2014 Playoffs" = 50,
+    "2013 Season" = 46,
+    "2013 Playoffs" = 48,
+    "2012 Season" = 44,
+    "2012 Playoffs" = 45,
+    "2011 Season" = 42,
+    "2011 Playoffs" = 43,
+    "2010 Season" = 38,
+    "2010 Playoffs" = 41,
+    "2009 Season" = 35,
+    "2009 Playoffs" = 37,
+    "2008 Season" = 32,
+    "2008 Playoffs" = 34,
+    "2007 Season" = 29,
+    "2007 Playoffs" = 31,
+    "2006 Season" = 26,
+    "2006 Playoffs" = 28,
+    "2005 Season" = 24,
+    "2005 Playoffs" = 25,
+    "2004 Season" = 21,
+    "2004 Playoffs" = 23,
+    "2003 Season" = 17,
+    "2003 Playoffs" = 20,
+    "2002 Season" = 14,
+    "2002 Playoffs" = 15,
+    "2001 Season" = 11,
+    "2001 Playoffs" = 12,
+    "2000 Season" = 9,
+    "2000 Playoffs" = 10,
+    "1999 Season" = 6,
+    "1999 Playoffs" = 7,
+    "1998 Season" = 4,
+    "1998 Playoffs" = 5
+  )
 
-  # Validate the input season_name and retrieve the corresponding season_id
+  # Validate the input season_name
   if (!season_name %in% names(season_ids)) {
     stop("Invalid season name. Please refer to package help.")
   }
 
   season_id <- season_ids[season_name]
 
-  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
+  # Build API URL
+  url_reg <- sprintf(
+    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
+    season_id
+  )
 
-  # use jsonlite::fromJSON to handle NULL values
+  # Fetch JSON data
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
 
-
-  # create data frame
+  # Create base data frame
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
     select(rank, player_id:num_teams) %>%
     select(-c(birthtown, birthprov, birthcntry,
@@ -105,19 +125,16 @@ get_RKStats <- function(RKStats, season_name = "2026 Season"){
               phonetic_name, last_years_club, suspension_games_remaining,
               suspension_indefinite)) %>%
     mutate(player_id = as.numeric(player_id)) %>%
-    mutate(across(active:age, ~as.numeric(.))) %>%
-    mutate(across(rookie:jersey_number, ~as.numeric(.))) %>%
+    mutate(across(active:age, as.numeric)) %>%
+    mutate(across(rookie:jersey_number, as.numeric)) %>%
     mutate(team_id = as.numeric(team_id)) %>%
-    mutate(across(games_played:faceoff_pct, ~as.numeric(.))) %>%
-    mutate(across(shots_on:num_teams, ~as.numeric(.))) %>%
-    mutate(birthdate_year = stringr::str_split(birthdate_year,
-                                               "\\'", simplify = TRUE, n = 2)[,2]) %>%
+    mutate(across(games_played:faceoff_pct, as.numeric)) %>%
+    mutate(across(shots_on:num_teams, as.numeric)) %>%
+    mutate(birthdate_year = str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[, 2]) %>%
     mutate(birthdate_year = as.numeric(birthdate_year)) %>%
     mutate(birthdate_year = 2000 + birthdate_year)
 
-
-
-  # create data frame with columns required for tableau viz
+  # Clean stats
   LeagueStats <- df %>%
     select(Name = "name",
            Rookie = "rookie",
@@ -144,27 +161,28 @@ get_RKStats <- function(RKStats, season_name = "2026 Season"){
            ENG = "empty_net_goals",
            PIM = "penalty_minutes",
            Active = "active") %>%
-    filter(Active == 1) %>%
-    filter(GP > 9) %>%
-    mutate(PPP = PPG + PPA) %>%
-    filter(Pos != "G")
+    filter(Active == 1, GP > 9, Pos != "G") %>%
+    mutate(PPP = PPG + PPA)
 
-  #assign rookie values as YES or No instead of binary (1, 0)
-  LeagueStats$Rookie <- gsub('1', 'YES', LeagueStats$Rookie)
-  LeagueStats$Rookie <- gsub('0', 'NO', LeagueStats$Rookie)
+  # Assign rookie values as YES or NO
+  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
 
-  #fix and adjust the BD column
+  # Fix BD column
   LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
   LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
+  # Filter rookies
   RKStats <- LeagueStats %>%
     filter(Rookie == "YES") %>%
     select(Name, BD, Pos, Team, GP, G,
            A, PTS, `Pts/G`, `+/-`, PPG,
            PPA, GWG, ENG, PIM)
 
-  return(RKStats)
+  # Apply team filter if provided
+  if (!is.null(team)) {
+    RKStats <- RKStats %>% filter(Team %in% team)
+  }
 
+  return(RKStats)
 }

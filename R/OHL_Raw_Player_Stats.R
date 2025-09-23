@@ -1,20 +1,32 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_RawStats.R
 # Created by: Noah Cornish
-# Description: Get raw skater stats (no GP cutoff).
+# Description: Get raw skater stats (no GP cutoff), with optional team filter.
 
 #' Get raw player stats
 #'
 #' @description Retrieves all active skater statistics for the specified season,
-#' without filtering by minimum games played.
+#' without filtering by minimum games played. Optionally filter by team(s).
+#'
 #' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
 #' @return A data frame with raw skater statistics.
+#'
 #' @examples
+#' # All players
 #' raw <- get_RawStats("2026 Season")
-#' head(raw)
+#'
+#' # Only London Knights players
+#' raw_london <- get_RawStats("2026 Season", team = "London Knights")
+#'
+#' # Multiple teams
+#' raw_subset <- get_RawStats("2026 Season",
+#'                            team = c("Erie Otters", "Saginaw Spirit"))
+#'
 #' @export
-
-get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
+get_RawStats <- function(season_name = "2026 Season", team = NULL) {
 
   library(rsconnect)
   library(ggplot2)
@@ -25,6 +37,7 @@ get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
   library(jsonlite)
   library(dplyr)
   library(scales)
+  library(stringr)
 
   # Map the updated season names to their respective season_ids
   season_ids <- c("2026 Season" = 83,
@@ -91,13 +104,14 @@ get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
 
   season_id <- season_ids[season_name]
 
-  # Use the correct season_id in the URL
-  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
+  # Build API URL
+  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
+                     season_id)
 
-  # use jsonlite::fromJSON to handle NULL values
+  # Fetch JSON
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
 
-  # create data frame
+  # Create raw dataframe
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
     select(rank, player_id:num_teams) %>%
     select(-c(birthtown, birthprov, birthcntry,
@@ -105,17 +119,16 @@ get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
               phonetic_name, last_years_club, suspension_games_remaining,
               suspension_indefinite)) %>%
     mutate(player_id = as.numeric(player_id)) %>%
-    mutate(across(active:age, ~as.numeric(.))) %>%
-    mutate(across(rookie:jersey_number, ~as.numeric(.))) %>%
+    mutate(across(active:age, as.numeric)) %>%
+    mutate(across(rookie:jersey_number, as.numeric)) %>%
     mutate(team_id = as.numeric(team_id)) %>%
-    mutate(across(games_played:faceoff_pct, ~as.numeric(.))) %>%
-    mutate(across(shots_on:num_teams, ~as.numeric(.))) %>%
-    mutate(birthdate_year = stringr::str_split(birthdate_year,
-                                               "\\'", simplify = TRUE, n = 2)[,2]) %>%
+    mutate(across(games_played:faceoff_pct, as.numeric)) %>%
+    mutate(across(shots_on:num_teams, as.numeric)) %>%
+    mutate(birthdate_year = str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[,2]) %>%
     mutate(birthdate_year = as.numeric(birthdate_year)) %>%
     mutate(birthdate_year = 2000 + birthdate_year)
 
-  # create data frame with columns required for tableau viz
+  # Final dataframe
   LeagueStats <- df %>%
     select(Name = "name",
            Rookie = "rookie",
@@ -142,22 +155,23 @@ get_RawStats <- function(season_name = "2026 Season", RawLeagueStats = NULL) {
            ENG = "empty_net_goals",
            PIM = "penalty_minutes",
            Active = "active") %>%
-    filter(Active == 1) %>%
-    mutate(PPP = PPG + PPA) %>%
-    filter(Pos != "G")
+    filter(Active == 1, Pos != "G") %>%
+    mutate(PPP = PPG + PPA)
 
-  #assign rookie values as YES or No instead of binary (1, 0)
-  LeagueStats$Rookie <- gsub('1', 'YES', LeagueStats$Rookie)
-  LeagueStats$Rookie <- gsub('0', 'NO', LeagueStats$Rookie)
+  # Convert Rookie binary to YES/NO
+  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
 
-  #fix and adjust the BD column
+  # Fix BD column
   LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
   LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
   RawLeagueStats <- LeagueStats
 
-  return(RawLeagueStats)
+  # Apply team filter if provided
+  if (!is.null(team)) {
+    RawLeagueStats <- RawLeagueStats %>% filter(Team %in% team)
+  }
 
+  return(RawLeagueStats)
 }

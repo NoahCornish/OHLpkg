@@ -1,30 +1,30 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_GoalieStats.R
 # Created by: Noah Cornish
-# Description: Get goalie statistics for a given season.
+# Description: Get goalie statistics for a given season with optional team filter.
 
 #' Get goalie stats
 #'
 #' @description Retrieves goalie statistics for the specified season,
 #' excluding goalies with fewer than 10 games played.
+#' Optionally filter by team(s).
+#'
 #' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
 #' @return A data frame with goalie statistics.
 #' @examples
 #' gl <- get_GoalieStats("2026 Season")
 #' head(gl)
+#'
+#' knights_goalies <- get_GoalieStats("2026 Season", team = "London Knights")
+#' head(knights_goalies)
 #' @export
+get_GoalieStats <- function(season_name = "2026 Season", team = NULL) {
 
-get_GoalieStats <- function(goalie_stats, season_name = "2026 Season"){
-
-  library(rsconnect)
-  library(ggplot2)
-  library(tidyverse)
-  library(janitor)
-  library(lubridate)
-  library(RJSONIO)
   library(jsonlite)
   library(dplyr)
-  library(scales)
 
   # Map the updated season names to their respective season_ids
   season_ids <- c("2026 Season" = 83,
@@ -84,23 +84,23 @@ get_GoalieStats <- function(goalie_stats, season_name = "2026 Season"){
                   "1998 Season" = 4,
                   "1998 Playoffs" = 5)
 
-  # Validate the input season_name and retrieve the corresponding season_id
+  # Validate season_name
   if (!season_name %in% names(season_ids)) {
     stop("Invalid season name. Please refer to package help.")
   }
 
   season_id <- season_ids[season_name]
 
-  url_goalies <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topgoalies&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=", season_id)
+  url_goalies <- sprintf(
+    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topgoalies&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
+    season_id
+  )
 
-  # use jsonlite::fromJSON to handle NULL values
-  json_data_goalies <- jsonlite::fromJSON(url_goalies, simplifyDataFrame = TRUE)
+  # Fetch JSON
+  json_data_goalies <- fromJSON(url_goalies, simplifyDataFrame = TRUE)
 
-
-  # create data frame
-  df_goalies <- json_data_goalies[["SiteKit"]][["Statviewtype"]]
-
-  goalie_stats <- df_goalies %>%
+  # Extract and clean
+  goalie_stats <- json_data_goalies[["SiteKit"]][["Statviewtype"]] %>%
     select(name, height, weight, team_name, birthdate,
            games_played, saves, shots, save_percentage,
            shots_against_average, goals_against, goals_against_average,
@@ -131,14 +131,15 @@ get_GoalieStats <- function(goalie_stats, season_name = "2026 Season"){
     mutate(across(GP:PIM, ~as.numeric(.))) %>%
     filter(GP > 9)
 
-  #fix and adjust the BD column
+  # Fix birthdate formatting
   goalie_stats$Birthdate <- gsub(",", "", goalie_stats$Birthdate)
-  goalie_stats$Birthdate <- as.POSIXct(goalie_stats$Birthdate, format='%B %d %Y')
+  goalie_stats$Birthdate <- as.Date(as.POSIXct(goalie_stats$Birthdate,
+                                               format = "%B %d %Y"))
 
-  goalie_stats$Birthdate <- as.Date(goalie_stats$Birthdate, format = "%d-%b-%Y")
-
-  goalie_stats <- goalie_stats
+  # Optional team filter
+  if (!is.null(team)) {
+    goalie_stats <- goalie_stats %>% filter(Team %in% team)
+  }
 
   return(goalie_stats)
 }
-

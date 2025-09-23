@@ -4,15 +4,28 @@
 \alias{get_Teams}
 \title{Get OHL teams}
 \usage{
-get_Teams(Teams)
+get_Teams(team = NULL)
+}
+\arguments{
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
-A data frame with OHL team details.
+A data frame with OHL team details for the current season.
 }
 \description{
-Retrieves a data frame with team information for the 2024–2025 or 2025–2026 season.
+Retrieves a data frame with team information for the 2025–2026 season.
+Users can optionally filter results by team name(s).
 }
 \examples{
+# Get all current teams
 teams <- get_Teams()
 head(teams)
+
+# Get just the London Knights
+knights <- get_Teams(team = "London Knights")
+
+# Get multiple specific teams
+subset <- get_Teams(team = c("Erie Otters", "Saginaw Spirit"))
+
 }

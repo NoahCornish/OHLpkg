@@ -1,19 +1,34 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_Teams.R
 # Created by: Noah Cornish
-# Description: Get team information for the current season.
+# Description: Get team information for the current season,
+# with optional filtering for one or more teams.
 
 #' Get OHL teams
 #'
-#' @description Retrieves a data frame with team information for the 2024–2025 or 2025–2026 season.
-#' @return A data frame with OHL team details.
+#' @description Retrieves a data frame with team information for the 2025–2026 season.
+#' Users can optionally filter results by team name(s).
+#'
+#' @param team Optional character vector of team names to filter
+#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#'
+#' @return A data frame with OHL team details for the current season.
+#'
 #' @examples
+#' # Get all current teams
 #' teams <- get_Teams()
 #' head(teams)
+#'
+#' # Get just the London Knights
+#' knights <- get_Teams(team = "London Knights")
+#'
+#' # Get multiple specific teams
+#' subset <- get_Teams(team = c("Erie Otters", "Saginaw Spirit"))
+#'
 #' @export
+get_Teams <- function(team = NULL) {
 
-get_Teams <- function(Teams){
-
+  # Load required libraries
   library(rsconnect)
   library(ggplot2)
   library(tidyverse)
@@ -23,14 +38,15 @@ get_Teams <- function(Teams){
   library(jsonlite)
   library(dplyr)
   library(scales)
+  library(stringr)
 
+  # API endpoint for current season (2026 season_id = 83)
   url_reg <- "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=83&first=0&limit=50000&sort=active&stat=all&order_direction="
 
-  # use jsonlite::fromJSON to handle NULL values
+  # Fetch JSON data
   json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
 
-
-  # create data frame
+  # Create base data frame
   df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
     select(rank, player_id:num_teams) %>%
     select(-c(birthtown, birthprov, birthcntry,
@@ -43,14 +59,11 @@ get_Teams <- function(Teams){
     mutate(team_id = as.numeric(team_id)) %>%
     mutate(across(games_played:faceoff_pct, ~as.numeric(.))) %>%
     mutate(across(shots_on:num_teams, ~as.numeric(.))) %>%
-    mutate(birthdate_year = stringr::str_split(birthdate_year,
-                                               "\\'", simplify = TRUE, n = 2)[,2]) %>%
+    mutate(birthdate_year = str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[, 2]) %>%
     mutate(birthdate_year = as.numeric(birthdate_year)) %>%
     mutate(birthdate_year = 2000 + birthdate_year)
 
-
-
-  # create data frame with columns required for tableau viz
+  # Clean LeagueStats
   LeagueStats <- df %>%
     select(Name = "name",
            Rookie = "rookie",
@@ -77,26 +90,24 @@ get_Teams <- function(Teams){
            ENG = "empty_net_goals",
            PIM = "penalty_minutes",
            Active = "active") %>%
-    filter(Active == 1) %>%
-    filter(GP > 9) %>%
-    mutate(PPP = PPG + PPA) %>%
-    filter(Pos != "G")
+    filter(Active == 1, GP > 9, Pos != "G") %>%
+    mutate(PPP = PPG + PPA)
 
-  #assign rookie values as YES or No instead of binary (1, 0)
-  LeagueStats$Rookie <- gsub('1', 'YES', LeagueStats$Rookie)
-  LeagueStats$Rookie <- gsub('0', 'NO', LeagueStats$Rookie)
+  # Assign rookie values as YES/NO
+  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
 
-  #fix and adjust the BD column
+  # Fix BD column
   LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
-  LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-
+  LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format = "%B %d %Y")
   LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
 
+  # Extract distinct teams
   Teams <- distinct(LeagueStats, Team)
 
+  # Apply team filter if provided
+  if (!is.null(team)) {
+    Teams <- Teams %>% filter(Team %in% team)
+  }
+
   return(Teams)
-
 }
-
-
-

@@ -4,19 +4,31 @@
 \alias{get_RKStats}
 \title{Get rookie skater stats}
 \usage{
-get_RKStats(RKStats, season_name = "2026 Season")
+get_RKStats(season_name = "2026 Season", team = NULL)
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
 A data frame with rookie skater statistics.
 }
 \description{
 Retrieves rookie skater statistics for the specified season,
-filtering out players with too few games.
+filtering out players with too few games. Optionally filter by team(s).
 }
 \examples{
+# Get all rookies in 2026 Season
 rk <- get_RKStats("2026 Season")
 head(rk)
+
+# Get rookies only from London Knights
+rk_knights <- get_RKStats("2026 Season", team = "London Knights")
+
+# Get rookies from multiple teams
+rk_subset <- get_RKStats("2026 Season",
+                         team = c("Erie Otters", "Saginaw Spirit"))
+
 }

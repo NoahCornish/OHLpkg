@@ -1,4 +1,4 @@
-# Version 2.4.1
+# Version 2.5.0
 # get_Schedule.R
 # Created by: Noah Cornish
 # Description: Get the OHL regular season schedule.
@@ -34,7 +34,7 @@ get_Schedule <- function(Schedule){
   json_data_schedule <- jsonlite::fromJSON(url_schedule, simplifyDataFrame = TRUE)
 
   Schedule <- json_data_schedule[["SiteKit"]][["Scorebar"]] %>%
-    filter(Date >= "2023-09-28") %>%
+    filter(Date >= "2025-09-18") %>%
     select(Date, ID, ScheduledFormattedTime,
            HomeLongName, HomeGoals,
            VisitorLongName, VisitorGoals)

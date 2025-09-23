@@ -4,10 +4,13 @@
 \alias{get_EVStats}
 \title{Get even-strength player stats}
 \usage{
-get_EVStats(EVStats)
+get_EVStats(season_name = "2026 Season", team = NULL)
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
 A data frame with even-strength player statistics.
@@ -19,4 +22,7 @@ filtering out players with too few games.
 \examples{
 ev_stats <- get_EVStats("2026 Season")
 head(ev_stats)
+
+knights_ev <- get_EVStats("2026 Season", team = "London Knights")
+head(knights_ev)
 }

@@ -4,7 +4,7 @@
 \alias{get_SHStats}
 \title{Get short-handed player stats}
 \usage{
-get_SHStats(SHStats)
+get_SHStats(season_name = "2026 Season")
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
@@ -17,6 +17,11 @@ Retrieves statistics for players while short-handed (SH) for the specified seaso
 filtering out players with too few games.
 }
 \examples{
+# Get 2026 Season SH stats
 sh_stats <- get_SHStats("2026 Season")
 head(sh_stats)
+
+# Get 2025 Playoffs SH stats
+sh_stats <- get_SHStats("2025 Playoffs")
+
 }

@@ -4,19 +4,30 @@
 \alias{get_RawStats}
 \title{Get raw player stats}
 \usage{
-get_RawStats(season_name = "2026 Season", RawLeagueStats = NULL)
+get_RawStats(season_name = "2026 Season", team = NULL)
 }
 \arguments{
 \item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+
+\item{team}{Optional character vector of team names to filter
+(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
 }
 \value{
 A data frame with raw skater statistics.
 }
 \description{
 Retrieves all active skater statistics for the specified season,
-without filtering by minimum games played.
+without filtering by minimum games played. Optionally filter by team(s).
 }
 \examples{
+# All players
 raw <- get_RawStats("2026 Season")
-head(raw)
+
+# Only London Knights players
+raw_london <- get_RawStats("2026 Season", team = "London Knights")
+
+# Multiple teams
+raw_subset <- get_RawStats("2026 Season",
+                           team = c("Erie Otters", "Saginaw Spirit"))
+
 }
