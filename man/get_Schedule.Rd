@@ -2,17 +2,20 @@
 % Please edit documentation in R/OHL_Schedule.R
 \name{get_Schedule}
 \alias{get_Schedule}
-\title{Get OHL schedule}
+\title{Get the Current OHL Schedule}
 \usage{
-get_Schedule(Schedule)
+get_Schedule()
 }
 \value{
-A data frame with the OHL regular season schedule.
+A data frame containing the current OHL regular season schedule.
 }
 \description{
-Retrieves the OHL regular season schedule for the current season.
+Retrieves the current OHL regular season schedule.
 }
 \examples{
-sched <- get_Schedule()
-head(sched)
+\dontrun{
+schedule <- get_Schedule()
+head(schedule)
+}
+
 }

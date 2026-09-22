@@ -2,27 +2,41 @@
 % Please edit documentation in R/OHL_Player_Info.R
 \name{get_PlayerInfo}
 \alias{get_PlayerInfo}
-\title{Get player information}
+\title{Get OHL Player Information}
 \usage{
-get_PlayerInfo(season_name = "2026 Season", team = NULL)
+get_PlayerInfo(season_name = "2027 Season", team = NULL)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch info for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
 }
 \value{
-A tibble with player information.
+A data frame containing OHL player information.
 }
 \description{
-Retrieves player information and metrics for a given season.
-Optionally filter by team(s).
+Retrieves player identification and biographical information for a selected
+OHL season. Results can optionally be filtered by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-info <- get_PlayerInfo("2026 Season")
-head(info)
+\dontrun{
+# Retrieve all available player information
+player_info <- get_PlayerInfo("2027 Season")
 
-info_knights <- get_PlayerInfo("2026 Season", team = "London Knights")
-head(info_knights)
+# Filter by one team
+london_info <- get_PlayerInfo(
+  season_name = "2027 Season",
+  team = "London Knights"
+)
+
+# Filter by multiple teams
+player_subset <- get_PlayerInfo(
+  season_name = "2027 Season",
+  team = c("Erie Otters", "Saginaw Spirit")
+)
+}
+
 }

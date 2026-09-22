@@ -2,29 +2,53 @@
 % Please edit documentation in R/OHL_Player_Stats.R
 \name{get_Stats}
 \alias{get_Stats}
-\title{Get regular season player stats}
+\title{Get OHL Player Statistics}
 \usage{
-get_Stats(season_name = "2026 Season", min_games = 10, team = NULL)
+get_Stats(season_name = "2027 Season", min_games = 10, team = NULL)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{min_games}{Numeric. Minimum games played before including a skater (default = 10).}
+\item{min_games}{Numeric. The minimum number of games played required for
+a player to be included. Defaults to 10.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
 }
 \value{
-A data frame with skater statistics.
+A data frame containing filtered OHL skater statistics.
 }
 \description{
-Retrieves regular season player statistics for the specified season.
-Filters out skaters who haven’t played a minimum number of games (default 10).
-Optionally filter by team(s).
+Retrieves active skater statistics for a selected OHL season and filters
+players according to a minimum number of games played. Results can
+optionally be filtered by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-stats <- get_Stats("2026 Season")
-stats_all <- get_Stats("2026 Season", min_games = 0)
-stats_london <- get_Stats("2026 Season", team = "London Knights")
-head(stats_london)
+\dontrun{
+# Players with at least 10 games played
+stats <- get_Stats("2027 Season")
+
+# Include all active skaters
+stats_all <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+# Filter by one team
+stats_london <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0,
+  team = "London Knights"
+)
+
+# Filter by multiple teams
+stats_subset <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0,
+  team = c("Erie Otters", "Saginaw Spirit")
+)
+}
+
 }

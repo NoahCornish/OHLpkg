@@ -1,37 +1,30 @@
 Package: OHLpkg
 Type: Package
 Title: Ontario Hockey League Statistics Tools
-Version: 2.5.0
-Date: 2025-09-18
-Authors@R: 
-    person(given = "Noah",
-           family = "Cornish",
-           role = c("aut", "cre"),
-           email = "your_email@example.com")
-Description: Provides convenient functions for accessing, cleaning, and analyzing 
-    Ontario Hockey League (OHL) statistics. Includes functions for retrieving 
-    regular season and playoff stats, performing basic summaries, and filtering 
-    data by season or player attributes. Now updated with 2025 Playoffs and 
-    2025–2026 Regular Season data.
+Version: 2.6.0
+Date: 2026-09-21
+Authors@R:
+    person(
+        given = "Noah",
+        family = "Cornish",
+        role = c("aut", "cre"),
+        email = "noahcornish7@gmail.com"
+    )
+Description: Provides functions for accessing, cleaning, filtering, and
+    analyzing Ontario Hockey League statistics. Includes tools for retrieving
+    skater statistics, goalie statistics, team information, schedules,
+    play-by-play events, draft-eligible players, rookies, and special-teams
+    production across supported regular seasons and playoffs.
 License: MIT + file LICENSE
+URL: https://github.com/NoahCornish/OHLpkg
+BugReports: https://github.com/NoahCornish/OHLpkg/issues
 Encoding: UTF-8
-LazyData: false
 Imports:
-    httr,
-    jsonlite,
-    readr,
-    dplyr,
-    tidyr,
-    tibble,
-    purrr,
-    stringr,
-    lubridate
+    jsonlite
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Depends: 
-    R (>= 4.0)
-Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
-Config/testthat/edition: 3
+Depends:
+    R (>= 4.1.0)

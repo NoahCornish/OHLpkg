@@ -2,30 +2,45 @@
 % Please edit documentation in R/OHL_Teams.R
 \name{get_Teams}
 \alias{get_Teams}
-\title{Get OHL teams}
+\title{Get OHL Teams}
 \usage{
-get_Teams(team = NULL)
+get_Teams(team = NULL, season_name = "2027 Season")
 }
 \arguments{
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
+
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 }
 \value{
-A data frame with OHL team details for the current season.
+A data frame containing OHL team names.
 }
 \description{
-Retrieves a data frame with team information for the 2025–2026 season.
-Users can optionally filter results by team name(s).
+Retrieves the names of OHL teams represented in the player statistics for
+a selected season. Results can optionally be filtered by one or more team
+names.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-# Get all current teams
+\dontrun{
+# Retrieve all current teams
 teams <- get_Teams()
-head(teams)
 
-# Get just the London Knights
-knights <- get_Teams(team = "London Knights")
+# Filter by one team
+london <- get_Teams(
+  team = "London Knights"
+)
 
-# Get multiple specific teams
-subset <- get_Teams(team = c("Erie Otters", "Saginaw Spirit"))
+# Filter by multiple teams
+team_subset <- get_Teams(
+  team = c("Erie Otters", "Saginaw Spirit")
+)
+
+# Retrieve teams from another supported season
+previous_teams <- get_Teams(
+  season_name = "2026 Season"
+)
+}
 
 }

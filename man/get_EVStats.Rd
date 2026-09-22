@@ -2,27 +2,56 @@
 % Please edit documentation in R/OHL_EV_Stats.R
 \name{get_EVStats}
 \alias{get_EVStats}
-\title{Get even-strength player stats}
+\title{Get OHL Even-Strength Player Statistics}
 \usage{
-get_EVStats(season_name = "2026 Season", team = NULL)
+get_EVStats(season_name = "2027 Season", team = NULL, min_games = 10)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
+
+\item{min_games}{Numeric. The minimum number of games played required for
+a player to be included. Defaults to 10.}
 }
 \value{
-A data frame with even-strength player statistics.
+A data frame containing calculated even-strength player statistics.
 }
 \description{
-Retrieves statistics for players at even strength (EV) for the specified season,
-filtering out players with too few games.
+Retrieves active skater statistics for a selected OHL season and calculates
+even-strength goals, assists, and points by removing power-play and
+short-handed production from each player's totals.
+
+Players can be filtered according to a minimum number of games played and
+by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-ev_stats <- get_EVStats("2026 Season")
-head(ev_stats)
+\dontrun{
+# Players with at least 10 games played
+ev_stats <- get_EVStats("2027 Season")
 
-knights_ev <- get_EVStats("2026 Season", team = "London Knights")
-head(knights_ev)
+# Include all active skaters
+all_ev_stats <- get_EVStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+# Filter by one team
+london_ev <- get_EVStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+
+# Filter by multiple teams
+ev_subset <- get_EVStats(
+  season_name = "2027 Season",
+  team = c("Erie Otters", "Saginaw Spirit"),
+  min_games = 0
+)
+}
+
 }

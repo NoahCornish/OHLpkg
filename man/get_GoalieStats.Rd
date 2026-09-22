@@ -2,28 +2,53 @@
 % Please edit documentation in R/OHL_Goalie_Stats.R
 \name{get_GoalieStats}
 \alias{get_GoalieStats}
-\title{Get goalie stats}
+\title{Get OHL Goalie Statistics}
 \usage{
-get_GoalieStats(season_name = "2026 Season", team = NULL)
+get_GoalieStats(season_name = "2027 Season", team = NULL, min_games = 10)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
+
+\item{min_games}{Numeric. The minimum number of games played required for
+a goalie to be included. Defaults to 10.}
 }
 \value{
-A data frame with goalie statistics.
+A data frame containing OHL goalie statistics.
 }
 \description{
-Retrieves goalie statistics for the specified season,
-excluding goalies with fewer than 10 games played.
-Optionally filter by team(s).
+Retrieves goalie statistics for a selected OHL season. Goalies can be
+filtered according to a minimum number of games played and by one or more
+OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-gl <- get_GoalieStats("2026 Season")
-head(gl)
+\dontrun{
+# Goalies with at least 10 games played
+goalies <- get_GoalieStats("2027 Season")
 
-knights_goalies <- get_GoalieStats("2026 Season", team = "London Knights")
-head(knights_goalies)
+# Include all goalies
+all_goalies <- get_GoalieStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+# Filter by one team
+london_goalies <- get_GoalieStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+
+# Filter by multiple teams
+goalie_subset <- get_GoalieStats(
+  season_name = "2027 Season",
+  team = c("Erie Otters", "Saginaw Spirit"),
+  min_games = 0
+)
+}
+
 }

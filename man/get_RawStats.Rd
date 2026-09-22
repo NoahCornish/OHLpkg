@@ -2,32 +2,42 @@
 % Please edit documentation in R/OHL_Raw_Player_Stats.R
 \name{get_RawStats}
 \alias{get_RawStats}
-\title{Get raw player stats}
+\title{Get Raw OHL Player Statistics}
 \usage{
-get_RawStats(season_name = "2026 Season", team = NULL)
+get_RawStats(season_name = "2027 Season", team = NULL)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
 }
 \value{
-A data frame with raw skater statistics.
+A data frame containing raw OHL skater statistics.
 }
 \description{
-Retrieves all active skater statistics for the specified season,
-without filtering by minimum games played. Optionally filter by team(s).
+Retrieves all active skater statistics for a selected OHL season without
+applying a minimum-games requirement. Results can optionally be filtered
+by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-# All players
-raw <- get_RawStats("2026 Season")
+\dontrun{
+# All active skaters
+raw <- get_RawStats("2027 Season")
 
-# Only London Knights players
-raw_london <- get_RawStats("2026 Season", team = "London Knights")
+# Filter by one team
+raw_london <- get_RawStats(
+  season_name = "2027 Season",
+  team = "London Knights"
+)
 
-# Multiple teams
-raw_subset <- get_RawStats("2026 Season",
-                           team = c("Erie Otters", "Saginaw Spirit"))
+# Filter by multiple teams
+raw_subset <- get_RawStats(
+  season_name = "2027 Season",
+  team = c("Erie Otters", "Saginaw Spirit")
+)
+}
 
 }

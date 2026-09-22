@@ -2,33 +2,55 @@
 % Please edit documentation in R/OHL_Rookie_Stats.R
 \name{get_RKStats}
 \alias{get_RKStats}
-\title{Get rookie skater stats}
+\title{Get OHL Rookie Skater Statistics}
 \usage{
-get_RKStats(season_name = "2026 Season", team = NULL)
+get_RKStats(season_name = "2027 Season", team = NULL, min_games = 10)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
 
-\item{team}{Optional character vector of team names to filter
-(e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).}
+\item{team}{Optional character vector containing one or more team names.}
+
+\item{min_games}{Numeric. The minimum number of games played required for
+a player to be included. Defaults to 10.}
 }
 \value{
-A data frame with rookie skater statistics.
+A data frame containing OHL rookie skater statistics.
 }
 \description{
-Retrieves rookie skater statistics for the specified season,
-filtering out players with too few games. Optionally filter by team(s).
+Retrieves statistics for active OHL skaters identified as rookies during
+a selected season.
+
+Players can be filtered according to a minimum number of games played and
+by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-# Get all rookies in 2026 Season
-rk <- get_RKStats("2026 Season")
-head(rk)
+\dontrun{
+# Rookies with at least 10 games played
+rookie_stats <- get_RKStats("2027 Season")
 
-# Get rookies only from London Knights
-rk_knights <- get_RKStats("2026 Season", team = "London Knights")
+# Include all active rookies
+all_rookies <- get_RKStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
 
-# Get rookies from multiple teams
-rk_subset <- get_RKStats("2026 Season",
-                         team = c("Erie Otters", "Saginaw Spirit"))
+# Filter by one team
+london_rookies <- get_RKStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+
+# Filter by multiple teams
+rookie_subset <- get_RKStats(
+  season_name = "2027 Season",
+  team = c("Erie Otters", "Saginaw Spirit"),
+  min_games = 0
+)
+}
 
 }

@@ -1,115 +1,209 @@
-# Version 2.5.0
+# Version 2.6.0
 # get_PlayerInfo.R
 # Created by: Noah Cornish
-# Description: Get player info and metrics for a season.
+# Description: Retrieve OHL player information for a selected season.
 
-#' Get player information
+#' Get OHL Player Information
 #'
-#' @description Retrieves player information and metrics for a given season.
-#' Optionally filter by team(s).
+#' @description
+#' Retrieves player identification and biographical information for a selected
+#' OHL season. Results can optionally be filtered by one or more OHL teams.
 #'
-#' @param season_name Character. The season to fetch info for, e.g. "2026 Season".
-#' @param team Optional character vector of team names to filter
-#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#' Run \code{get_Seasons()} to view all supported season names.
 #'
-#' @return A tibble with player information.
+#' @param season_name Character. The season to retrieve.
+#'   Defaults to \code{"2027 Season"}.
+#' @param team Optional character vector containing one or more team names.
+#'
+#' @return A data frame containing OHL player information.
 #'
 #' @examples
-#' info <- get_PlayerInfo("2026 Season")
-#' head(info)
+#' \dontrun{
+#' # Retrieve all available player information
+#' player_info <- get_PlayerInfo("2027 Season")
 #'
-#' info_knights <- get_PlayerInfo("2026 Season", team = "London Knights")
-#' head(info_knights)
+#' # Filter by one team
+#' london_info <- get_PlayerInfo(
+#'   season_name = "2027 Season",
+#'   team = "London Knights"
+#' )
+#'
+#' # Filter by multiple teams
+#' player_subset <- get_PlayerInfo(
+#'   season_name = "2027 Season",
+#'   team = c("Erie Otters", "Saginaw Spirit")
+#' )
+#' }
+#'
 #' @export
-get_PlayerInfo <- function(season_name = "2026 Season", team = NULL) {
+get_PlayerInfo <- function(
+    season_name = "2027 Season",
+    team = NULL
+) {
 
-  library(httr)
-  library(jsonlite)
-  library(dplyr)
-  library(tibble)
+  # Validate the season and retrieve its OHL season ID
+  season_id <- .get_season_id(season_name)
 
-  # Map the updated season names to their respective season_ids
-  season_ids <- c("2026 Season" = 83,
-                  "2025 Playoffs" = 81,
-                  "2025 Season" = 79,
-                  "2025 Pre-Season" = 78,
-                  "2024 Season" = 76,
-                  "2024 Playoffs" = 77,
-                  "2024 Pre-Season" = 75,
-                  "2023 Season" = 73,
-                  "2023 Playoffs" = 74,
-                  "2022 Season" = 70,
-                  "2022 Playoffs" = 71,
-                  "2020 Season" = 68,
-                  "2019 Season" = 63,
-                  "2019 Playoffs" = 66,
-                  "2018 Season" = 60,
-                  "2018 Playoffs" = 61,
-                  "2017 Season" = 56,
-                  "2017 Playoffs" = 57,
-                  "2016 Season" = 54,
-                  "2016 Playoffs" = 55,
-                  "2015 Season" = 51,
-                  "2015 Playoffs" = 52,
-                  "2014 Season" = 49,
-                  "2014 Playoffs" = 50,
-                  "2013 Season" = 46,
-                  "2013 Playoffs" = 48,
-                  "2012 Season" = 44,
-                  "2012 Playoffs" = 45,
-                  "2011 Season" = 42,
-                  "2011 Playoffs" = 43,
-                  "2010 Season" = 38,
-                  "2010 Playoffs" = 41,
-                  "2009 Season" = 35,
-                  "2009 Playoffs" = 37,
-                  "2008 Season" = 32,
-                  "2008 Playoffs" = 34,
-                  "2007 Season" = 29,
-                  "2007 Playoffs" = 31,
-                  "2006 Season" = 26,
-                  "2006 Playoffs" = 28,
-                  "2005 Season" = 24,
-                  "2005 Playoffs" = 25,
-                  "2004 Season" = 21,
-                  "2004 Playoffs" = 23,
-                  "2003 Season" = 17,
-                  "2003 Playoffs" = 20,
-                  "2002 Season" = 14,
-                  "2002 Playoffs" = 15,
-                  "2001 Season" = 11,
-                  "2001 Playoffs" = 12,
-                  "2000 Season" = 9,
-                  "2000 Playoffs" = 10,
-                  "1999 Season" = 6,
-                  "1999 Playoffs" = 7,
-                  "1998 Season" = 4,
-                  "1998 Playoffs" = 5)
-
-  # Validate the input season_name and retrieve the corresponding season_id
-  if (!season_name %in% names(season_ids)) {
-    stop("Invalid season name. Please refer to package help.")
+  # Validate the optional team argument
+  if (!is.null(team) && !is.character(team)) {
+    stop(
+      "`team` must be NULL or a character vector of team names.",
+      call. = FALSE
+    )
   }
 
-  season_id <- season_ids[season_name]
-
-  # Construct the URL with the dynamic season_id
+  # Build the OHL API URL
   url_player <- sprintf(
-    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=10000&sort=active&stat=all&order_direction=",
+    paste0(
+      "https://lscluster.hockeytech.com/feed/",
+      "?feed=modulekit",
+      "&view=statviewtype",
+      "&type=topscorers",
+      "&key=2976319eb44abe94",
+      "&fmt=json",
+      "&client_code=ohl",
+      "&lang=en",
+      "&season_id=%s",
+      "&first=0",
+      "&limit=10000",
+      "&sort=active",
+      "&stat=all",
+      "&order_direction="
+    ),
     season_id
   )
 
-  # Retrieve and process the JSON data
-  json_data_player <- fromJSON(url_player, simplifyDataFrame = TRUE)
+  # Retrieve and parse the OHL data
+  json_data_player <- tryCatch(
+    jsonlite::fromJSON(
+      url_player,
+      simplifyDataFrame = TRUE
+    ),
+    error = function(error) {
+      stop(
+        paste0(
+          "OHL player information could not be retrieved for \"",
+          season_name,
+          "\". ",
+          error$message
+        ),
+        call. = FALSE
+      )
+    }
+  )
 
-  # Select relevant player information
-  player_info <- as_tibble(json_data_player[["SiteKit"]][["Statviewtype"]]) %>%
-    select(player_id, name, height, weight, birthdate, team_name, team_id)
+  # Extract the player-information table
+  raw_player_info <- json_data_player[["SiteKit"]][["Statviewtype"]]
 
-  # Optional team filter
-  if (!is.null(team)) {
-    player_info <- player_info %>% filter(team_name %in% team)
+  # Return an empty table when no player information is available
+  if (!is.data.frame(raw_player_info) || nrow(raw_player_info) == 0L) {
+    warning(
+      paste0(
+        "No player information is currently available for \"",
+        season_name,
+        "\"."
+      ),
+      call. = FALSE
+    )
+
+    return(
+      data.frame(
+        player_id = numeric(),
+        name = character(),
+        height = character(),
+        weight = numeric(),
+        birthdate = as.Date(character()),
+        team_name = character(),
+        team_id = numeric(),
+        stringsAsFactors = FALSE
+      )
+    )
   }
+
+  # Columns required from the OHL API
+  required_columns <- c(
+    "player_id",
+    "name",
+    "height",
+    "weight",
+    "birthdate",
+    "team_name",
+    "team_id"
+  )
+
+  # Identify changes or missing fields in the OHL API
+  missing_columns <- setdiff(
+    required_columns,
+    names(raw_player_info)
+  )
+
+  if (length(missing_columns) > 0L) {
+    stop(
+      paste0(
+        "The OHL player data feed is missing required columns: ",
+        paste(missing_columns, collapse = ", "),
+        "."
+      ),
+      call. = FALSE
+    )
+  }
+
+  # Select the player-information columns
+  player_info <- raw_player_info[
+    required_columns
+  ]
+
+  # Safely convert known numeric fields
+  convert_numeric <- function(value) {
+
+    value <- trimws(as.character(value))
+
+    value[value %in% c("", "-", "--", "NA", "N/A")] <- NA_character_
+
+    suppressWarnings(as.numeric(value))
+  }
+
+  numeric_columns <- c(
+    "player_id",
+    "weight",
+    "team_id"
+  )
+
+  player_info[numeric_columns] <- lapply(
+    player_info[numeric_columns],
+    convert_numeric
+  )
+
+  # Format birthdates
+  player_info$birthdate <- as.Date(
+    gsub(",", "", player_info$birthdate),
+    format = "%B %d %Y"
+  )
+
+  # Apply the optional team filter
+  if (!is.null(team)) {
+    player_info <- player_info[
+      player_info$team_name %in% team,
+      ,
+      drop = FALSE
+    ]
+  }
+
+  # Sort players by team and name
+  if (nrow(player_info) > 0L) {
+    player_info <- player_info[
+      order(
+        player_info$team_name,
+        player_info$name,
+        na.last = TRUE
+      ),
+      ,
+      drop = FALSE
+    ]
+  }
+
+  # Remove inherited row numbers
+  rownames(player_info) <- NULL
 
   return(player_info)
 }

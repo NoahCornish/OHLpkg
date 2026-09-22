@@ -1,177 +1,309 @@
-# Version 2.5.0
+# Version 2.6.0
 # get_RawStats.R
 # Created by: Noah Cornish
-# Description: Get raw skater stats (no GP cutoff), with optional team filter.
+# Description: Retrieve raw OHL skater statistics with an optional team filter.
 
-#' Get raw player stats
+#' Get Raw OHL Player Statistics
 #'
-#' @description Retrieves all active skater statistics for the specified season,
-#' without filtering by minimum games played. Optionally filter by team(s).
+#' @description
+#' Retrieves all active skater statistics for a selected OHL season without
+#' applying a minimum-games requirement. Results can optionally be filtered
+#' by one or more OHL teams.
 #'
-#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
-#' @param team Optional character vector of team names to filter
-#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#' Run \code{get_Seasons()} to view all supported season names.
 #'
-#' @return A data frame with raw skater statistics.
+#' @param season_name Character. The season to retrieve.
+#'   Defaults to \code{"2027 Season"}.
+#' @param team Optional character vector containing one or more team names.
+#'
+#' @return A data frame containing raw OHL skater statistics.
 #'
 #' @examples
-#' # All players
-#' raw <- get_RawStats("2026 Season")
+#' \dontrun{
+#' # All active skaters
+#' raw <- get_RawStats("2027 Season")
 #'
-#' # Only London Knights players
-#' raw_london <- get_RawStats("2026 Season", team = "London Knights")
+#' # Filter by one team
+#' raw_london <- get_RawStats(
+#'   season_name = "2027 Season",
+#'   team = "London Knights"
+#' )
 #'
-#' # Multiple teams
-#' raw_subset <- get_RawStats("2026 Season",
-#'                            team = c("Erie Otters", "Saginaw Spirit"))
+#' # Filter by multiple teams
+#' raw_subset <- get_RawStats(
+#'   season_name = "2027 Season",
+#'   team = c("Erie Otters", "Saginaw Spirit")
+#' )
+#' }
 #'
 #' @export
-get_RawStats <- function(season_name = "2026 Season", team = NULL) {
+get_RawStats <- function(
+    season_name = "2027 Season",
+    team = NULL
+) {
 
-  library(rsconnect)
-  library(ggplot2)
-  library(tidyverse)
-  library(janitor)
-  library(lubridate)
-  library(RJSONIO)
-  library(jsonlite)
-  library(dplyr)
-  library(scales)
-  library(stringr)
+  # Validate the season and retrieve its OHL season ID
+  season_id <- .get_season_id(season_name)
 
-  # Map the updated season names to their respective season_ids
-  season_ids <- c("2026 Season" = 83,
-                  "2025 Playoffs" = 81,
-                  "2025 Season" = 79,
-                  "2025 Pre-Season" = 78,
-                  "2024 Season" = 76,
-                  "2024 Playoffs" = 77,
-                  "2024 Pre-Season" = 75,
-                  "2023 Season" = 73,
-                  "2023 Playoffs" = 74,
-                  "2022 Season" = 70,
-                  "2022 Playoffs" = 71,
-                  "2020 Season" = 68,
-                  "2019 Season" = 63,
-                  "2019 Playoffs" = 66,
-                  "2018 Season" = 60,
-                  "2018 Playoffs" = 61,
-                  "2017 Season" = 56,
-                  "2017 Playoffs" = 57,
-                  "2016 Season" = 54,
-                  "2016 Playoffs" = 55,
-                  "2015 Season" = 51,
-                  "2015 Playoffs" = 52,
-                  "2014 Season" = 49,
-                  "2014 Playoffs" = 50,
-                  "2013 Season" = 46,
-                  "2013 Playoffs" = 48,
-                  "2012 Season" = 44,
-                  "2012 Playoffs" = 45,
-                  "2011 Season" = 42,
-                  "2011 Playoffs" = 43,
-                  "2010 Season" = 38,
-                  "2010 Playoffs" = 41,
-                  "2009 Season" = 35,
-                  "2009 Playoffs" = 37,
-                  "2008 Season" = 32,
-                  "2008 Playoffs" = 34,
-                  "2007 Season" = 29,
-                  "2007 Playoffs" = 31,
-                  "2006 Season" = 26,
-                  "2006 Playoffs" = 28,
-                  "2005 Season" = 24,
-                  "2005 Playoffs" = 25,
-                  "2004 Season" = 21,
-                  "2004 Playoffs" = 23,
-                  "2003 Season" = 17,
-                  "2003 Playoffs" = 20,
-                  "2002 Season" = 14,
-                  "2002 Playoffs" = 15,
-                  "2001 Season" = 11,
-                  "2001 Playoffs" = 12,
-                  "2000 Season" = 9,
-                  "2000 Playoffs" = 10,
-                  "1999 Season" = 6,
-                  "1999 Playoffs" = 7,
-                  "1998 Season" = 4,
-                  "1998 Playoffs" = 5)
-
-  # Validate the input season_name and retrieve the corresponding season_id
-  if (!season_name %in% names(season_ids)) {
-    stop("Invalid season name. Please refer to package help.")
+  # Validate the optional team argument
+  if (!is.null(team) && !is.character(team)) {
+    stop(
+      "`team` must be NULL or a character vector of team names.",
+      call. = FALSE
+    )
   }
 
-  season_id <- season_ids[season_name]
+  # Build the OHL API URL
+  url_reg <- sprintf(
+    paste0(
+      "https://lscluster.hockeytech.com/feed/",
+      "?feed=modulekit",
+      "&view=statviewtype",
+      "&type=topscorers",
+      "&key=2976319eb44abe94",
+      "&fmt=json",
+      "&client_code=ohl",
+      "&lang=en",
+      "&league_code=",
+      "&season_id=%s",
+      "&first=0",
+      "&limit=50000",
+      "&sort=active",
+      "&stat=all",
+      "&order_direction="
+    ),
+    season_id
+  )
 
-  # Build API URL
-  url_reg <- sprintf("https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&league_code=&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
-                     season_id)
+  # Retrieve and parse the OHL data
+  json_data <- tryCatch(
+    jsonlite::fromJSON(
+      url_reg,
+      simplifyDataFrame = TRUE
+    ),
+    error = function(error) {
+      stop(
+        paste0(
+          "OHL data could not be retrieved for \"",
+          season_name,
+          "\". ",
+          error$message
+        ),
+        call. = FALSE
+      )
+    }
+  )
 
-  # Fetch JSON
-  json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
+  # Extract the player-statistics table
+  raw_data <- json_data[["SiteKit"]][["Statviewtype"]]
 
-  # Create raw dataframe
-  df <- json_data[["SiteKit"]][["Statviewtype"]] %>%
-    select(rank, player_id:num_teams) %>%
-    select(-c(birthtown, birthprov, birthcntry,
-              loose_ball_recoveries, caused_turnovers, turnovers,
-              phonetic_name, last_years_club, suspension_games_remaining,
-              suspension_indefinite)) %>%
-    mutate(player_id = as.numeric(player_id)) %>%
-    mutate(across(active:age, as.numeric)) %>%
-    mutate(across(rookie:jersey_number, as.numeric)) %>%
-    mutate(team_id = as.numeric(team_id)) %>%
-    mutate(across(games_played:faceoff_pct, as.numeric)) %>%
-    mutate(across(shots_on:num_teams, as.numeric)) %>%
-    mutate(birthdate_year = str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[,2]) %>%
-    mutate(birthdate_year = as.numeric(birthdate_year)) %>%
-    mutate(birthdate_year = 2000 + birthdate_year)
+  # Return gracefully when a season does not contain statistics yet
+  if (!is.data.frame(raw_data) || nrow(raw_data) == 0L) {
+    warning(
+      paste0(
+        "No player statistics are currently available for \"",
+        season_name,
+        "\"."
+      ),
+      call. = FALSE
+    )
 
-  # Final dataframe
-  LeagueStats <- df %>%
-    select(Name = "name",
-           Rookie = "rookie",
-           JN = "jersey_number",
-           BD = "birthdate",
-           BD_Y = "birthdate_year",
-           Hgt = "height",
-           Wgt = "weight",
-           Pos = "position",
-           Team = "team_name",
-           GP = "games_played",
-           G = "goals",
-           A = "assists",
-           PTS = "points",
-           `Pts/G` = "points_per_game",
-           `+/-` = "plus_minus",
-           PPG = "power_play_goals",
-           PPA = "power_play_assists",
-           PPP = "power_play_points",
-           SHG = "short_handed_goals",
-           SHA = "short_handed_assists",
-           SHPTS = "short_handed_points",
-           GWG = "game_winning_goals",
-           ENG = "empty_net_goals",
-           PIM = "penalty_minutes",
-           Active = "active") %>%
-    filter(Active == 1, Pos != "G") %>%
-    mutate(PPP = PPG + PPA)
+    return(data.frame())
+  }
 
-  # Convert Rookie binary to YES/NO
-  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
+  # Columns required from the OHL API
+  required_columns <- c(
+    "name",
+    "rookie",
+    "jersey_number",
+    "birthdate",
+    "height",
+    "weight",
+    "position",
+    "team_name",
+    "games_played",
+    "goals",
+    "assists",
+    "points",
+    "points_per_game",
+    "plus_minus",
+    "power_play_goals",
+    "power_play_assists",
+    "power_play_points",
+    "short_handed_goals",
+    "short_handed_assists",
+    "short_handed_points",
+    "game_winning_goals",
+    "empty_net_goals",
+    "penalty_minutes",
+    "active"
+  )
 
-  # Fix BD column
-  LeagueStats$BD <- gsub(",", "", LeagueStats$BD)
-  LeagueStats$BD <- as.POSIXct(LeagueStats$BD, format='%B %d %Y')
-  LeagueStats$BD <- as.Date(LeagueStats$BD, format = "%d-%b-%Y")
+  # Identify changes or missing fields in the OHL API
+  missing_columns <- setdiff(
+    required_columns,
+    names(raw_data)
+  )
 
-  RawLeagueStats <- LeagueStats
+  if (length(missing_columns) > 0L) {
+    stop(
+      paste0(
+        "The OHL data feed is missing required columns: ",
+        paste(missing_columns, collapse = ", "),
+        "."
+      ),
+      call. = FALSE
+    )
+  }
 
-  # Apply team filter if provided
+  # Select only the columns used by this function
+  RawLeagueStats <- raw_data[required_columns]
+
+  # Apply readable column names
+  names(RawLeagueStats) <- c(
+    "Name",
+    "Rookie",
+    "JN",
+    "BD",
+    "Hgt",
+    "Wgt",
+    "Pos",
+    "Team",
+    "GP",
+    "G",
+    "A",
+    "PTS",
+    "Pts/G",
+    "+/-",
+    "PPG",
+    "PPA",
+    "PPP",
+    "SHG",
+    "SHA",
+    "SHPTS",
+    "GWG",
+    "ENG",
+    "PIM",
+    "Active"
+  )
+
+  # Safely convert known numeric fields
+  convert_numeric <- function(value) {
+
+    value <- trimws(as.character(value))
+
+    value[value %in% c("", "-", "--", "NA", "N/A")] <- NA_character_
+
+    suppressWarnings(as.numeric(value))
+  }
+
+  numeric_columns <- c(
+    "Rookie",
+    "JN",
+    "Wgt",
+    "GP",
+    "G",
+    "A",
+    "PTS",
+    "Pts/G",
+    "+/-",
+    "PPG",
+    "PPA",
+    "PPP",
+    "SHG",
+    "SHA",
+    "SHPTS",
+    "GWG",
+    "ENG",
+    "PIM",
+    "Active"
+  )
+
+  RawLeagueStats[numeric_columns] <- lapply(
+    RawLeagueStats[numeric_columns],
+    convert_numeric
+  )
+
+  # Format birthdates
+  RawLeagueStats$BD <- as.Date(
+    gsub(",", "", RawLeagueStats$BD),
+    format = "%B %d %Y"
+  )
+
+  # Calculate birth year from the complete birthdate
+  RawLeagueStats$BD_Y <- as.integer(
+    format(RawLeagueStats$BD, "%Y")
+  )
+
+  # Position birth year directly after birthdate
+  output_order <- c(
+    "Name",
+    "Rookie",
+    "JN",
+    "BD",
+    "BD_Y",
+    "Hgt",
+    "Wgt",
+    "Pos",
+    "Team",
+    "GP",
+    "G",
+    "A",
+    "PTS",
+    "Pts/G",
+    "+/-",
+    "PPG",
+    "PPA",
+    "PPP",
+    "SHG",
+    "SHA",
+    "SHPTS",
+    "GWG",
+    "ENG",
+    "PIM",
+    "Active"
+  )
+
+  RawLeagueStats <- RawLeagueStats[output_order]
+
+  # Recalculate power-play points
+  RawLeagueStats$PPP <- (
+    RawLeagueStats$PPG +
+      RawLeagueStats$PPA
+  )
+
+  # Convert the rookie indicator to readable values
+  RawLeagueStats$Rookie <- ifelse(
+    RawLeagueStats$Rookie == 1,
+    "YES",
+    "NO"
+  )
+
+  # Keep active skaters and remove goaltenders
+  keep_players <- (
+    RawLeagueStats$Active == 1 &
+      RawLeagueStats$Pos != "G"
+  )
+
+  keep_players[is.na(keep_players)] <- FALSE
+
+  RawLeagueStats <- RawLeagueStats[
+    keep_players,
+    ,
+    drop = FALSE
+  ]
+
+  # Apply the optional team filter
   if (!is.null(team)) {
-    RawLeagueStats <- RawLeagueStats %>% filter(Team %in% team)
+    RawLeagueStats <- RawLeagueStats[
+      RawLeagueStats$Team %in% team,
+      ,
+      drop = FALSE
+    ]
   }
+
+  # Remove inherited row numbers
+  rownames(RawLeagueStats) <- NULL
 
   return(RawLeagueStats)
 }

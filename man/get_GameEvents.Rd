@@ -2,20 +2,30 @@
 % Please edit documentation in R/OHL_Individual_Game_Data.R
 \name{get_GameEvents}
 \alias{get_GameEvents}
-\title{Get game events}
+\title{Get OHL Game Events}
 \usage{
 get_GameEvents(game_id)
 }
 \arguments{
-\item{game_id}{Numeric. The unique game ID.}
+\item{game_id}{Numeric or character. The unique OHL game ID.}
 }
 \value{
-A data frame with play-by-play events.
+A data frame containing available play-by-play events.
 }
 \description{
-Retrieves game event data (play-by-play) for a given game.
+Retrieves detailed play-by-play event data for a specific OHL game.
+Game IDs can be obtained from the \code{ID} column returned by
+\code{get_Schedule()}.
 }
 \examples{
-events <- get_GameEvents(game_id = 12345)
-head(events)
+\dontrun{
+schedule <- get_Schedule()
+
+game_events <- get_GameEvents(
+  game_id = schedule$ID[1]
+)
+
+head(game_events)
+}
+
 }

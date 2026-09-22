@@ -2,26 +2,54 @@
 % Please edit documentation in R/OHL_SH_Stats.R
 \name{get_SHStats}
 \alias{get_SHStats}
-\title{Get short-handed player stats}
+\title{Get OHL Short-Handed Player Statistics}
 \usage{
-get_SHStats(season_name = "2026 Season")
+get_SHStats(season_name = "2027 Season", team = NULL, min_games = 10)
 }
 \arguments{
-\item{season_name}{Character. The season to fetch stats for, e.g. "2026 Season".}
+\item{season_name}{Character. The season to retrieve.
+Defaults to \code{"2027 Season"}.}
+
+\item{team}{Optional character vector containing one or more team names.}
+
+\item{min_games}{Numeric. The minimum number of games played required for
+a player to be included. Defaults to 10.}
 }
 \value{
-A data frame with short-handed player statistics.
+A data frame containing short-handed OHL player statistics.
 }
 \description{
-Retrieves statistics for players while short-handed (SH) for the specified season,
-filtering out players with too few games.
+Retrieves active skater statistics for a selected OHL season and presents
+each player's short-handed goals, assists, and points.
+
+Players can be filtered according to a minimum number of games played and
+by one or more OHL teams.
+
+Run \code{get_Seasons()} to view all supported season names.
 }
 \examples{
-# Get 2026 Season SH stats
-sh_stats <- get_SHStats("2026 Season")
-head(sh_stats)
+\dontrun{
+# Players with at least 10 games played
+sh_stats <- get_SHStats("2027 Season")
 
-# Get 2025 Playoffs SH stats
-sh_stats <- get_SHStats("2025 Playoffs")
+# Include all active skaters
+all_sh_stats <- get_SHStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+# Filter by one team
+london_sh <- get_SHStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+
+# Retrieve playoff statistics
+playoff_sh <- get_SHStats(
+  season_name = "2026 Playoffs",
+  min_games = 0
+)
+}
 
 }

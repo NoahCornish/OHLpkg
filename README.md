@@ -1,117 +1,539 @@
-# OHLpkg: R Package for Ontario Hockey League Data
+# OHLpkg
 
-------------------------------------------------------------------------
+### Ontario Hockey League Statistics Tools for R
 
-![](https://img.shields.io/badge/OHLpkg-v2.5.0-red)
+[![Version](https://img.shields.io/badge/version-2.6.0-red.svg)](https://github.com/NoahCornish/OHLpkg/releases)
+[![Package status](https://img.shields.io/badge/status-operational-brightgreen.svg)](https://github.com/NoahCornish/OHLpkg)
+[![GitHub issues](https://img.shields.io/github/issues/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/issues)
+[![Repository size](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg)
+[![License](https://img.shields.io/github/license/NoahCornish/OHLpkg)](LICENSE)
 
-![](https://img.shields.io/github/commit-activity/t/NoahCornish/OHLpkg/main)
+<p align="center">
+  <img src="OHLpkg_logo.png" alt="OHLpkg logo" width="300">
+</p>
 
-![](https://img.shields.io/github/issues/NoahCornish/OHLpkg)
+`OHLpkg` is an R package created by **Noah Cornish** for retrieving clean, ready-to-use Ontario Hockey League data.
 
-![](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total)
+The package provides access to skater statistics, goalie statistics, team information, schedules, rookie and draft-eligible players, special-teams production, and individual game events.
 
-![](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)
+---
 
-![](https://img.shields.io/github/license/NoahCornish/OHLpkg)
+## What Can OHLpkg Do?
 
-![](https://img.shields.io/badge/Package-Operational-brightgreen.svg)
+With `OHLpkg`, you can:
 
-Created by: Noah Cornish
+- Retrieve current and historical OHL player statistics.
+- Include every active skater or apply a minimum-games requirement.
+- Filter results by one team or multiple teams.
+- Retrieve goalie statistics.
+- Calculate even-strength player production.
+- Examine short-handed production.
+- Identify rookies and NHL draft-eligible players.
+- Retrieve player biographical information.
+- View the current OHL schedule and game results.
+- Retrieve play-by-play events for individual games.
+- View all season names supported by the package.
 
-![](OHLpkg_logo.png)
+All major functions return standard R data frames that can be used for further analysis, visualization, or export.
 
-------------------------------------------------------------------------
+> An internet connection is required because `OHLpkg` retrieves information from the OHL's online data feeds.
 
-#### **Introduction**
+---
 
-The *OHLpkg* R package provides a comprehensive suite of tools for accessing, analyzing, and visualizing Ontario Hockey League (OHL) data. Designed for hockey analysts, enthusiasts, and data scientists, this package facilitates easy access to OHL statistics, including player stats, team stats, schedules, and more.
+## Installation
 
-The Ontario Hockey League (OHL) is one of the three major junior ice hockey leagues that constitute the Canadian Hockey League (CHL). The OHL is known for producing a significant number of NHL players and is a key developmental league for young hockey talent.
+`OHLpkg` is currently available through GitHub.
 
-Whether you're conducting a detailed statistical analysis or simply want to explore the latest season data, *OHLpkg* provides all the essential functions you need to work with OHL data in R.
+First, install the `remotes` package if it is not already installed:
 
-------------------------------------------------------------------------
+```r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+```
 
-#### **Download this Package**
+Install `OHLpkg`:
 
-To get started with *OHLpkg*, you can install it directly from GitHub using the following commands:
+```r
+remotes::install_github("NoahCornish/OHLpkg")
+```
 
-**`devtools::install_github('NoahCornish/OHLpkg')`**
+Load the package:
 
-**`library(OHLpkg)`**
+```r
+library(OHLpkg)
+```
 
-------------------------------------------------------------------------
+---
 
-#### **Latest Version Update**
+## Start Here
 
-**Version 2.5.0:**
+These three commands provide the easiest introduction to the package:
 
--   Added new arguments to some functions to filter based on a selected team(s).
+```r
+library(OHLpkg)
 
-**Version 2.4.1:**
+# View every supported season
+get_Seasons()
 
--   Patched a critical error where only `get_Stats()` was available in v2.4.0.
--   All core functions are now properly exported and available after loading the package.
+# Retrieve all active skaters from the current season
+players <- get_RawStats("2027 Season")
 
-**Version 2.4.0**
+# View the first six players
+head(players)
+```
 
--   Added the ability to view and pull 2024-2025 Playoff data.
--   Added the ability to view and pull 2025-2026 Regular Season data.
+The package uses the ending year when naming a season:
 
-------------------------------------------------------------------------
+```text
+"2027 Season" = 2026–27 OHL regular season
+"2026 Season" = 2025–26 OHL regular season
+"2026 Playoffs" = 2026 OHL playoffs
+"2026 Pre-Season" = 2025–26 OHL preseason
+```
 
-#### **Functions**
+Use the season names exactly as displayed by:
 
-| Function              | Information                                                                |
-|-------------------|-----------------------------------------------------|
-| **get_Stats()**       | Returns skaters statistics (GP \> 9)                                       |
-| **get_RawStats()**    | Returns all skaters statistics                                             |
-| **get_GoalieStats()** | Returns goalie statistics (GP\>9)                                          |
-| **get_EVStats()**     | Returns skaters (GP\>9) even-strength statistics                           |
-| **get_SHStats()**     | Returns skaters (GP\>9) short-handed statistics                            |
-| **get_DYStats()**     | Returns skaters (GP\>9) statistics who are NHL draft year (DY-0) eligible  |
-| **get_RKStats()**     | Returns skaters (GP\>9) statistics who are playing in their first OHL year |
-| **get_Teams()**       | Returns a data table consisting of all 20 OHL teams                        |
-| **get_Schedule()**    | Returns a data table consisting of the league schedule and results.        |
-| **get_GameEvents()**  | Returns a data table consisting of single game events.                     |
-| **get_PlayerInfo()**  | Returns a data table consisting of player metrics.                         |
+```r
+get_Seasons()
+```
 
-------------------------------------------------------------------------
+---
 
-#### **Arguments**
+## Player Statistics
 
-| Function              | Argument          | **Description**                                        |
-|---------------------|-----------------|-----------------------------------|
-| **get_RawStats()**    | season_name, team | Retrieve skater statistics by season and selected team |
-| **get_Stats()**       | season_name, team | Retrieve skater statistics by season and selected team |
-| **get_GoalieStats()** | season_name, team | Retrieve goalie statistics by season and selected team |
-| **get_RKStats()**     | season_name, team | Retrieve rookie statistics by season and selected team |
-| **get_GameEvents()**  | game_id           | Retrieve events for a specific game                    |
-| **get_PlayerInfo()**  | season_name, team | Retrieve skater metrics by season and selected team    |
+### Retrieve every active skater
 
-**Example Usage**
+`get_RawStats()` does not apply a games-played cutoff:
 
-`x <- get_RawStats(season_name = "2026 Season")`
+```r
+raw_stats <- get_RawStats(
+  season_name = "2027 Season"
+)
 
-`y <- get_RawStats(season_name = "2025 Playoffs")`
+head(raw_stats)
+```
 
-`z <- get_GameEvents(game_id = 12345)`
+### Apply a minimum-games requirement
 
-[OHLpkg Project Information](https://github.com/users/NoahCornish/projects/4?pane=info&statusUpdateId=42574)
+`get_Stats()` includes players with at least 10 games played by default:
 
-------------------------------------------------------------------------
+```r
+player_stats <- get_Stats(
+  season_name = "2027 Season"
+)
+```
 
-#### **Footnotes**
+Because the current season has only recently started, use `min_games = 0` to include everyone:
 
-Regular season and playoff data is available from 1998-\>2026. Regular season and playoff data is only available for the functions (`get_Stats(), get_RawStats(), get_RKStats()`). All other functions will return the current "season" such as the pre-season, regular season, or playoff data.
+```r
+player_stats <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+```
 
-Pre-Season data is **ONLY** available temporarily for the 2024 and 2025 season. **Once every team has played 10 games in the 2025-2026 season, the 2024 and 2025 pre-season data will be removed.**
+### Filter by team
 
-This was a temporary addition.
+```r
+london_stats <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0,
+  team = "London Knights"
+)
 
-------------------------------------------------------------------------
+head(london_stats)
+```
 
-Created by:\
-Noah Cornish
+Multiple teams can be supplied as a character vector:
 
-[![](https://img.shields.io/twitter/follow/NoahCornish)](https://twitter.com/NoahCornish)
+```r
+team_subset <- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0,
+  team = c("Erie Otters", "Saginaw Spirit")
+)
+```
+
+Team names must match the names returned by:
+
+```r
+get_Teams()
+```
+
+---
+
+## Goalie Statistics
+
+Retrieve all goalies from the current season:
+
+```r
+goalie_stats <- get_GoalieStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+head(goalie_stats)
+```
+
+Apply a team filter:
+
+```r
+london_goalies <- get_GoalieStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+```
+
+The default minimum is 10 games if `min_games` is not specified.
+
+---
+
+## Even-Strength Statistics
+
+`get_EVStats()` calculates:
+
+- Even-strength goals (`EVG`)
+- Even-strength assists (`EVA`)
+- Even-strength points (`EVPTS`)
+- Even-strength points per game (`EVPTS/G`)
+- Percentage of total points recorded at even strength (`EVPTS%`)
+
+```r
+ev_stats <- get_EVStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+head(ev_stats)
+```
+
+---
+
+## Short-Handed Statistics
+
+`get_SHStats()` returns short-handed goals, assists, points, points per game, and percentage of total production:
+
+```r
+sh_stats <- get_SHStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+head(sh_stats)
+```
+
+---
+
+## Draft-Eligible Players
+
+`get_DYStats()` returns first-time NHL draft-eligible skaters for the selected season:
+
+```r
+draft_year_stats <- get_DYStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+head(draft_year_stats)
+```
+
+For `"2027 Season"`, the draft-eligible birthdate range is:
+
+```text
+September 16, 2008 through September 15, 2009
+```
+
+The package calculates the appropriate birthdate range automatically for other supported seasons.
+
+---
+
+## Rookie Statistics
+
+`get_RKStats()` uses the OHL feed's rookie indicator:
+
+```r
+rookie_stats <- get_RKStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+head(rookie_stats)
+```
+
+Rookies can also be filtered by team:
+
+```r
+london_rookies <- get_RKStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+```
+
+---
+
+## Player Information
+
+Retrieve player IDs and biographical information:
+
+```r
+player_info <- get_PlayerInfo(
+  season_name = "2027 Season"
+)
+
+head(player_info)
+```
+
+The returned information includes:
+
+- Player ID
+- Player name
+- Height
+- Weight
+- Birthdate
+- Team name
+- Team ID
+
+---
+
+## Team Information
+
+Retrieve all teams represented in the current season:
+
+```r
+teams <- get_Teams()
+
+teams
+```
+
+Retrieve teams from another supported season:
+
+```r
+previous_teams <- get_Teams(
+  season_name = "2026 Season"
+)
+```
+
+Filter the result:
+
+```r
+selected_teams <- get_Teams(
+  team = c("London Knights", "Oshawa Generals")
+)
+```
+
+---
+
+## Current Schedule
+
+Retrieve the current 2026–27 OHL schedule and available results:
+
+```r
+schedule <- get_Schedule()
+
+head(schedule)
+```
+
+The schedule includes:
+
+- Game date
+- Game ID
+- Scheduled time
+- Home team
+- Home score
+- Visiting team
+- Visiting score
+
+The `ID` column can be supplied to `get_GameEvents()`.
+
+---
+
+## Individual Game Events
+
+First, retrieve the schedule:
+
+```r
+schedule <- get_Schedule()
+```
+
+Find games with recorded scores:
+
+```r
+completed_games <- schedule[
+  !is.na(schedule$HomeGoals) &
+    !is.na(schedule$VisitorGoals),
+]
+
+head(completed_games)
+```
+
+Retrieve play-by-play events using a game ID:
+
+```r
+game_events <- get_GameEvents(
+  game_id = completed_games$ID[1]
+)
+
+head(game_events)
+```
+
+---
+
+## Function Reference
+
+| Function | Purpose | Main arguments |
+|---|---|---|
+| `get_Seasons()` | List supported seasons and IDs | None |
+| `get_RawStats()` | Retrieve all active skaters | `season_name`, `team` |
+| `get_Stats()` | Retrieve skaters using a GP cutoff | `season_name`, `min_games`, `team` |
+| `get_GoalieStats()` | Retrieve goalie statistics | `season_name`, `team`, `min_games` |
+| `get_EVStats()` | Calculate even-strength production | `season_name`, `team`, `min_games` |
+| `get_SHStats()` | Retrieve short-handed production | `season_name`, `team`, `min_games` |
+| `get_DYStats()` | Retrieve draft-eligible skaters | `season_name`, `team`, `min_games` |
+| `get_RKStats()` | Retrieve rookie skaters | `season_name`, `team`, `min_games` |
+| `get_PlayerInfo()` | Retrieve player information | `season_name`, `team` |
+| `get_Teams()` | Retrieve unique team names | `team`, `season_name` |
+| `get_Schedule()` | Retrieve the current schedule | None |
+| `get_GameEvents()` | Retrieve play-by-play events | `game_id` |
+
+Open the package help page:
+
+```r
+help(package = "OHLpkg")
+```
+
+Open documentation for an individual function:
+
+```r
+?get_Stats
+?get_GoalieStats
+?get_DYStats
+```
+
+---
+
+## Common Questions
+
+### Why did `get_Stats()` return no players?
+
+The default minimum is 10 games. Early in a season, players may not have reached that threshold.
+
+Use:
+
+```r
+get_Stats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+```
+
+### How do I find the correct season name?
+
+Run:
+
+```r
+get_Seasons()
+```
+
+Season names are case-sensitive and should be entered exactly as displayed.
+
+### How do I find the correct team name?
+
+Run:
+
+```r
+get_Teams()
+```
+
+### Why did I receive an empty data frame?
+
+The selected season may be recognized by the package before statistics have been published by the OHL feed.
+
+### Why did I receive an API error?
+
+`OHLpkg` depends on an external online data source. Temporary connection problems or changes to the source feed may affect availability.
+
+---
+
+## Version 2.6.0
+
+Version 2.6.0 adds support for the 2026–27 OHL season and significantly improves the package's internal structure.
+
+### Changes
+
+- Added `"2027 Season"` using season ID `88`.
+- Added `"2026 Pre-Season"` using season ID `87`.
+- Added `"2026 Playoffs"` using season ID `85`.
+- Added `get_Seasons()`.
+- Centralized season names and IDs.
+- Updated current-season defaults to `"2027 Season"`.
+- Added clearer season and argument validation.
+- Added safer handling for empty and unavailable data.
+- Added customizable minimum-games filters.
+- Expanded optional team filtering.
+- Removed unnecessary package dependencies.
+- Removed in-function `library()` calls.
+- Improved documentation and package-check compatibility.
+
+---
+
+## Data Availability
+
+Data availability varies by season and statistic.
+
+Some older seasons may not contain every field available in recent seasons. A season may also be recognized before statistics are published.
+
+Use:
+
+```r
+get_Seasons()
+```
+
+to view the season names currently supported by the package.
+
+---
+
+## Reporting Problems
+
+If you find a problem, unexpected result, or change in the OHL data feed, please open an issue:
+
+[Report an OHLpkg issue](https://github.com/NoahCornish/OHLpkg/issues)
+
+When reporting a problem, include:
+
+- The function you used
+- The season name
+- Any team or minimum-games filters
+- The complete warning or error message
+- Your installed version of `OHLpkg`
+
+Check the installed version with:
+
+```r
+packageVersion("OHLpkg")
+```
+
+---
+
+## Disclaimer
+
+`OHLpkg` is an independent project and is not affiliated with or endorsed by the Ontario Hockey League, Canadian Hockey League, or HockeyTech.
+
+The package depends on externally maintained data feeds. Data availability, field names, and feed structure may change without notice.
+
+---
+
+## License
+
+`OHLpkg` is available under the MIT License.
+
+---
+
+## Author
+
+Created and maintained by **Noah Cornish**.
+
+- [GitHub](https://github.com/NoahCornish)
+- [X/Twitter](https://twitter.com/NoahCornish)

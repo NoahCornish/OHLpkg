@@ -1,144 +1,93 @@
-# Version 2.5.0
+# Version 2.6.0
 # get_Stats.R
 # Created by: Noah Cornish
-# Description: Get regular season skater stats (filtered by minimum games played).
+# Description: Retrieve OHL skater statistics filtered by games played.
 
-#' Get regular season player stats
+#' Get OHL Player Statistics
 #'
-#' @description Retrieves regular season player statistics for the specified season.
-#' Filters out skaters who haven’t played a minimum number of games (default 10).
-#' Optionally filter by team(s).
+#' @description
+#' Retrieves active skater statistics for a selected OHL season and filters
+#' players according to a minimum number of games played. Results can
+#' optionally be filtered by one or more OHL teams.
 #'
-#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
-#' @param min_games Numeric. Minimum games played before including a skater (default = 10).
-#' @param team Optional character vector of team names to filter
-#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#' Run \code{get_Seasons()} to view all supported season names.
 #'
-#' @return A data frame with skater statistics.
+#' @param season_name Character. The season to retrieve.
+#'   Defaults to \code{"2027 Season"}.
+#' @param min_games Numeric. The minimum number of games played required for
+#'   a player to be included. Defaults to 10.
+#' @param team Optional character vector containing one or more team names.
+#'
+#' @return A data frame containing filtered OHL skater statistics.
 #'
 #' @examples
-#' stats <- get_Stats("2026 Season")
-#' stats_all <- get_Stats("2026 Season", min_games = 0)
-#' stats_london <- get_Stats("2026 Season", team = "London Knights")
-#' head(stats_london)
+#' \dontrun{
+#' # Players with at least 10 games played
+#' stats <- get_Stats("2027 Season")
+#'
+#' # Include all active skaters
+#' stats_all <- get_Stats(
+#'   season_name = "2027 Season",
+#'   min_games = 0
+#' )
+#'
+#' # Filter by one team
+#' stats_london <- get_Stats(
+#'   season_name = "2027 Season",
+#'   min_games = 0,
+#'   team = "London Knights"
+#' )
+#'
+#' # Filter by multiple teams
+#' stats_subset <- get_Stats(
+#'   season_name = "2027 Season",
+#'   min_games = 0,
+#'   team = c("Erie Otters", "Saginaw Spirit")
+#' )
+#' }
+#'
 #' @export
-get_Stats <- function(season_name = "2026 Season", min_games = 10, team = NULL) {
+get_Stats <- function(
+    season_name = "2027 Season",
+    min_games = 10,
+    team = NULL
+) {
 
-  # Map season names to season_ids
-  season_ids <- c(
-    "2026 Season" = 83,
-    "2025 Playoffs" = 81,
-    "2025 Season" = 79,
-    "2025 Pre-Season" = 78,
-    "2024 Season" = 76,
-    "2024 Playoffs" = 77,
-    "2024 Pre-Season" = 75,
-    "2023 Season" = 73,
-    "2023 Playoffs" = 74,
-    "2022 Season" = 70,
-    "2022 Playoffs" = 71,
-    "2020 Season" = 68,
-    "2019 Season" = 63,
-    "2019 Playoffs" = 66,
-    "2018 Season" = 60,
-    "2018 Playoffs" = 61,
-    "2017 Season" = 56,
-    "2017 Playoffs" = 57,
-    "2016 Season" = 54,
-    "2016 Playoffs" = 55,
-    "2015 Season" = 51,
-    "2015 Playoffs" = 52,
-    "2014 Season" = 49,
-    "2014 Playoffs" = 50,
-    "2013 Season" = 46,
-    "2013 Playoffs" = 48,
-    "2012 Season" = 44,
-    "2012 Playoffs" = 45,
-    "2011 Season" = 42,
-    "2011 Playoffs" = 43,
-    "2010 Season" = 38,
-    "2010 Playoffs" = 41,
-    "2009 Season" = 35,
-    "2009 Playoffs" = 37,
-    "2008 Season" = 32,
-    "2008 Playoffs" = 34,
-    "2007 Season" = 29,
-    "2007 Playoffs" = 31,
-    "2006 Season" = 26,
-    "2006 Playoffs" = 28,
-    "2005 Season" = 24,
-    "2005 Playoffs" = 25,
-    "2004 Season" = 21,
-    "2004 Playoffs" = 23,
-    "2003 Season" = 17,
-    "2003 Playoffs" = 20,
-    "2002 Season" = 14,
-    "2002 Playoffs" = 15,
-    "2001 Season" = 11,
-    "2001 Playoffs" = 12,
-    "2000 Season" = 9,
-    "2000 Playoffs" = 10,
-    "1999 Season" = 6,
-    "1999 Playoffs" = 7,
-    "1998 Season" = 4,
-    "1998 Playoffs" = 5
+  # Validate the minimum-games argument
+  if (
+    !is.numeric(min_games) ||
+    length(min_games) != 1L ||
+    is.na(min_games) ||
+    !is.finite(min_games) ||
+    min_games < 0
+  ) {
+    stop(
+      "`min_games` must be one non-negative numeric value.",
+      call. = FALSE
+    )
+  }
+
+  # Retrieve the processed raw skater statistics
+  LeagueStats <- get_RawStats(
+    season_name = season_name,
+    team = team
   )
 
-  if (!season_name %in% names(season_ids)) {
-    stop("Invalid season name. Please refer to package help.")
+  # Return immediately if no statistics are available
+  if (nrow(LeagueStats) == 0L) {
+    return(LeagueStats)
   }
 
-  season_id <- season_ids[[season_name]]
+  # Apply the minimum-games requirement
+  LeagueStats <- LeagueStats[
+    !is.na(LeagueStats$GP) &
+      LeagueStats$GP >= min_games,
+    ,
+    drop = FALSE
+  ]
 
-  # Build API URL
-  url_reg <- sprintf(
-    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topscorers&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
-    season_id
-  )
-
-  json_data <- jsonlite::fromJSON(url_reg, simplifyDataFrame = TRUE)
-
-  df <- json_data[["SiteKit"]][["Statviewtype"]] |>
-    dplyr::select(rank, player_id:num_teams) |>
-    dplyr::select(-c(birthtown, birthprov, birthcntry,
-                     loose_ball_recoveries, caused_turnovers, turnovers,
-                     phonetic_name, last_years_club, suspension_games_remaining,
-                     suspension_indefinite)) |>
-    dplyr::mutate(player_id = as.numeric(player_id)) |>
-    dplyr::mutate(dplyr::across(active:age, as.numeric)) |>
-    dplyr::mutate(dplyr::across(rookie:jersey_number, as.numeric)) |>
-    dplyr::mutate(team_id = as.numeric(team_id)) |>
-    dplyr::mutate(dplyr::across(games_played:faceoff_pct, as.numeric)) |>
-    dplyr::mutate(dplyr::across(shots_on:num_teams, as.numeric)) |>
-    dplyr::mutate(birthdate_year = stringr::str_split(birthdate_year, "\\'", simplify = TRUE, n = 2)[, 2]) |>
-    dplyr::mutate(birthdate_year = as.numeric(birthdate_year),
-                  birthdate_year = 2000 + birthdate_year)
-
-  LeagueStats <- df |>
-    dplyr::select(Name = "name", Rookie = "rookie", JN = "jersey_number",
-                  BD = "birthdate", BD_Y = "birthdate_year", Hgt = "height",
-                  Wgt = "weight", Pos = "position", Team = "team_name",
-                  GP = "games_played", G = "goals", A = "assists",
-                  PTS = "points", `Pts/G` = "points_per_game", `+/-` = "plus_minus",
-                  PPG = "power_play_goals", PPA = "power_play_assists",
-                  PPP = "power_play_points", SHG = "short_handed_goals",
-                  SHA = "short_handed_assists", SHPTS = "short_handed_points",
-                  GWG = "game_winning_goals", ENG = "empty_net_goals",
-                  PIM = "penalty_minutes", Active = "active") |>
-    dplyr::filter(Active == 1, GP >= min_games, Pos != "G") |>
-    dplyr::mutate(PPP = PPG + PPA)
-
-  LeagueStats$Rookie <- ifelse(LeagueStats$Rookie == 1, "YES", "NO")
-  LeagueStats$BD <- as.Date(as.POSIXct(gsub(",", "", LeagueStats$BD), format = "%B %d %Y"))
-
-  # Optional team filter
-  if (!is.null(team)) {
-    LeagueStats <- LeagueStats |> dplyr::filter(Team %in% team)
-  }
-
-  if (nrow(LeagueStats) == 0 && season_name == "2026 Season") {
-    message("No 2026 season data available yet. Consider specifying season_name = '2025 Season'.")
-  }
+  # Remove inherited row numbers
+  rownames(LeagueStats) <- NULL
 
   return(LeagueStats)
 }

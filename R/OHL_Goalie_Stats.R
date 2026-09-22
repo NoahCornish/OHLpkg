@@ -1,145 +1,270 @@
-# Version 2.5.0
+# Version 2.6.0
 # get_GoalieStats.R
 # Created by: Noah Cornish
-# Description: Get goalie statistics for a given season with optional team filter.
+# Description: Retrieve OHL goalie statistics with optional filters.
 
-#' Get goalie stats
+#' Get OHL Goalie Statistics
 #'
-#' @description Retrieves goalie statistics for the specified season,
-#' excluding goalies with fewer than 10 games played.
-#' Optionally filter by team(s).
+#' @description
+#' Retrieves goalie statistics for a selected OHL season. Goalies can be
+#' filtered according to a minimum number of games played and by one or more
+#' OHL teams.
 #'
-#' @param season_name Character. The season to fetch stats for, e.g. "2026 Season".
-#' @param team Optional character vector of team names to filter
-#'        (e.g., "London Knights" or c("Erie Otters", "Saginaw Spirit")).
+#' Run \code{get_Seasons()} to view all supported season names.
 #'
-#' @return A data frame with goalie statistics.
+#' @param season_name Character. The season to retrieve.
+#'   Defaults to \code{"2027 Season"}.
+#' @param team Optional character vector containing one or more team names.
+#' @param min_games Numeric. The minimum number of games played required for
+#'   a goalie to be included. Defaults to 10.
+#'
+#' @return A data frame containing OHL goalie statistics.
+#'
 #' @examples
-#' gl <- get_GoalieStats("2026 Season")
-#' head(gl)
+#' \dontrun{
+#' # Goalies with at least 10 games played
+#' goalies <- get_GoalieStats("2027 Season")
 #'
-#' knights_goalies <- get_GoalieStats("2026 Season", team = "London Knights")
-#' head(knights_goalies)
+#' # Include all goalies
+#' all_goalies <- get_GoalieStats(
+#'   season_name = "2027 Season",
+#'   min_games = 0
+#' )
+#'
+#' # Filter by one team
+#' london_goalies <- get_GoalieStats(
+#'   season_name = "2027 Season",
+#'   team = "London Knights",
+#'   min_games = 0
+#' )
+#'
+#' # Filter by multiple teams
+#' goalie_subset <- get_GoalieStats(
+#'   season_name = "2027 Season",
+#'   team = c("Erie Otters", "Saginaw Spirit"),
+#'   min_games = 0
+#' )
+#' }
+#'
 #' @export
-get_GoalieStats <- function(season_name = "2026 Season", team = NULL) {
+get_GoalieStats <- function(
+    season_name = "2027 Season",
+    team = NULL,
+    min_games = 10
+) {
 
-  library(jsonlite)
-  library(dplyr)
+  # Validate the season and retrieve its OHL season ID
+  season_id <- .get_season_id(season_name)
 
-  # Map the updated season names to their respective season_ids
-  season_ids <- c("2026 Season" = 83,
-                  "2025 Playoffs" = 81,
-                  "2025 Season" = 79,
-                  "2025 Pre-Season" = 78,
-                  "2024 Season" = 76,
-                  "2024 Playoffs" = 77,
-                  "2024 Pre-Season" = 75,
-                  "2023 Season" = 73,
-                  "2023 Playoffs" = 74,
-                  "2022 Season" = 70,
-                  "2022 Playoffs" = 71,
-                  "2020 Season" = 68,
-                  "2019 Season" = 63,
-                  "2019 Playoffs" = 66,
-                  "2018 Season" = 60,
-                  "2018 Playoffs" = 61,
-                  "2017 Season" = 56,
-                  "2017 Playoffs" = 57,
-                  "2016 Season" = 54,
-                  "2016 Playoffs" = 55,
-                  "2015 Season" = 51,
-                  "2015 Playoffs" = 52,
-                  "2014 Season" = 49,
-                  "2014 Playoffs" = 50,
-                  "2013 Season" = 46,
-                  "2013 Playoffs" = 48,
-                  "2012 Season" = 44,
-                  "2012 Playoffs" = 45,
-                  "2011 Season" = 42,
-                  "2011 Playoffs" = 43,
-                  "2010 Season" = 38,
-                  "2010 Playoffs" = 41,
-                  "2009 Season" = 35,
-                  "2009 Playoffs" = 37,
-                  "2008 Season" = 32,
-                  "2008 Playoffs" = 34,
-                  "2007 Season" = 29,
-                  "2007 Playoffs" = 31,
-                  "2006 Season" = 26,
-                  "2006 Playoffs" = 28,
-                  "2005 Season" = 24,
-                  "2005 Playoffs" = 25,
-                  "2004 Season" = 21,
-                  "2004 Playoffs" = 23,
-                  "2003 Season" = 17,
-                  "2003 Playoffs" = 20,
-                  "2002 Season" = 14,
-                  "2002 Playoffs" = 15,
-                  "2001 Season" = 11,
-                  "2001 Playoffs" = 12,
-                  "2000 Season" = 9,
-                  "2000 Playoffs" = 10,
-                  "1999 Season" = 6,
-                  "1999 Playoffs" = 7,
-                  "1998 Season" = 4,
-                  "1998 Playoffs" = 5)
-
-  # Validate season_name
-  if (!season_name %in% names(season_ids)) {
-    stop("Invalid season name. Please refer to package help.")
+  # Validate the optional team argument
+  if (!is.null(team) && !is.character(team)) {
+    stop(
+      "`team` must be NULL or a character vector of team names.",
+      call. = FALSE
+    )
   }
 
-  season_id <- season_ids[season_name]
+  # Validate the minimum-games argument
+  if (
+    !is.numeric(min_games) ||
+    length(min_games) != 1L ||
+    is.na(min_games) ||
+    !is.finite(min_games) ||
+    min_games < 0
+  ) {
+    stop(
+      "`min_games` must be one non-negative numeric value.",
+      call. = FALSE
+    )
+  }
 
+  # Build the OHL API URL
   url_goalies <- sprintf(
-    "https://lscluster.hockeytech.com/feed/?feed=modulekit&view=statviewtype&type=topgoalies&key=2976319eb44abe94&fmt=json&client_code=ohl&lang=en&season_id=%s&first=0&limit=50000&sort=active&stat=all&order_direction=",
+    paste0(
+      "https://lscluster.hockeytech.com/feed/",
+      "?feed=modulekit",
+      "&view=statviewtype",
+      "&type=topgoalies",
+      "&key=2976319eb44abe94",
+      "&fmt=json",
+      "&client_code=ohl",
+      "&lang=en",
+      "&season_id=%s",
+      "&first=0",
+      "&limit=50000",
+      "&sort=active",
+      "&stat=all",
+      "&order_direction="
+    ),
     season_id
   )
 
-  # Fetch JSON
-  json_data_goalies <- fromJSON(url_goalies, simplifyDataFrame = TRUE)
+  # Retrieve and parse the OHL data
+  json_data_goalies <- tryCatch(
+    jsonlite::fromJSON(
+      url_goalies,
+      simplifyDataFrame = TRUE
+    ),
+    error = function(error) {
+      stop(
+        paste0(
+          "OHL goalie data could not be retrieved for \"",
+          season_name,
+          "\". ",
+          error$message
+        ),
+        call. = FALSE
+      )
+    }
+  )
 
-  # Extract and clean
-  goalie_stats <- json_data_goalies[["SiteKit"]][["Statviewtype"]] %>%
-    select(name, height, weight, team_name, birthdate,
-           games_played, saves, shots, save_percentage,
-           shots_against_average, goals_against, goals_against_average,
-           shutouts, wins, losses, ot_losses, total_losses,
-           shootout_games_played, shootout_wins, shootout_losses,
-           penalty_minutes) %>%
-    rename(Name = "name",
-           Height = "height",
-           Weight = "weight",
-           Team = "team_name",
-           Birthdate = "birthdate",
-           GP = "games_played",
-           SAV = "saves",
-           SH = "shots",
-           `SAV%` = "save_percentage",
-           `SH%` = "shots_against_average",
-           GA = "goals_against",
-           GAA = "goals_against_average",
-           SO = "shutouts",
-           W = "wins",
-           L = "losses",
-           OTL = "ot_losses",
-           TL = "total_losses",
-           SOGP = "shootout_games_played",
-           SOW = "shootout_wins",
-           SOL = "shootout_losses",
-           PIM = "penalty_minutes") %>%
-    mutate(across(GP:PIM, ~as.numeric(.))) %>%
-    filter(GP > 9)
+  # Extract the goalie-statistics table
+  raw_goalies <- json_data_goalies[["SiteKit"]][["Statviewtype"]]
 
-  # Fix birthdate formatting
-  goalie_stats$Birthdate <- gsub(",", "", goalie_stats$Birthdate)
-  goalie_stats$Birthdate <- as.Date(as.POSIXct(goalie_stats$Birthdate,
-                                               format = "%B %d %Y"))
+  # Return gracefully when a season does not contain goalie statistics
+  if (!is.data.frame(raw_goalies) || nrow(raw_goalies) == 0L) {
+    warning(
+      paste0(
+        "No goalie statistics are currently available for \"",
+        season_name,
+        "\"."
+      ),
+      call. = FALSE
+    )
 
-  # Optional team filter
-  if (!is.null(team)) {
-    goalie_stats <- goalie_stats %>% filter(Team %in% team)
+    return(data.frame())
   }
+
+  # Columns required from the OHL API
+  required_columns <- c(
+    "name",
+    "height",
+    "weight",
+    "team_name",
+    "birthdate",
+    "games_played",
+    "saves",
+    "shots",
+    "save_percentage",
+    "shots_against_average",
+    "goals_against",
+    "goals_against_average",
+    "shutouts",
+    "wins",
+    "losses",
+    "ot_losses",
+    "total_losses",
+    "shootout_games_played",
+    "shootout_wins",
+    "shootout_losses",
+    "penalty_minutes"
+  )
+
+  # Identify changes or missing fields in the OHL API
+  missing_columns <- setdiff(
+    required_columns,
+    names(raw_goalies)
+  )
+
+  if (length(missing_columns) > 0L) {
+    stop(
+      paste0(
+        "The OHL goalie data feed is missing required columns: ",
+        paste(missing_columns, collapse = ", "),
+        "."
+      ),
+      call. = FALSE
+    )
+  }
+
+  # Select only the columns used by this function
+  goalie_stats <- raw_goalies[required_columns]
+
+  # Apply readable column names
+  names(goalie_stats) <- c(
+    "Name",
+    "Height",
+    "Weight",
+    "Team",
+    "Birthdate",
+    "GP",
+    "SAV",
+    "SH",
+    "SAV%",
+    "SH%",
+    "GA",
+    "GAA",
+    "SO",
+    "W",
+    "L",
+    "OTL",
+    "TL",
+    "SOGP",
+    "SOW",
+    "SOL",
+    "PIM"
+  )
+
+  # Safely convert known numeric fields
+  convert_numeric <- function(value) {
+
+    value <- trimws(as.character(value))
+
+    value[value %in% c("", "-", "--", "NA", "N/A")] <- NA_character_
+
+    suppressWarnings(as.numeric(value))
+  }
+
+  numeric_columns <- c(
+    "Weight",
+    "GP",
+    "SAV",
+    "SH",
+    "SAV%",
+    "SH%",
+    "GA",
+    "GAA",
+    "SO",
+    "W",
+    "L",
+    "OTL",
+    "TL",
+    "SOGP",
+    "SOW",
+    "SOL",
+    "PIM"
+  )
+
+  goalie_stats[numeric_columns] <- lapply(
+    goalie_stats[numeric_columns],
+    convert_numeric
+  )
+
+  # Format birthdates
+  goalie_stats$Birthdate <- as.Date(
+    gsub(",", "", goalie_stats$Birthdate),
+    format = "%B %d %Y"
+  )
+
+  # Apply the minimum-games requirement
+  goalie_stats <- goalie_stats[
+    !is.na(goalie_stats$GP) &
+      goalie_stats$GP >= min_games,
+    ,
+    drop = FALSE
+  ]
+
+  # Apply the optional team filter
+  if (!is.null(team)) {
+    goalie_stats <- goalie_stats[
+      goalie_stats$Team %in% team,
+      ,
+      drop = FALSE
+    ]
+  }
+
+  # Remove inherited row numbers
+  rownames(goalie_stats) <- NULL
 
   return(goalie_stats)
 }
