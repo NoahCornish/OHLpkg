@@ -2,11 +2,14 @@
 
 ### Ontario Hockey League Statistics Tools for R
 
-[![Version](https://img.shields.io/badge/version-2.6.0-red.svg)](https://github.com/NoahCornish/OHLpkg/releases)
+[![Version](https://img.shields.io/badge/version-2.6.0-red.svg)](https://github.com/NoahCornish/OHLpkg/releases/latest)
 [![Package status](https://img.shields.io/badge/status-operational-brightgreen.svg)](https://github.com/NoahCornish/OHLpkg)
 [![GitHub issues](https://img.shields.io/github/issues/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/issues)
+[![Downloads](https://img.shields.io/github/downloads/NoahCornish/OHLpkg/total)](https://github.com/NoahCornish/OHLpkg/releases)
 [![Repository size](https://img.shields.io/github/repo-size/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg)
-[![License](https://img.shields.io/github/license/NoahCornish/OHLpkg)](LICENSE)
+[![License](https://img.shields.io/github/license/NoahCornish/OHLpkg)](https://github.com/NoahCornish/OHLpkg/blob/main/LICENSE)
+
+
 
 <p align="center">
   <img src="OHLpkg_logo.png" alt="OHLpkg logo" width="300">
