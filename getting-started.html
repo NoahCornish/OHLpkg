@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Getting started with OHLpkg, an R package for Ontario Hockey League statistics.">
+  <title>Getting Started • OHLpkg</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --surface:#f7f9fb;
+      --surface-2:#eef2f6;
+      --text:#20262e;
+      --muted:#65717f;
+      --line:#dfe5eb;
+      --brand:#b21f2d;
+      --brand-dark:#8e1723;
+      --code:#f4f6f8;
+      --code-text:#1f2933;
+      --link:#1469a8;
+      --shadow:0 10px 30px rgba(20,30,45,.08);
+      --radius:12px;
+      --max:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:var(--bg);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      line-height:1.65;
+    }
+    a{color:var(--link);text-decoration:none}
+    a:hover{text-decoration:underline}
+    code,kbd,pre{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(255,255,255,.96);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      min-height:64px;
+      padding:0 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:22px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:var(--text);
+      font-weight:750;
+      letter-spacing:-.02em;
+      font-size:1.12rem;
+      text-decoration:none!important;
+    }
+    .brand-mark{
+      width:34px;height:34px;
+      border-radius:9px;
+      display:grid;place-items:center;
+      background:var(--brand);
+      color:#fff;
+      font-weight:850;
+      font-size:.85rem;
+      box-shadow:0 4px 14px rgba(178,31,45,.18);
+    }
+    .nav{
+      display:flex;align-items:center;gap:18px;
+      font-size:.93rem;
+      white-space:nowrap;
+    }
+    .nav a{color:#3c4753;font-weight:600}
+    .nav .primary{
+      color:#fff;background:var(--brand);padding:8px 12px;border-radius:8px;
+    }
+    .nav .primary:hover{background:var(--brand-dark);text-decoration:none}
+
+    .hero{
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(178,31,45,.08), transparent 35%),
+        linear-gradient(180deg,#fff 0%,#fbfcfd 100%);
+    }
+    .hero-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:58px 22px 48px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 280px;
+      gap:48px;
+      align-items:center;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:5px 9px;
+      border:1px solid #efcbd0;
+      background:#fff7f8;
+      color:var(--brand-dark);
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:750;
+      letter-spacing:.02em;
+      margin-bottom:16px;
+    }
+    h1{
+      margin:0 0 15px;
+      font-size:clamp(2.3rem,6vw,4.2rem);
+      line-height:1.02;
+      letter-spacing:-.055em;
+    }
+    .lead{
+      margin:0;
+      max-width:760px;
+      color:#4b5662;
+      font-size:1.14rem;
+      line-height:1.72;
+    }
+    .hero-logo{
+      justify-self:end;
+      width:min(100%,260px);
+      filter:drop-shadow(0 12px 24px rgba(0,0,0,.08));
+    }
+    .hero-logo img{display:block;width:100%;height:auto}
+
+    .layout{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:42px 22px 80px;
+      display:grid;
+      grid-template-columns:220px minmax(0,1fr) 245px;
+      gap:40px;
+      align-items:start;
+    }
+    .toc,.aside-card{position:sticky;top:88px}
+    .toc-title,.aside-title{
+      text-transform:uppercase;
+      font-size:.72rem;
+      letter-spacing:.09em;
+      font-weight:800;
+      color:#7b8794;
+      margin-bottom:10px;
+    }
+    .toc a{
+      display:block;
+      padding:5px 0;
+      color:#53606c;
+      font-size:.9rem;
+    }
+    .toc a:hover{color:var(--brand);text-decoration:none}
+    .toc .sub{padding-left:12px;font-size:.85rem}
+
+    main{min-width:0}
+    section{scroll-margin-top:90px;margin-bottom:54px}
+    h2{
+      font-size:1.72rem;
+      line-height:1.25;
+      letter-spacing:-.025em;
+      margin:0 0 16px;
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
+    }
+    h3{
+      font-size:1.2rem;
+      margin:28px 0 10px;
+      letter-spacing:-.015em;
+    }
+    p{margin:0 0 16px}
+    ul{margin:10px 0 18px;padding-left:1.3rem}
+    li{margin:5px 0}
+
+    .code-wrap{
+      position:relative;
+      margin:16px 0 22px;
+    }
+    pre{
+      margin:0;
+      padding:18px 20px;
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:var(--code);
+      color:var(--code-text);
+      line-height:1.55;
+      font-size:.9rem;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    .copy{
+      position:absolute;right:9px;top:9px;
+      border:1px solid #ccd4dc;
+      background:#fff;
+      color:#56626e;
+      font-size:.72rem;
+      font-weight:700;
+      padding:5px 8px;
+      border-radius:7px;
+      cursor:pointer;
+    }
+    .copy:hover{background:#f5f7f9}
+
+    .callout{
+      border-left:4px solid var(--brand);
+      background:#fff8f8;
+      padding:15px 18px;
+      border-radius:0 9px 9px 0;
+      margin:20px 0 24px;
+    }
+    .callout strong{color:var(--brand-dark)}
+
+    .workflow{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin:18px 0 26px;
+    }
+    .step{
+      border:1px solid var(--line);
+      background:var(--surface);
+      border-radius:10px;
+      padding:14px;
+      text-align:center;
+      font-size:.86rem;
+      font-weight:700;
+      color:#4c5864;
+      position:relative;
+    }
+    .step span{
+      display:block;
+      color:var(--brand);
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:4px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin:18px 0 26px;
+      font-size:.92rem;
+      display:block;
+      overflow-x:auto;
+    }
+    th,td{
+      padding:11px 12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{
+      background:var(--surface);
+      color:#4d5965;
+      font-weight:750;
+    }
+    td code{
+      background:var(--surface-2);
+      padding:2px 5px;
+      border-radius:5px;
+      font-size:.88em;
+    }
+
+    .aside-card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:#fff;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .aside-head{
+      padding:18px 18px 12px;
+      border-bottom:1px solid var(--line);
+    }
+    .aside-head strong{display:block;font-size:1.02rem}
+    .aside-head span{display:block;color:var(--muted);font-size:.82rem;margin-top:3px}
+    .aside-body{padding:14px 18px}
+    .meta-row{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      padding:7px 0;
+      border-bottom:1px solid #edf1f4;
+      font-size:.84rem;
+    }
+    .meta-row:last-child{border-bottom:0}
+    .meta-row span:first-child{color:var(--muted)}
+    .link-list{margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+    .link-list a{display:block;padding:5px 0;font-size:.86rem;font-weight:650}
+
+    .function-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin:18px 0 26px;
+    }
+    .function-card{
+      padding:15px 16px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:10px;
+    }
+    .function-card code{
+      color:var(--brand-dark);
+      font-weight:750;
+      background:#fff3f4;
+      padding:2px 5px;
+      border-radius:5px;
+    }
+    .function-card p{
+      margin:7px 0 0;
+      color:#65717d;
+      font-size:.88rem;
+      line-height:1.5;
+    }
+
+    footer{
+      border-top:1px solid var(--line);
+      background:var(--surface);
+    }
+    .footer-inner{
+      max-width:var(--max);
+      margin:0 auto;
+      padding:26px 22px 40px;
+      color:#6c7782;
+      font-size:.82rem;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    @media (max-width:1000px){
+      .layout{grid-template-columns:180px minmax(0,1fr)}
+      .aside-card{display:none}
+      .hero-inner{grid-template-columns:1fr 190px}
+    }
+    @media (max-width:760px){
+      .nav a:not(.primary){display:none}
+      .hero-inner{grid-template-columns:1fr;padding-top:42px}
+      .hero-logo{display:none}
+      .layout{grid-template-columns:1fr;padding-top:26px}
+      .toc{display:none}
+      .workflow{grid-template-columns:1fr 1fr}
+      .function-grid{grid-template-columns:1fr}
+      h1{font-size:2.65rem}
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">OHL</span>
+      <span>OHLpkg</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="#functions">Functions</a>
+      <a href="#games">Game data</a>
+      <a href="https://github.com/NoahCornish/OHLpkg">GitHub</a>
+      <a class="primary" href="#start">Get started</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">OHLpkg 2.6.0 · Getting Started</div>
+      <h1>Ontario Hockey League data, straight into R.</h1>
+      <p class="lead">
+        OHLpkg provides a focused set of tools for retrieving skater, goalie, team,
+        schedule, prospect and game-event data from the Ontario Hockey League.
+        This guide takes you from installation to useful analysis without turning
+        the documentation into a wall of function definitions.
+      </p>
+    </div>
+    <div class="hero-logo">
+      <img src="OHLpkg_logo.png" alt="OHLpkg logo">
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+
+  <aside class="toc" aria-label="Contents">
+    <div class="toc-title">On this page</div>
+    <a href="#installation">Installation</a>
+    <a href="#start">Start here</a>
+    <a href="#seasons">Seasons</a>
+    <a href="#skaters">Skater statistics</a>
+    <a class="sub" href="#raw-vs-filtered">Raw vs filtered</a>
+    <a class="sub" href="#teams">Team filters</a>
+    <a href="#special">Special situations</a>
+    <a href="#prospects">Prospects & rookies</a>
+    <a href="#goalies">Goalies</a>
+    <a href="#games">Schedules & events</a>
+    <a href="#functions">Function reference</a>
+    <a href="#problems">Common problems</a>
+  </aside>
+
+  <main>
+
+    <section id="installation">
+      <h2>Installation</h2>
+      <p>Install the stable CRAN release once it is available:</p>
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>install.packages("OHLpkg")
+library(OHLpkg)</code></pre>
+      </div>
+
+      <p>To install the current development version directly from GitHub:</p>
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+remotes::install_github("NoahCornish/OHLpkg")
+library(OHLpkg)</code></pre>
+      </div>
+
+      <div class="callout">
+        <strong>Live data package.</strong> OHLpkg retrieves information from online
+        OHL data feeds, so an internet connection is required when requesting data.
+      </div>
+    </section>
+
+    <section id="start">
+      <h2>Start here</h2>
+      <p>
+        The fastest way to understand OHLpkg is to retrieve a real dataset.
+        Most workflows follow the same four-step pattern.
+      </p>
+
+      <div class="workflow" aria-label="OHLpkg workflow">
+        <div class="step"><span>Step 1</span>Choose a season</div>
+        <div class="step"><span>Step 2</span>Retrieve data</div>
+        <div class="step"><span>Step 3</span>Filter it</div>
+        <div class="step"><span>Step 4</span>Analyze in R</div>
+      </div>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>library(OHLpkg)
+
+# See every supported season
+get_Seasons()
+
+# Retrieve every active skater
+players &lt;- get_RawStats("2027 Season")
+
+# Inspect the result
+head(players)</code></pre>
+      </div>
+
+      <p>
+        The returned object is a regular R data frame, so you can immediately use
+        base R, dplyr, ggplot2, Shiny, Tableau exports or whatever analysis workflow
+        you already prefer.
+      </p>
+    </section>
+
+    <section id="seasons">
+      <h2>Understanding seasons</h2>
+      <p>
+        OHLpkg names seasons by their <strong>ending year</strong>. Use
+        <code>get_Seasons()</code> whenever you want to confirm a supported name or ID.
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>OHLpkg name</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>"2027 Season"</code></td><td>2026–27 regular season</td></tr>
+          <tr><td><code>"2026 Season"</code></td><td>2025–26 regular season</td></tr>
+          <tr><td><code>"2026 Playoffs"</code></td><td>2026 OHL playoffs</td></tr>
+          <tr><td><code>"2026 Pre-Season"</code></td><td>2025–26 preseason</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>seasons &lt;- get_Seasons()
+
+head(seasons)</code></pre>
+      </div>
+    </section>
+
+    <section id="skaters">
+      <h2>Skater statistics</h2>
+      <p>
+        There are two primary entry points for skater data:
+        <code>get_RawStats()</code> and <code>get_Stats()</code>.
+      </p>
+
+      <h3 id="raw-vs-filtered">Raw vs. filtered statistics</h3>
+      <p>
+        Use <code>get_RawStats()</code> when you want every active skater in the
+        selected feed. Use <code>get_Stats()</code> when you want a games-played cutoff.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code># Every active skater
+raw &lt;- get_RawStats("2027 Season")
+
+# Players with at least 10 GP
+established &lt;- get_Stats(
+  season_name = "2027 Season",
+  min_games = 10
+)
+
+# Same function, but include everyone
+everyone &lt;- get_Stats(
+  season_name = "2027 Season",
+  min_games = 0
+)</code></pre>
+      </div>
+
+      <h3 id="teams">Filter by team</h3>
+      <p>
+        Many OHLpkg functions accept a single team or a vector of teams.
+        Use <code>get_Teams()</code> to confirm the exact team names first.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>get_Teams()
+
+london &lt;- get_Stats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)
+
+two_teams &lt;- get_Stats(
+  season_name = "2027 Season",
+  team = c("London Knights", "Oshawa Generals"),
+  min_games = 0
+)</code></pre>
+      </div>
+    </section>
+
+    <section id="special">
+      <h2>Special-situation production</h2>
+      <p>
+        OHLpkg can separate even-strength and short-handed production so you can
+        look beyond a player's raw point total.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>ev &lt;- get_EVStats(
+  season_name = "2027 Season",
+  min_games = 10
+)
+
+sh &lt;- get_SHStats(
+  season_name = "2027 Season",
+  min_games = 0
+)</code></pre>
+      </div>
+
+      <p>
+        The specialized tables include rate and share statistics in addition to the
+        underlying goal, assist and point totals.
+      </p>
+    </section>
+
+    <section id="prospects">
+      <h2>Draft-eligible players and rookies</h2>
+      <p>
+        Two functions make it easy to isolate prospect groups without rebuilding
+        age or rookie filters every time.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code># First-time NHL draft-eligible skaters
+draft_class &lt;- get_DYStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+# Players flagged as rookies in the OHL feed
+rookies &lt;- get_RKStats(
+  season_name = "2027 Season",
+  min_games = 0
+)</code></pre>
+      </div>
+
+      <p>
+        Use <code>get_PlayerInfo()</code> when you need player IDs and biographical
+        fields such as height, weight, birthdate and team information.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>player_info &lt;- get_PlayerInfo("2027 Season")
+
+head(player_info)</code></pre>
+      </div>
+    </section>
+
+    <section id="goalies">
+      <h2>Goalie statistics</h2>
+      <p>
+        Goaltenders have their own retrieval function and support the same basic
+        team and minimum-games workflow.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>goalies &lt;- get_GoalieStats(
+  season_name = "2027 Season",
+  min_games = 0
+)
+
+london_goalies &lt;- get_GoalieStats(
+  season_name = "2027 Season",
+  team = "London Knights",
+  min_games = 0
+)</code></pre>
+      </div>
+    </section>
+
+    <section id="games">
+      <h2>Schedules and game events</h2>
+      <p>
+        OHLpkg also lets you move from season-level statistics into individual
+        games. Start with the schedule, then use a game's <code>ID</code> to retrieve
+        its event feed.
+      </p>
+
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code># Step 1: get the schedule
+schedule &lt;- get_Schedule()
+
+# Step 2: find games with recorded scores
+completed_games &lt;- schedule[
+  !is.na(schedule$HomeGoals) &
+  !is.na(schedule$VisitorGoals),
+]
+
+# Step 3: choose a game ID
+game_id &lt;- completed_games$ID[1]
+
+# Step 4: retrieve the play-by-play events
+events &lt;- get_GameEvents(game_id)
+
+head(events)</code></pre>
+      </div>
+
+      <div class="callout">
+        <strong>Useful pattern:</strong> <code>get_Schedule()</code> gives you the bridge
+        from league-level data to individual-game analysis.
+      </div>
+    </section>
+
+    <section id="functions">
+      <h2>Function reference</h2>
+      <p>
+        OHLpkg 2.6.0 exposes a compact set of functions. Pick the one that matches
+        the question you are trying to answer.
+      </p>
+
+      <div class="function-grid">
+        <div class="function-card"><code>get_Seasons()</code><p>List supported seasons, IDs and season types.</p></div>
+        <div class="function-card"><code>get_Teams()</code><p>Retrieve team names for a supported season.</p></div>
+        <div class="function-card"><code>get_RawStats()</code><p>Retrieve all active skaters without a GP cutoff.</p></div>
+        <div class="function-card"><code>get_Stats()</code><p>Retrieve skaters with optional team and minimum-GP filters.</p></div>
+        <div class="function-card"><code>get_GoalieStats()</code><p>Retrieve goalie statistics with optional filters.</p></div>
+        <div class="function-card"><code>get_EVStats()</code><p>Calculate even-strength player production.</p></div>
+        <div class="function-card"><code>get_SHStats()</code><p>Retrieve short-handed production.</p></div>
+        <div class="function-card"><code>get_DYStats()</code><p>Identify first-time NHL draft-eligible skaters.</p></div>
+        <div class="function-card"><code>get_RKStats()</code><p>Retrieve players flagged as OHL rookies.</p></div>
+        <div class="function-card"><code>get_PlayerInfo()</code><p>Retrieve player IDs and biographical information.</p></div>
+        <div class="function-card"><code>get_Schedule()</code><p>Retrieve the current schedule and available results.</p></div>
+        <div class="function-card"><code>get_GameEvents()</code><p>Retrieve play-by-play events for an individual game.</p></div>
+      </div>
+
+      <p>Inside R, you can also open the package help page directly:</p>
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>help(package = "OHLpkg")
+
+?get_Stats
+?get_GoalieStats
+?get_GameEvents</code></pre>
+      </div>
+    </section>
+
+    <section id="problems">
+      <h2>Common problems</h2>
+
+      <h3>No players were returned</h3>
+      <p>
+        <code>get_Stats()</code> defaults to a minimum-games requirement. Early in
+        a season, try <code>min_games = 0</code>.
+      </p>
+
+      <h3>I don't know the correct season or team name</h3>
+      <div class="code-wrap">
+        <button class="copy" type="button">Copy</button>
+        <pre><code>get_Seasons()
+get_Teams()</code></pre>
+      </div>
+
+      <h3>I received an API or connection error</h3>
+      <p>
+        OHLpkg depends on externally maintained online data feeds. Temporary
+        outages, network restrictions or feed changes can affect availability.
+      </p>
+
+      <h3>Something looks wrong</h3>
+      <p>
+        Open an issue on
+        <a href="https://github.com/NoahCornish/OHLpkg/issues">GitHub</a> and include
+        the function, season, filters, package version and complete error message.
+      </p>
+    </section>
+
+  </main>
+
+  <aside class="aside-card" aria-label="Package information">
+    <div class="aside-head">
+      <strong>OHLpkg</strong>
+      <span>Ontario Hockey League Statistics Tools</span>
+    </div>
+    <div class="aside-body">
+      <div class="aside-title">Package</div>
+      <div class="meta-row"><span>Version</span><strong>2.6.0</strong></div>
+      <div class="meta-row"><span>License</span><strong>MIT</strong></div>
+      <div class="meta-row"><span>Language</span><strong>R</strong></div>
+      <div class="meta-row"><span>Maintainer</span><strong>Noah Cornish</strong></div>
+
+      <div class="link-list">
+        <div class="aside-title">Links</div>
+        <a href="index.html">OHLpkg home</a>
+        <a href="https://github.com/NoahCornish/OHLpkg">Source code</a>
+        <a href="https://github.com/NoahCornish/OHLpkg/issues">Report a bug</a>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>OHLpkg is an independent project and is not affiliated with or endorsed by the Ontario Hockey League or Canadian Hockey League.</div>
+    <div>Developed by Noah Cornish · MIT License</div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copy').forEach(function(button){
+    button.addEventListener('click', async function(){
+      var text = button.nextElementSibling.innerText;
+      try {
+        await navigator.clipboard.writeText(text);
+        var original = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(function(){ button.textContent = original; }, 1200);
+      } catch(e) {
+        button.textContent = 'Select code';
+      }
+    });
+  });
+</script>
+</body>
+</html>
