@@ -7,7 +7,7 @@ Authors@R:
     person(
         given = "Noah",
         family = "Cornish",
-        role = c("aut", "cre"),
+        role = c("aut", "cre", "cph"),
         email = "noahcornish7@gmail.com"
     )
 Description: Provides functions for accessing, cleaning, filtering, and

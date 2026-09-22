@@ -41,7 +41,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Noah Cornish \email{noahcornish7@gmail.com}
+\strong{Maintainer}: Noah Cornish \email{noahcornish7@gmail.com} [copyright holder]
 
 }
 \keyword{internal}
