@@ -519,7 +519,7 @@ packageVersion("OHLpkg")
 
 ## Disclaimer
 
-`OHLpkg` is an independent project and is not affiliated with or endorsed by the Ontario Hockey League, Canadian Hockey League, or HockeyTech.
+`OHLpkg` is an independent project and is not affiliated with or endorsed by the Ontario Hockey League or Canadian Hockey League.
 
 The package depends on externally maintained data feeds. Data availability, field names, and feed structure may change without notice.
 
