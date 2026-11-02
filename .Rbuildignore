@@ -9,3 +9,4 @@
 ^test$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^getting-started\.html$

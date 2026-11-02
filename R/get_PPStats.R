@@ -1,13 +1,13 @@
-# Version 2.6.0
-# get_SHStats.R
+# Version 2.7.0
+# get_PPStats.R
 # Created by: Noah Cornish
-# Description: Retrieve short-handed OHL skater statistics.
+# Description: Retrieve power-play OHL skater statistics.
 
-#' Get OHL Short-Handed Player Statistics
+#' Get OHL Power-Play Player Statistics
 #'
 #' @description
 #' Retrieves active skater statistics for a selected OHL season and presents
-#' each player's short-handed goals, assists, and points.
+#' each player's power-play goals, assists, and points.
 #'
 #' Players can be filtered according to a minimum number of games played and
 #' by one or more OHL teams.
@@ -20,35 +20,35 @@
 #' @param min_games Numeric. The minimum number of games played required for
 #'   a player to be included. Defaults to 10.
 #'
-#' @return A data frame containing short-handed OHL player statistics.
+#' @return A data frame containing power-play OHL player statistics.
 #'
 #' @examples
 #' \dontrun{
 #' # Players with at least 10 games played
-#' sh_stats <- get_SHStats("2027 Season")
+#' pp_stats <- get_PPStats("2027 Season")
 #'
 #' # Include all active skaters
-#' all_sh_stats <- get_SHStats(
+#' all_pp_stats <- get_PPStats(
 #'   season_name = "2027 Season",
 #'   min_games = 0
 #' )
 #'
 #' # Filter by one team
-#' london_sh <- get_SHStats(
+#' london_pp <- get_PPStats(
 #'   season_name = "2027 Season",
 #'   team = "London Knights",
 #'   min_games = 0
 #' )
 #'
 #' # Retrieve playoff statistics
-#' playoff_sh <- get_SHStats(
+#' playoff_pp <- get_PPStats(
 #'   season_name = "2026 Playoffs",
 #'   min_games = 0
 #' )
 #' }
 #'
 #' @export
-get_SHStats <- function(
+get_PPStats <- function(
     season_name = "2027 Season",
     team = NULL,
     min_games = 10
@@ -70,53 +70,53 @@ get_SHStats <- function(
         Pos = character(),
         Team = character(),
         GP = numeric(),
-        SHG = numeric(),
-        SHA = numeric(),
-        SHPTS = numeric(),
-        `SHPTS/G` = numeric(),
-        `SHPTS%` = numeric(),
+        PPG = numeric(),
+        PPA = numeric(),
+        PPP = numeric(),
+        `PPP/G` = numeric(),
+        `PPP%` = numeric(),
         check.names = FALSE
       )
     )
   }
 
-  # Calculate short-handed points
-  SHPTS <- LeagueStats$SHG + LeagueStats$SHA
+  # Calculate power-play points
+  PPP <- LeagueStats$PPG + LeagueStats$PPA
 
   # Avoid division by zero for players with no games or points
-  SHPTS_per_game <- ifelse(
+  PPP_per_game <- ifelse(
     LeagueStats$GP > 0,
-    round(SHPTS / LeagueStats$GP, 2),
+    round(PPP / LeagueStats$GP, 2),
     NA_real_
   )
 
-  SHPTS_percentage <- ifelse(
+  PPP_percentage <- ifelse(
     LeagueStats$PTS > 0,
-    round((SHPTS / LeagueStats$PTS) * 100),
+    round((PPP / LeagueStats$PTS) * 100),
     NA_real_
   )
 
-  # Build the final short-handed statistics table
-  SHStats <- data.frame(
+  # Build the final power-play statistics table
+  PPStats <- data.frame(
     Name = LeagueStats$Name,
     BD = LeagueStats$BD,
     Pos = LeagueStats$Pos,
     Team = LeagueStats$Team,
     GP = LeagueStats$GP,
-    SHG = LeagueStats$SHG,
-    SHA = LeagueStats$SHA,
-    SHPTS = SHPTS,
-    `SHPTS/G` = SHPTS_per_game,
-    `SHPTS%` = SHPTS_percentage,
+    PPG = LeagueStats$PPG,
+    PPA = LeagueStats$PPA,
+    PPP = PPP,
+    `PPP/G` = PPP_per_game,
+    `PPP%` = PPP_percentage,
     check.names = FALSE
   )
 
-  # Sort players by short-handed points
-  SHStats <- SHStats[
+  # Sort players by power-play points
+  PPStats <- PPStats[
     order(
-      -SHStats$SHPTS,
-      -SHStats$SHG,
-      SHStats$Name,
+      -PPStats$PPP,
+      -PPStats$PPG,
+      PPStats$Name,
       na.last = TRUE
     ),
     ,
@@ -124,7 +124,7 @@ get_SHStats <- function(
   ]
 
   # Remove inherited row numbers
-  rownames(SHStats) <- NULL
+  rownames(PPStats) <- NULL
 
-  return(SHStats)
+  return(PPStats)
 }

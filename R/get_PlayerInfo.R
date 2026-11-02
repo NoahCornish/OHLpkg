@@ -1,4 +1,4 @@
-# Version 2.6.0
+# Version 2.7.0
 # get_PlayerInfo.R
 # Created by: Noah Cornish
 # Description: Retrieve OHL player information for a selected season.

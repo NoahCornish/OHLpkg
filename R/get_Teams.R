@@ -1,4 +1,4 @@
-# Version 2.6.0
+# Version 2.7.0
 # get_Teams.R
 # Created by: Noah Cornish
 # Description: Retrieve OHL team names for a selected season.

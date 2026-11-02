@@ -1,4 +1,4 @@
-# Version 2.6.0
+# Version 2.7.0
 # get_RawStats.R
 # Created by: Noah Cornish
 # Description: Retrieve raw OHL skater statistics with an optional team filter.
@@ -16,8 +16,8 @@
 #'   Defaults to \code{"2027 Season"}.
 #' @param team Optional character vector containing one or more team names.
 #'
-#' @return A data frame containing raw OHL skater statistics.
-#'
+#' @return A data frame containing raw OHL skater statistics, including
+#'   player IDs and player headshot URLs.
 #' @examples
 #' \dontrun{
 #' # All active skaters
@@ -114,6 +114,7 @@ get_RawStats <- function(
   # Columns required from the OHL API
   required_columns <- c(
     "name",
+    "player_id",
     "rookie",
     "jersey_number",
     "birthdate",
@@ -162,6 +163,7 @@ get_RawStats <- function(
   # Apply readable column names
   names(RawLeagueStats) <- c(
     "Name",
+    "PlayerID",
     "Rookie",
     "JN",
     "BD",
@@ -198,6 +200,7 @@ get_RawStats <- function(
   }
 
   numeric_columns <- c(
+    "PlayerID",
     "Rookie",
     "JN",
     "Wgt",
@@ -235,9 +238,22 @@ get_RawStats <- function(
     format(RawLeagueStats$BD, "%Y")
   )
 
+  # Build the OHL player headshot URL
+  RawLeagueStats$PhotoURL <- ifelse(
+    !is.na(RawLeagueStats$PlayerID),
+    paste0(
+      "https://assets.leaguestat.com/ohl/240x240/",
+      RawLeagueStats$PlayerID,
+      ".jpg"
+    ),
+    NA_character_
+  )
+
   # Position birth year directly after birthdate
   output_order <- c(
     "Name",
+    "PlayerID",
+    "PhotoURL",
     "Rookie",
     "JN",
     "BD",

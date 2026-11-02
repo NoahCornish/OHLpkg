@@ -1,13 +1,18 @@
-# Version 2.6.0
-# get_RKStats.R
+# Version 2.7.0
+# get_DYStats.R
 # Created by: Noah Cornish
-# Description: Retrieve OHL rookie skater statistics.
+# Description: Retrieve draft-eligible OHL skater statistics.
 
-#' Get OHL Rookie Skater Statistics
+#' Get OHL Draft-Eligible Skater Statistics
 #'
 #' @description
-#' Retrieves statistics for active OHL skaters identified as rookies during
-#' a selected season.
+#' Retrieves statistics for first-time draft-eligible OHL skaters during a
+#' selected season.
+#'
+#' Draft eligibility is calculated automatically from the year at the
+#' beginning of \code{season_name}. For example, players in the
+#' \code{"2027 Season"} draft-year group must have birthdates from
+#' September 16, 2008, through September 15, 2009.
 #'
 #' Players can be filtered according to a minimum number of games played and
 #' by one or more OHL teams.
@@ -20,36 +25,35 @@
 #' @param min_games Numeric. The minimum number of games played required for
 #'   a player to be included. Defaults to 10.
 #'
-#' @return A data frame containing OHL rookie skater statistics.
+#' @return A data frame containing draft-eligible OHL skater statistics.
 #'
 #' @examples
 #' \dontrun{
-#' # Rookies with at least 10 games played
-#' rookie_stats <- get_RKStats("2027 Season")
+#' # Draft-eligible players with at least 10 games played
+#' draft_year_stats <- get_DYStats("2027 Season")
 #'
-#' # Include all active rookies
-#' all_rookies <- get_RKStats(
+#' # Include all draft-eligible players
+#' all_draft_year_stats <- get_DYStats(
 #'   season_name = "2027 Season",
 #'   min_games = 0
 #' )
 #'
 #' # Filter by one team
-#' london_rookies <- get_RKStats(
+#' london_draft_year <- get_DYStats(
 #'   season_name = "2027 Season",
 #'   team = "London Knights",
 #'   min_games = 0
 #' )
 #'
-#' # Filter by multiple teams
-#' rookie_subset <- get_RKStats(
-#'   season_name = "2027 Season",
-#'   team = c("Erie Otters", "Saginaw Spirit"),
+#' # Retrieve draft-eligible playoff statistics
+#' playoff_draft_year <- get_DYStats(
+#'   season_name = "2026 Playoffs",
 #'   min_games = 0
 #' )
 #' }
 #'
 #' @export
-get_RKStats <- function(
+get_DYStats <- function(
     season_name = "2027 Season",
     team = NULL,
     min_games = 10
@@ -65,7 +69,10 @@ get_RKStats <- function(
   # Columns returned by this function
   output_columns <- c(
     "Name",
+    "Rookie",
     "BD",
+    "Hgt",
+    "Wgt",
     "Pos",
     "Team",
     "GP",
@@ -76,6 +83,7 @@ get_RKStats <- function(
     "+/-",
     "PPG",
     "PPA",
+    "PPP",
     "GWG",
     "ENG",
     "PIM"
@@ -86,7 +94,10 @@ get_RKStats <- function(
     return(
       data.frame(
         Name = character(),
+        Rookie = character(),
         BD = as.Date(character()),
+        Hgt = character(),
+        Wgt = numeric(),
         Pos = character(),
         Team = character(),
         GP = numeric(),
@@ -97,6 +108,7 @@ get_RKStats <- function(
         `+/-` = numeric(),
         PPG = numeric(),
         PPA = numeric(),
+        PPP = numeric(),
         GWG = numeric(),
         ENG = numeric(),
         PIM = numeric(),
@@ -105,26 +117,47 @@ get_RKStats <- function(
     )
   }
 
-  # Identify players marked as rookies by the OHL data feed
-  rookie_players <- (
-    !is.na(LeagueStats$Rookie) &
-      LeagueStats$Rookie == "YES"
+  # Extract the draft year from the season name
+  draft_year <- as.integer(
+    substr(season_name, 1L, 4L)
   )
 
-  # Build the rookie statistics table
-  RKStats <- LeagueStats[
-    rookie_players,
+  # Calculate the first-time draft-eligibility birthdate range
+  eligibility_start <- as.Date(
+    sprintf(
+      "%d-09-16",
+      draft_year - 19L
+    )
+  )
+
+  eligibility_end <- as.Date(
+    sprintf(
+      "%d-09-15",
+      draft_year - 18L
+    )
+  )
+
+  # Identify players inside the draft-eligible birthdate range
+  eligible_players <- (
+    !is.na(LeagueStats$BD) &
+      LeagueStats$BD >= eligibility_start &
+      LeagueStats$BD <= eligibility_end
+  )
+
+  # Build the draft-year statistics table
+  DY <- LeagueStats[
+    eligible_players,
     output_columns,
     drop = FALSE
   ]
 
-  # Sort rookies by points, goals, and name
-  if (nrow(RKStats) > 0L) {
-    RKStats <- RKStats[
+  # Sort players by points, goals, and name
+  if (nrow(DY) > 0L) {
+    DY <- DY[
       order(
-        -RKStats$PTS,
-        -RKStats$G,
-        RKStats$Name,
+        -DY$PTS,
+        -DY$G,
+        DY$Name,
         na.last = TRUE
       ),
       ,
@@ -133,7 +166,7 @@ get_RKStats <- function(
   }
 
   # Remove inherited row numbers
-  rownames(RKStats) <- NULL
+  rownames(DY) <- NULL
 
-  return(RKStats)
+  return(DY)
 }

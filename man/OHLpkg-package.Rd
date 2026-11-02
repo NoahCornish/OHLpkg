@@ -8,8 +8,9 @@
 \description{
 OHLpkg provides functions for accessing, cleaning, filtering, and analyzing
 Ontario Hockey League data. Available information includes skater and goalie
-statistics, schedules, play-by-play events, team information, rookie
-statistics, draft-eligible players, and special-teams production.
+statistics, schedules, play-by-play events, team information, rookie and
+draft-eligible players, special-teams production, and penalty-minute
+statistics.
 
 Use \code{get_Seasons()} to view the seasons currently supported by the
 package.
@@ -22,7 +23,9 @@ package.
 \item \code{get_Stats()} retrieves skaters using a games-played cutoff.
 \item \code{get_GoalieStats()} retrieves goalie statistics.
 \item \code{get_EVStats()} calculates even-strength production.
+\item \code{get_PPStats()} retrieves power-play production.
 \item \code{get_SHStats()} retrieves short-handed production.
+\item \code{get_PIMStats()} retrieves penalty-minute statistics.
 \item \code{get_DYStats()} retrieves draft-eligible skaters.
 \item \code{get_RKStats()} retrieves rookie skaters.
 \item \code{get_PlayerInfo()} retrieves player information.
@@ -42,6 +45,11 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Noah Cornish \email{noahcornish7@gmail.com} [copyright holder]
+
+Authors:
+\itemize{
+  \item Noah Cornish \email{noahcornish7@gmail.com} [copyright holder]
+}
 
 }
 \keyword{internal}
